@@ -1,0 +1,1100 @@
+{
+  "saisons": [
+    {
+      "id": "ifrn-2026-s1",
+      "label": "IFRN 2026 · Saison 1",
+      "maj": "2026-09-26",
+      "debut": "2026-08-31",
+      "fin": null,
+      "pilotes": [
+        {
+          "nom": "Thomas Daries",
+          "nom_affiche": "Thomas Daries",
+          "division": 1,
+          "division_label": "IFRN 1 · Cup",
+          "regularite": 100,
+          "stats": {
+            "courses": 4,
+            "moy_res": 9.2,
+            "meilleur": 3,
+            "top5": 1,
+            "top10": 2,
+            "moy_qualif": 14,
+            "qualifs_nq": 0,
+            "dans_le_tour": 3,
+            "moy_x": 5,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 63,
+            "Résultats": 77,
+            "Propreté": 75,
+            "Finir dans le tour": 75
+          },
+          "indice": 93.1,
+          "courses": [
+            {
+              "date": "02/09/26",
+              "div": 1,
+              "res": 11,
+              "qualif": "19",
+              "tour": true,
+              "x": 12,
+              "pige": false
+            },
+            {
+              "date": "07/09/26",
+              "div": 3,
+              "res": 1,
+              "qualif": "nq",
+              "tour": true,
+              "x": 9,
+              "pige": true
+            },
+            {
+              "date": "09/09/26",
+              "div": 1,
+              "res": 3,
+              "qualif": "7",
+              "tour": true,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "16/09/26",
+              "div": 1,
+              "res": 16,
+              "qualif": "16",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "23/09/26",
+              "div": 1,
+              "res": 7,
+              "qualif": "14",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            }
+          ],
+          "titre": "Le patron",
+          "resume": "Référence de l'équipe et pilote le plus complet du plateau Meatball. Il sait construire une course, doubler proprement et gérer ses pneus sur la durée. Ses deux mauvais résultats viennent de dégâts subis en début de course, pas d'erreurs de sa part.",
+          "forces": [
+            "Intelligence de course et gestion des pneus (victoire truck avec un train économisé)",
+            "Capacité à doubler en maîtrise",
+            "Polyvalence : aussi fort en Cup qu'en pige truck",
+            "Incidents en forte baisse (12x à Daytona, 0x à la dernière)"
+          ],
+          "axes": [
+            "Qualifications : 14e de moyenne, il part souvent loin pour son niveau",
+            "Long run moins solide sur la dernière manche",
+            "Présence au briefing (1 sur 4)"
+          ],
+          "conseils": [
+            "Préparer la qualif comme une course : 3 ou 4 runs de tours lancés en test drive avec le setup de qualif, pas celui de course.",
+            "Comparer ses tours de long run entre Darlington et la dernière manche sur Garage61 pour repérer où le rythme s'effrite.",
+            "Être présent au briefing : son expérience est la plus utile à transmettre aux autres."
+          ],
+          "felicitations": "Victoire haut la main en truck à Atlanta et podium à Darlington en Cup. Le président montre la voie, au sens propre.",
+          "rang": 1
+        },
+        {
+          "nom": "Nicolas Ciappara",
+          "nom_affiche": "Nicolas Ciappara",
+          "division": 1,
+          "division_label": "IFRN 1 · Cup",
+          "regularite": 83,
+          "stats": {
+            "courses": 4,
+            "moy_res": 10,
+            "meilleur": 5,
+            "top5": 1,
+            "top10": 2,
+            "moy_qualif": 13.5,
+            "qualifs_nq": 0,
+            "dans_le_tour": 3,
+            "moy_x": 7.5,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 64,
+            "Résultats": 74,
+            "Propreté": 62,
+            "Finir dans le tour": 75
+          },
+          "indice": 87.2,
+          "courses": [
+            {
+              "date": "02/09/26",
+              "div": 1,
+              "res": 5,
+              "qualif": "11",
+              "tour": true,
+              "x": 12,
+              "pige": false
+            },
+            {
+              "date": "09/09/26",
+              "div": 1,
+              "res": 6,
+              "qualif": "2",
+              "tour": true,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "14/09/26",
+              "div": 3,
+              "res": 7,
+              "qualif": "3",
+              "tour": true,
+              "x": 0,
+              "pige": true
+            },
+            {
+              "date": "16/09/26",
+              "div": 1,
+              "res": 14,
+              "qualif": "15",
+              "tour": false,
+              "x": 6,
+              "pige": false
+            },
+            {
+              "date": "23/09/26",
+              "div": 1,
+              "res": 15,
+              "qualif": "26",
+              "tour": true,
+              "x": 4,
+              "pige": false
+            }
+          ],
+          "titre": "Le finisseur",
+          "resume": "Rapide partout, superspeedway comme piste technique, et capable de remontées spectaculaires en fin de course. Il marque de gros points en début de saison, avec une petite baisse de rythme sur les deux dernières manches.",
+          "forces": [
+            "Vitesse pure : 2e en qualif à Darlington, 3e en pige truck",
+            "Remontées de fin de course",
+            "Incidents en baisse régulière (12, 8, 6, 4)"
+          ],
+          "axes": [
+            "Sang froid après un incident : il a perdu ses moyens après un crash à Darlington",
+            "Long run un peu en retrait par rapport aux meilleurs",
+            "Tendance récente : 14e puis 15e, rythme en dessous de d'habitude"
+          ],
+          "conseils": [
+            "Se donner une routine de reset après un incident : respirer, se fixer un objectif simple sur les 10 tours suivants, ne pas chercher à tout reprendre d'un coup.",
+            "Travailler la dégradation des pneus : des relais longs en test drive en surveillant l'écart au tour entre le début et la fin du relais.",
+            "Analyser avec l'équipe ce qui a changé sur les deux dernières courses (setup, conditions, confiance) avant que ça ne s'installe."
+          ],
+          "felicitations": "Top 5 à Daytona et une remontée folle à Darlington pour arracher la 6e place. Le gros capital points de début de saison, c'est lui.",
+          "rang": 2
+        },
+        {
+          "nom": "Jerome Durand",
+          "nom_affiche": "Jérôme Durand",
+          "division": 1,
+          "division_label": "IFRN 1 · Cup",
+          "regularite": 67,
+          "stats": {
+            "courses": 4,
+            "moy_res": 22.8,
+            "meilleur": 14,
+            "top5": 0,
+            "top10": 0,
+            "moy_qualif": 8.3,
+            "qualifs_nq": 1,
+            "dans_le_tour": 2,
+            "moy_x": 9.8,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 79,
+            "Résultats": 38,
+            "Propreté": 51,
+            "Finir dans le tour": 50
+          },
+          "indice": 71.4,
+          "courses": [
+            {
+              "date": "02/09/26",
+              "div": 1,
+              "res": 18,
+              "qualif": "9",
+              "tour": true,
+              "x": 13,
+              "pige": false
+            },
+            {
+              "date": "09/09/26",
+              "div": 1,
+              "res": 14,
+              "qualif": "nq",
+              "tour": true,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "16/09/26",
+              "div": 1,
+              "res": 30,
+              "qualif": "12",
+              "tour": false,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "23/09/26",
+              "div": 1,
+              "res": 29,
+              "qualif": "4",
+              "tour": false,
+              "x": 10,
+              "pige": false
+            }
+          ],
+          "titre": "Le rapide malchanceux",
+          "resume": "La vitesse est là : 4e en qualif sur la dernière manche et un rythme jugé au moins top 5 à Gateway. Mais les résultats ne suivent pas, parce qu'il se retrouve trop souvent pris dans les accidents devant lui. C'est le point à régler en priorité.",
+          "forces": [
+            "Très bon qualifieur (8e de moyenne, meilleure moyenne de la Cup Meatball)",
+            "Rythme de course de haut niveau quand il est libre",
+            "Marque des points même les jours difficiles"
+          ],
+          "axes": [
+            "Pris dans des accidents devant lui dans 3 courses sur 4",
+            "Incidents élevés pour la Cup (près de 10x par course)",
+            "Rythme parfois trop prudent quand il ne se sent pas en confiance"
+          ],
+          "conseils": [
+            "Travailler l'anticipation : regarder deux ou trois voitures devant, pas seulement celle qui précède, pour lever plus tôt quand ça se désunit.",
+            "S'appuyer davantage sur le spotter en fin de relance, et laisser une marge plus grande dans les pelotons serrés.",
+            "En qualif il part devant : c'est l'occasion de rester dans le groupe de tête plutôt que dans le milieu de peloton où les accidents se produisent."
+          ],
+          "felicitations": "4e sur la grille à la dernière manche et une 14e place à Darlington malgré le trafic. Quand la chance tournera, les résultats vont suivre vite.",
+          "rang": 4
+        },
+        {
+          "nom": "Cedric Colleau",
+          "nom_affiche": "Cédric Colleau",
+          "division": 1,
+          "division_label": "IFRN 1 · Cup",
+          "regularite": 50,
+          "stats": {
+            "courses": 4,
+            "moy_res": 20.8,
+            "meilleur": 10,
+            "top5": 0,
+            "top10": 1,
+            "moy_qualif": 21,
+            "qualifs_nq": 0,
+            "dans_le_tour": 2,
+            "moy_x": 2,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 43,
+            "Résultats": 43,
+            "Propreté": 90,
+            "Finir dans le tour": 50
+          },
+          "indice": 67.9,
+          "courses": [
+            {
+              "date": "02/09/26",
+              "div": 1,
+              "res": 36,
+              "qualif": "10",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "09/09/26",
+              "div": 1,
+              "res": 23,
+              "qualif": "35",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "16/09/26",
+              "div": 1,
+              "res": 10,
+              "qualif": "32",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            },
+            {
+              "date": "23/09/26",
+              "div": 1,
+              "res": 14,
+              "qualif": "7",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            }
+          ],
+          "titre": "La progression",
+          "resume": "Arrivé dans l'équipe avec une meatball dès Daytona, il a très vite trouvé ses marques : 36e, 23e, puis 10e et 14e, avec zéro incident sur les deux dernières courses. Une courbe exactement dans le bon sens.",
+          "forces": [
+            "Propreté : 0x sur les deux dernières manches",
+            "Bonne tenue des pneus",
+            "Progression rapide course après course"
+          ],
+          "axes": [
+            "Qualifications irrégulières (35e et 32e sur deux manches)",
+            "Encore en adaptation sur les pistes techniques comme Darlington"
+          ],
+          "conseils": [
+            "Garder la même approche en course : propre et régulier, c'est ce qui paie.",
+            "Mettre l'accent sur la qualif pour éviter les départs en fond de grille.",
+            "Refaire Darlington en test drive pour gagner en aisance sur ce type de tracé."
+          ],
+          "felicitations": "Top 10 à Gateway sans le moindre incident. Bienvenue, et bien joué.",
+          "rang": 5
+        },
+        {
+          "nom": "Alexis Joube",
+          "nom_affiche": "Alexis Joube",
+          "division": 2,
+          "division_label": "IFRN 2 · Division B",
+          "regularite": 83,
+          "stats": {
+            "courses": 4,
+            "moy_res": 7,
+            "meilleur": 2,
+            "top5": 3,
+            "top10": 3,
+            "moy_qualif": 15.5,
+            "qualifs_nq": 0,
+            "dans_le_tour": 3,
+            "moy_x": 3.5,
+            "briefing": 4
+          },
+          "jauges": {
+            "Vitesse": 59,
+            "Résultats": 83,
+            "Propreté": 82,
+            "Finir dans le tour": 75
+          },
+          "indice": 79.9,
+          "courses": [
+            {
+              "date": "01/09/26",
+              "div": 2,
+              "res": 19,
+              "qualif": "20",
+              "tour": false,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "08/09/26",
+              "div": 2,
+              "res": 4,
+              "qualif": "28",
+              "tour": true,
+              "x": 2,
+              "pige": false
+            },
+            {
+              "date": "14/09/26",
+              "div": 3,
+              "res": 6,
+              "qualif": "28",
+              "tour": true,
+              "x": 0,
+              "pige": true
+            },
+            {
+              "date": "15/09/26",
+              "div": 2,
+              "res": 3,
+              "qualif": "4",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            },
+            {
+              "date": "21/09/26",
+              "div": 3,
+              "res": 1,
+              "qualif": "13",
+              "tour": true,
+              "x": 8,
+              "pige": true
+            },
+            {
+              "date": "22/09/26",
+              "div": 2,
+              "res": 2,
+              "qualif": "10",
+              "tour": true,
+              "x": 4,
+              "pige": false
+            }
+          ],
+          "titre": "Le long run",
+          "resume": "Après un Daytona manqué, une montée en puissance nette : 4e, 3e puis 2e en division B, et une victoire en pige truck. Souvent parmi les plus rapides en course, et parmi les meilleurs sur la durée. Le point faible est clair : les qualifications.",
+          "forces": [
+            "Meilleur long run du plateau à plusieurs reprises",
+            "Gestion des pneus exemplaire (victoire truck avec 100 tours de plus dans les gommes)",
+            "Progression constante en division B",
+            "Assiduité parfaite aux briefings (4 sur 4)"
+          ],
+          "axes": [
+            "Qualifications : 28e deux fois, 20e à Daytona, ce qui oblige à remonter à chaque course",
+            "Choix de stratégie pneus en truck à Chicagoland (relais entier sur vieux pneus)"
+          ],
+          "conseils": [
+            "Faire de la qualif une priorité : partir dans le top 10 transformerait les podiums en victoires vu le rythme de course.",
+            "Préparer une stratégie de pit avec deux scénarios avant chaque course (jaune tôt, jaune tard) pour éviter de subir un relais entier sur des pneus usés.",
+            "Face à un pilote agressif, noter ce qui a manqué pour passer à Bristol et le travailler en course IA."
+          ],
+          "felicitations": "Trois tops 4 d'affilée en division B, une victoire en truck à Bristol. La course à la montée est bien lancée.",
+          "rang": 3
+        },
+        {
+          "nom": "Johann Bourgouin",
+          "nom_affiche": "Johann Bourgouin",
+          "division": 2,
+          "division_label": "IFRN 2 · Division B",
+          "regularite": 42,
+          "stats": {
+            "courses": 4,
+            "moy_res": 26.2,
+            "meilleur": 20,
+            "top5": 0,
+            "top10": 0,
+            "moy_qualif": 22.5,
+            "qualifs_nq": 2,
+            "dans_le_tour": 1,
+            "moy_x": 5.5,
+            "briefing": 2
+          },
+          "jauges": {
+            "Vitesse": 39,
+            "Résultats": 28,
+            "Propreté": 72,
+            "Finir dans le tour": 25
+          },
+          "indice": 50.9,
+          "courses": [
+            {
+              "date": "01/09/26",
+              "div": 2,
+              "res": 28,
+              "qualif": "9",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "08/09/26",
+              "div": 2,
+              "res": 31,
+              "qualif": "nq",
+              "tour": false,
+              "x": 6,
+              "pige": false
+            },
+            {
+              "date": "15/09/26",
+              "div": 2,
+              "res": 20,
+              "qualif": "36",
+              "tour": true,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "22/09/26",
+              "div": 2,
+              "res": 26,
+              "qualif": "nq",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            }
+          ],
+          "titre": "Le sous-marin en plongée",
+          "resume": "Début de saison compliqué en division B, avec des crashs qui n'étaient pas de son fait. Les remarques reviennent sur le même point : trop de prudence, un manque de confiance dans la voiture et un freinage plus précoce que le reste du peloton qui l'expose aux touchettes par l'arrière.",
+          "forces": [
+            "Assure les points et évite de provoquer les accidents",
+            "Capable de bien se qualifier (9e à Daytona)"
+          ],
+          "axes": [
+            "Vitesse de course en retrait",
+            "Confiance dans la voiture et gestion du gabarit en peloton",
+            "Freinage décalé par rapport au groupe",
+            "Deux qualifs non disputées sur quatre"
+          ],
+          "conseils": [
+            "Prendre le temps de faire des courses IA en peloton serré pour s'habituer au gabarit et aux voitures proches.",
+            "Freiner au même moment que le groupe : un freinage prévisible est plus sûr qu'un freinage prudent.",
+            "Disputer toutes les qualifs : partir devant, c'est aussi éviter les crashs du milieu de peloton.",
+            "Travailler avec un setup de base fiable pour pouvoir se concentrer sur le pilotage plutôt que sur la voiture."
+          ],
+          "felicitations": "20e dans le tour à Gateway en marquant de bons points. La saison est longue, la remontée commence là.",
+          "rang": 8
+        },
+        {
+          "nom": "Etienne Senamaud",
+          "nom_affiche": "Etienne Senamaud",
+          "division": 3,
+          "division_label": "IFRN 3 · Truck",
+          "regularite": 50,
+          "stats": {
+            "courses": 3,
+            "moy_res": 16,
+            "meilleur": 2,
+            "top5": 1,
+            "top10": 1,
+            "moy_qualif": 12.7,
+            "qualifs_nq": 0,
+            "dans_le_tour": 1,
+            "moy_x": 5.3,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 67,
+            "Résultats": 57,
+            "Propreté": 74,
+            "Finir dans le tour": 33
+          },
+          "indice": 52.1,
+          "courses": [
+            {
+              "date": "31/08/26",
+              "div": 3,
+              "res": 12,
+              "qualif": "8",
+              "tour": false,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "07/09/26",
+              "div": 3,
+              "res": 34,
+              "qualif": "18",
+              "tour": false,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "14/09/26",
+              "div": 3,
+              "res": 2,
+              "qualif": "12",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            }
+          ],
+          "titre": "Le rythme en attente de récompense",
+          "resume": "Un gros rythme dès Darlington, puis une superbe 2e place sans le moindre incident à Chicagoland. Ses deux autres courses ont été ruinées par des accidents devant lui, pas par ses propres erreurs.",
+          "forces": [
+            "Vitesse de course",
+            "Course impeccable quand il est libre (P2 et 0x)",
+            "Patience en course"
+          ],
+          "axes": [
+            "Freinages au déclenchement des jaunes",
+            "Placement dans le peloton pour éviter les crashs devant"
+          ],
+          "conseils": [
+            "Au déclenchement d'un jaune, lever puis freiner progressivement au lieu de piler : le pilote derrière n'a pas forcément vu la même chose.",
+            "Garder un œil sur le spotter et laisser un peu plus d'espace dans les phases de relance."
+          ],
+          "felicitations": "Une 2e place propre et maîtrisée. Le niveau est là, clairement.",
+          "rang": 6
+        },
+        {
+          "nom": "Christophe Gasse",
+          "nom_affiche": "Christophe Gasse",
+          "division": 3,
+          "division_label": "IFRN 3 · Truck",
+          "regularite": 33,
+          "stats": {
+            "courses": 4,
+            "moy_res": 26.8,
+            "meilleur": 15,
+            "top5": 0,
+            "top10": 0,
+            "moy_qualif": 4.7,
+            "qualifs_nq": 1,
+            "dans_le_tour": 1,
+            "moy_x": 5.8,
+            "briefing": 0
+          },
+          "jauges": {
+            "Vitesse": 89,
+            "Résultats": 26,
+            "Propreté": 71,
+            "Finir dans le tour": 25
+          },
+          "indice": 37.8,
+          "courses": [
+            {
+              "date": "31/08/26",
+              "div": 3,
+              "res": 34,
+              "qualif": "5",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "07/09/26",
+              "div": 3,
+              "res": 25,
+              "qualif": "nq",
+              "tour": false,
+              "x": 5,
+              "pige": false
+            },
+            {
+              "date": "14/09/26",
+              "div": 3,
+              "res": 33,
+              "qualif": "5",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "21/09/26",
+              "div": 3,
+              "res": 15,
+              "qualif": "4",
+              "tour": true,
+              "x": 10,
+              "pige": false
+            }
+          ],
+          "titre": "Le qualifieur",
+          "resume": "Le meilleur qualifieur de l'équipe (moins de 5e de moyenne sur la grille), avec un rythme pour jouer le haut du classement. Le problème est ce qui se passe ensuite : trois courses sur quatre gâchées par des dégâts, dont une au moins évitable faute d'avoir écouté son spotter.",
+          "forces": [
+            "Vitesse pure exceptionnelle (5e, 5e, 4e en qualif)",
+            "Rythme de top 5 en course",
+            "A su assurer les points à Bristol"
+          ],
+          "axes": [
+            "Écoute du spotter : voiture détruite en début de course à Chicagoland",
+            "Prise de décision après un incident (réaction lente à Atlanta)",
+            "Absent des briefings (0 sur 4)"
+          ],
+          "conseils": [
+            "Faire confiance au spotter à 100 % : tant qu'il n'a pas annoncé clear, on ne bouge pas.",
+            "Les premiers tours après un départ devant ne se gagnent pas, ils se perdent : sécuriser la position puis attaquer.",
+            "Venir au briefing, notamment pour les consignes de départ et de relance.",
+            "Préparer à l'avance quoi faire en cas de dégâts (rentrer tout de suite ou non) pour décider vite."
+          ],
+          "felicitations": "Un rythme de premier plan dès la première course et une 15e place à Bristol en assurant. Quand il finira ses courses, il sera devant.",
+          "rang": 10
+        },
+        {
+          "nom": "Damien Przybylski",
+          "nom_affiche": "Damien Przybylski",
+          "division": 3,
+          "division_label": "IFRN 3 · Truck",
+          "regularite": 33,
+          "stats": {
+            "courses": 4,
+            "moy_res": 27.5,
+            "meilleur": 17,
+            "top5": 0,
+            "top10": 0,
+            "moy_qualif": 30,
+            "qualifs_nq": 1,
+            "dans_le_tour": 1,
+            "moy_x": 6.5,
+            "briefing": 2
+          },
+          "jauges": {
+            "Vitesse": 17,
+            "Résultats": 24,
+            "Propreté": 68,
+            "Finir dans le tour": 25
+          },
+          "indice": 37.2,
+          "courses": [
+            {
+              "date": "31/08/26",
+              "div": 3,
+              "res": 24,
+              "qualif": "30",
+              "tour": false,
+              "x": 6,
+              "pige": false
+            },
+            {
+              "date": "07/09/26",
+              "div": 3,
+              "res": 36,
+              "qualif": "nq",
+              "tour": false,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "14/09/26",
+              "div": 3,
+              "res": 17,
+              "qualif": "24",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            },
+            {
+              "date": "21/09/26",
+              "div": 3,
+              "res": 33,
+              "qualif": "36",
+              "tour": false,
+              "x": 16,
+              "pige": false
+            }
+          ],
+          "titre": "Le concentré à venir",
+          "resume": "Il a le rythme pour faire de bons résultats, mais les remarques pointent toutes vers la même chose : des erreurs d'inattention, surtout sous drapeau jaune et aux stands. C'est un défaut qui se corrige, et le jour où il le fait, le top 10 est à portée.",
+          "forces": [
+            "Du rythme, notamment à Atlanta",
+            "Course sans incident à Chicagoland (0x)",
+            "Capable d'assurer les points"
+          ],
+          "axes": [
+            "Procédures sous jaune (plusieurs erreurs coûteuses)",
+            "Erreurs aux stands",
+            "Temps de réaction quand un accident survient devant",
+            "Réglage du répartiteur de freinage trop sur l'arrière"
+          ],
+          "conseils": [
+            "Relire le règlement IFRN sur les jaunes et les relances avant chaque course, et se faire une mini checklist (limiteur, ordre, lucky dog).",
+            "Anticiper : dès qu'un pilote devant se désunit, lever immédiatement plutôt qu'attendre de voir.",
+            "Ramener le répartiteur vers l'avant pour gagner en stabilité au freinage.",
+            "Faire quelques arrêts aux stands en test drive pour automatiser l'entrée et la sortie."
+          ],
+          "felicitations": "Une course propre à Chicagoland, 17e sans incident en assurant les points. C'est la base pour la suite.",
+          "rang": 11
+        },
+        {
+          "nom": "Maxime Toffolet",
+          "nom_affiche": "Maxime Toffolet",
+          "division": 4,
+          "division_label": "IFRN 4 · Rookie",
+          "regularite": 33,
+          "stats": {
+            "courses": 4,
+            "moy_res": 11,
+            "meilleur": 2,
+            "top5": 1,
+            "top10": 2,
+            "moy_qualif": 5.3,
+            "qualifs_nq": 1,
+            "dans_le_tour": 3,
+            "moy_x": 14.5,
+            "briefing": 4
+          },
+          "jauges": {
+            "Vitesse": 88,
+            "Résultats": 71,
+            "Propreté": 28,
+            "Finir dans le tour": 75
+          },
+          "indice": 41.3,
+          "courses": [
+            {
+              "date": "03/09/26",
+              "div": 4,
+              "res": 18,
+              "qualif": "3",
+              "tour": false,
+              "x": 22,
+              "pige": false
+            },
+            {
+              "date": "10/09/26",
+              "div": 4,
+              "res": 10,
+              "qualif": "5",
+              "tour": true,
+              "x": 16,
+              "pige": false
+            },
+            {
+              "date": "17/09/26",
+              "div": 4,
+              "res": 14,
+              "qualif": "8",
+              "tour": true,
+              "x": 14,
+              "pige": false
+            },
+            {
+              "date": "24/09/26",
+              "div": 4,
+              "res": 2,
+              "qualif": "nq",
+              "tour": true,
+              "x": 6,
+              "pige": false
+            }
+          ],
+          "titre": "La plus grosse progression",
+          "resume": "Disqualifié pour trop d'incidents à la première manche, puis 10e, 14e et enfin 2e avec une course intelligente. Les incidents fondent (22, 16, 14, 6). La vitesse a toujours été là, en qualif comme en course : ce qui change, c'est la maîtrise.",
+          "forces": [
+            "Très rapide, excellent en qualif (3e, 5e, 8e)",
+            "Progression spectaculaire manche après manche",
+            "Sait remonter un peloton",
+            "Assiduité parfaite aux briefings (4 sur 4)"
+          ],
+          "axes": [
+            "Agressivité : force trop l'intérieur et se rabat dès le clear",
+            "Sur short track, freine sans tenir compte des pilotes qui freinent très tard derrière",
+            "Marge trop faible avec la limite d'incidents"
+          ],
+          "conseils": [
+            "Après un clear, attendre une longueur de plus avant de se rabattre.",
+            "Ne pas insister à l'intérieur si l'autre ne laisse pas la place : la position se reprend souvent au tour suivant.",
+            "Sur short track, freiner de manière plus progressive pour que le pilote derrière puisse anticiper.",
+            "Suivre son compteur de X pendant la course et passer en mode sécurisation à mi-limite."
+          ],
+          "felicitations": "Une 2e place en évitant tous les crashs. De la disqualification au podium en quatre courses, bravo.",
+          "rang": 9
+        },
+        {
+          "nom": "Kevin Charles",
+          "nom_affiche": "Kevin Charles",
+          "division": 4,
+          "division_label": "IFRN 4 · Rookie",
+          "regularite": 20,
+          "stats": {
+            "courses": 4,
+            "moy_res": 12.5,
+            "meilleur": 8,
+            "top5": 0,
+            "top10": 2,
+            "moy_qualif": 9,
+            "qualifs_nq": 0,
+            "dans_le_tour": 2,
+            "moy_x": 11.8,
+            "briefing": 4
+          },
+          "jauges": {
+            "Vitesse": 77,
+            "Résultats": 67,
+            "Propreté": 41,
+            "Finir dans le tour": 50
+          },
+          "indice": 36.1,
+          "courses": [
+            {
+              "date": "03/09/26",
+              "div": 4,
+              "res": 13,
+              "qualif": "7",
+              "tour": true,
+              "x": 16,
+              "pige": false
+            },
+            {
+              "date": "10/09/26",
+              "div": 4,
+              "res": 21,
+              "qualif": "6",
+              "tour": false,
+              "x": 22,
+              "pige": false
+            },
+            {
+              "date": "17/09/26",
+              "div": 4,
+              "res": 8,
+              "qualif": "21",
+              "tour": true,
+              "x": 8,
+              "pige": false
+            },
+            {
+              "date": "24/09/26",
+              "div": 4,
+              "res": 8,
+              "qualif": "2",
+              "tour": false,
+              "x": 1,
+              "pige": false
+            }
+          ],
+          "titre": "La pointe de vitesse",
+          "resume": "Rapide et très sérieux dans sa préparation, avec un excellent état d'esprit. Il lui manque de la constance : des petites erreurs d'inattention, des inputs saccadés et une tendance à perdre ses moyens à la moindre contrariété. Les incidents ont pourtant chuté (22 puis 8 puis 1).",
+          "forces": [
+            "Pointe de vitesse (2e en qualif à la dernière manche)",
+            "Sérieux et état d'esprit",
+            "Incidents en forte baisse",
+            "Deux 8e places consécutives",
+            "Assiduité parfaite aux briefings (4 sur 4)"
+          ],
+          "axes": [
+            "À-coups au volant et à l'accélérateur",
+            "Concentration sur toute la durée de la course",
+            "Gestion mentale après une contrariété",
+            "Erreur aux stands à la dernière manche"
+          ],
+          "conseils": [
+            "Travailler la douceur des commandes : regarder sa télémétrie Garage61 pour repérer les à-coups et viser des traces plus lisses.",
+            "Se fixer des mini objectifs par relais pour rester concentré jusqu'au bout.",
+            "Après une erreur, se dire que la course est longue : un tour propre vaut mieux qu'une réaction à chaud.",
+            "Répéter les arrêts aux stands en test drive."
+          ],
+          "felicitations": "De 22x à 1x en quatre courses et deux 8e places de suite. La zone de montée n'est pas loin.",
+          "rang": 12
+        },
+        {
+          "nom": "Arnaud Dehu",
+          "nom_affiche": "Arnaud Dehu",
+          "division": 4,
+          "division_label": "IFRN 4 · Rookie",
+          "regularite": 50,
+          "stats": {
+            "courses": 2,
+            "moy_res": 5,
+            "meilleur": 4,
+            "top5": 1,
+            "top10": 2,
+            "moy_qualif": 13,
+            "qualifs_nq": 0,
+            "dans_le_tour": 2,
+            "moy_x": 2,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 66,
+            "Résultats": 89,
+            "Propreté": 90,
+            "Finir dans le tour": 100
+          },
+          "indice": 51.7,
+          "courses": [
+            {
+              "date": "03/09/26",
+              "div": 4,
+              "res": 4,
+              "qualif": "19",
+              "tour": true,
+              "x": 4,
+              "pige": false
+            },
+            {
+              "date": "10/09/26",
+              "div": 4,
+              "res": 6,
+              "qualif": "7",
+              "tour": true,
+              "x": 0,
+              "pige": false
+            }
+          ],
+          "titre": "La révélation",
+          "resume": "Rapide, constant, calme : la révélation du début de saison en rookie. Il a su choisir d'assurer les points plutôt que de prendre des risques pour le podium, une sagesse rare à ce niveau. Seulement deux courses renseignées dans la base pour l'instant.",
+          "forces": [
+            "Très bon rythme",
+            "Agilité pour éviter les crashs",
+            "Calme et application",
+            "Course à 0x à Nashville",
+            "Dépassements en croisé décroisé"
+          ],
+          "axes": [
+            "Procédures sous jaune, par manque d'expérience",
+            "Qualif à USA Speedway (19e)"
+          ],
+          "conseils": [
+            "Relire les procédures de jaune et de relance IFRN avant chaque course.",
+            "Garder cette approche mesurée : c'est ce qui fera la différence sur la saison.",
+            "Travailler les longs runs pour aller chercher le top 3 quand l'occasion se présentera."
+          ],
+          "felicitations": "4e puis 6e, dont une course à zéro incident. Un début de saison remarquable.",
+          "rang": 7
+        },
+        {
+          "nom": "Claude Charles",
+          "nom_affiche": "Claude Charles",
+          "division": 4,
+          "division_label": "IFRN 4 · Rookie",
+          "regularite": 17,
+          "stats": {
+            "courses": 3,
+            "moy_res": 14.3,
+            "meilleur": 7,
+            "top5": 0,
+            "top10": 2,
+            "moy_qualif": 26.7,
+            "qualifs_nq": 0,
+            "dans_le_tour": 2,
+            "moy_x": 10.7,
+            "briefing": 1
+          },
+          "jauges": {
+            "Vitesse": 27,
+            "Résultats": 62,
+            "Propreté": 46,
+            "Finir dans le tour": 67
+          },
+          "indice": 33.6,
+          "courses": [
+            {
+              "date": "10/09/26",
+              "div": 4,
+              "res": 27,
+              "qualif": "30",
+              "tour": false,
+              "x": 12,
+              "pige": false
+            },
+            {
+              "date": "17/09/26",
+              "div": 4,
+              "res": 9,
+              "qualif": "24",
+              "tour": true,
+              "x": 14,
+              "pige": false
+            },
+            {
+              "date": "24/09/26",
+              "div": 4,
+              "res": 7,
+              "qualif": "26",
+              "tour": true,
+              "x": 6,
+              "pige": false
+            }
+          ],
+          "titre": "Le bon élève",
+          "resume": "Première course à Nashville ruinée par l'agressivité d'un adversaire, puis 9e et 7e en suivant le mouvement et en restant dans le tour. Il a compris l'essentiel : finir les courses. Il lui reste à aller chercher de la vitesse.",
+          "forces": [
+            "Construction de course prudente et intelligente",
+            "Termine dans le tour",
+            "Progression rapide (27e, 9e, 7e)"
+          ],
+          "axes": [
+            "Vitesse pure (26e de moyenne en qualif)",
+            "Incidents encore élevés (entre 6 et 14x)"
+          ],
+          "conseils": [
+            "Faire des runs de qualif en test drive pour gagner en vitesse sur un tour.",
+            "Suivre un pilote plus rapide en course IA pour apprendre les lignes et les points de freinage.",
+            "Continuer de privilégier la fin de course plutôt que les risques."
+          ],
+          "felicitations": "Deux tops 10 de suite pour ses débuts. Exactement la philosophie de l'équipe.",
+          "rang": 13
+        }
+      ]
+    }
+  ]
+}

@@ -1440,6 +1440,92 @@
     /* Articles de news : image en pleine largeur, texte qui respire */
     .article-stats { grid-template-columns: 1fr; }
   }
+
+  /* --- Suivi des pilotes : profils détaillés (données : profils-pilotes.json + RESULTATS LIGUE) --- */
+  .sp-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 16px; margin-bottom: 14px; }
+  .sp-season { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px; }
+  .sp-season select { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text); background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 6px 8px; }
+  .sp-subtabs { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 8px; margin-bottom: 22px; scrollbar-width: thin; }
+  .sp-subtab {
+    flex: none; display: flex; align-items: center; gap: 7px;
+    font-family: 'Oswald', sans-serif; font-weight: 500; font-size: 13px; letter-spacing: .5px; text-transform: uppercase;
+    color: var(--text-dim); background: var(--panel); border: 1px solid var(--line); border-radius: 999px;
+    padding: 7px 13px; cursor: pointer; white-space: nowrap;
+  }
+  .sp-subtab:hover { color: var(--text); border-color: #4a4034; }
+  .sp-subtab.active { color: var(--black); background: var(--orange); border-color: var(--orange); }
+  .sp-subtab:focus-visible, .sp-hier tr:focus-visible { outline: 2px solid var(--amber); outline-offset: 2px; }
+  .sp-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .sp-subtab.active .sp-dot { box-shadow: 0 0 0 2px var(--black); }
+
+  .sp-card { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 24px; display: grid; gap: 26px; }
+  .sp-card > *, .sp-charts > *, .sp-cols > * { min-width: 0; }
+  .sp-head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 14px 24px; }
+  .sp-eyebrow { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--orange); }
+  .sp-name { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: clamp(28px, 6vw, 42px); line-height: 1.05; text-transform: uppercase; margin: 4px 0 10px; }
+  .sp-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+  .sp-chip { font-family: 'JetBrains Mono', monospace; font-size: 11px; padding: 3px 9px; border-radius: 999px; border: 1px solid var(--line); color: var(--text-dim); background: var(--panel-2); }
+  .sp-chip.div { color: #fff; border-color: transparent; }
+  .sp-rank { text-align: right; }
+  .sp-rank b { display: block; font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 52px; line-height: 1; color: var(--text); }
+  .sp-rank span { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--text-dim); }
+  .sp-resume { margin: 0; font-size: 15px; line-height: 1.65; max-width: 68ch; }
+  .sp-h { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 14px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text-dim); margin: 0 0 12px; }
+  .sp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .sp-stat { background: var(--panel-2); padding: 10px 12px; }
+  .sp-stat b { display: block; font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 24px; font-variant-numeric: tabular-nums; }
+  .sp-stat span { font-size: 11.5px; color: var(--text-dim); }
+
+  .sp-chart { position: relative; background: var(--panel-2); border: 1px solid var(--line); border-radius: 8px; padding: 12px 10px 6px; }
+  .sp-chart svg { width: 100%; height: auto; display: block; overflow: visible; }
+  .sp-legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 12px; color: var(--text-dim); padding: 4px 6px 6px; }
+  .sp-legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sp-legend i { display: inline-block; }
+  .sp-tip {
+    position: absolute; pointer-events: none; z-index: 5; min-width: 150px;
+    background: var(--black); border: 1px solid #4a4034; border-radius: 6px; padding: 8px 10px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11.5px; line-height: 1.6; color: var(--text);
+    box-shadow: 0 6px 20px rgba(0,0,0,.5);
+  }
+  .sp-tip b { font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: .5px; }
+  .sp-tip .dim { color: var(--text-dim); }
+  .sp-charts { display: grid; gap: 18px; }
+
+  .sp-gauges { display: grid; gap: 10px; }
+  .sp-g { display: grid; grid-template-columns: 150px minmax(0, 1fr) 64px; gap: 12px; align-items: center; font-size: 13px; }
+  .sp-bar { position: relative; height: 10px; background: var(--panel-2); border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+  .sp-bar i { position: absolute; inset: 0 auto 0 0; background: var(--orange); border-radius: 5px; }
+  .sp-bar em { position: absolute; top: -1px; bottom: -1px; width: 2px; background: var(--text); opacity: .6; }
+  .sp-gv { font-family: 'JetBrains Mono', monospace; font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+  .sp-up { color: #4FC27F; } .sp-down { color: #E86060; }
+  .sp-note { font-size: 11.5px; color: var(--text-dim); margin-top: 8px; font-family: 'JetBrains Mono', monospace; }
+
+  .sp-cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 22px; }
+  .sp-list { margin: 0; padding-left: 18px; display: grid; gap: 7px; font-size: 14px; line-height: 1.55; }
+  .sp-list li::marker { color: var(--orange); }
+  .sp-conseils { background: var(--panel-2); border: 1px solid var(--line); border-left: 3px solid var(--orange); border-radius: 8px; padding: 16px 18px; }
+  .sp-conseils ol { margin: 0; padding-left: 20px; display: grid; gap: 9px; font-size: 14px; line-height: 1.55; }
+  .sp-bravo { display: grid; grid-template-columns: 44px minmax(0, 1fr); gap: 14px; align-items: center; border-top: 1px dashed var(--line); padding-top: 20px; }
+  .sp-flag { width: 44px; height: 32px; border-radius: 3px; border: 1px solid var(--line); background: repeating-conic-gradient(#F2EFEA 0 25%, #0A0908 0 50%) 0 0 / 11px 11px; }
+  .sp-bravo p { margin: 0; font-weight: 500; line-height: 1.55; }
+
+  .sp-tablewrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; }
+  .sp-table { width: 100%; border-collapse: collapse; font-size: 13px; min-width: 480px; }
+  .sp-table th, .sp-table td { padding: 8px 12px; border-bottom: 1px solid var(--line); text-align: left; white-space: nowrap; }
+  .sp-table th { font-family: 'JetBrains Mono', monospace; font-size: 10.5px; letter-spacing: .5px; text-transform: uppercase; color: var(--text-dim); background: var(--panel-2); font-weight: 400; }
+  .sp-table td.n { font-family: 'JetBrains Mono', monospace; text-align: right; font-variant-numeric: tabular-nums; }
+  .sp-table tr:last-child td { border-bottom: 0; }
+  .sp-tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--text-dim); border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; margin-left: 6px; }
+  .sp-hier tbody tr { cursor: pointer; }
+  .sp-hier tbody tr:hover { background: var(--panel-2); }
+  .sp-hier .sp-pos { font-family: 'Oswald', sans-serif; font-weight: 700; font-size: 18px; width: 44px; }
+  .sp-hier .sp-pname { display: flex; align-items: center; gap: 8px; font-weight: 600; }
+
+  @media (max-width: 700px) {
+    .sp-card { padding: 18px 16px; }
+    .sp-g { grid-template-columns: 104px minmax(0, 1fr) 58px; }
+    .sp-rank b { font-size: 40px; }
+  }
 </style>
 </head>
 <body>
@@ -1464,6 +1550,7 @@
     <button class="tab-btn" data-tab="records">Records</button>
     <button class="tab-btn" data-tab="tutos" id="tabBtnTutos" style="display:none;">Les Tutos</button>
     <button class="tab-btn" data-tab="ressources" id="tabBtnRessources" style="display:none;">Ressources Graphiques</button>
+    <button class="tab-btn" data-tab="suivi">Suivi des Pilotes</button>
     <button class="tab-btn" data-tab="cartes">Cartes Pilotes</button>
     <button class="tab-btn" data-tab="shop">Shop</button>
     <button class="tab-btn" data-tab="regles">Règles Meatball Party</button>
@@ -1828,6 +1915,18 @@
           </div>
 
         </div>
+      </section>
+    </div>
+
+    <div class="tab-panel" id="tab-suivi">
+      <section>
+        <div class="sp-top">
+          <div class="section-title" style="margin-bottom:0">Suivi des Pilotes</div>
+          <label class="sp-season">Saison <select id="sp-saison"></select></label>
+        </div>
+        <div class="sp-note" id="sp-maj" style="margin:-4px 0 16px"></div>
+        <div class="sp-subtabs" id="sp-subtabs" role="tablist" aria-label="Pilotes"></div>
+        <div id="sp-content"><div class="state-msg">Chargement des profils...</div></div>
       </section>
     </div>
 
@@ -2926,9 +3025,348 @@ async function loadCartes() {
   }
 }
 
+
+// ===================== SUIVI DES PILOTES =====================
+// Profils rédigés : profils-pilotes.json (une entrée par saison, à la racine du repo).
+// Courses : onglet RESULTATS LIGUE (GID 1015066806), lu en direct et filtré sur les dates
+// de la saison. Si le Sheet est injoignable, on retombe sur les courses figées dans le JSON.
+// Colonnes Sheet : Date | Nom du pilote | Division | Résultat | Qualif | Dans le tour ? | Briefing | X | Conclusion
+const SP_DIV_COLORS = { 1: '#2E6FD8', 2: '#2E9B57', 3: '#D9A600', 4: '#D23B3B' };
+const SP_DIV_LABEL = { 1: 'IFRN 1', 2: 'IFRN 2', 3: 'IFRN 3', 4: 'IFRN 4' };
+const SP_PLATEAU = 36;
+let _sp = { data: null, rows: null, saisonIdx: 0, vue: 'hierarchie' };
+
+function spEsc(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function spNorm(s) {
+  return String(s || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/\s+/g, ' ').trim();
+}
+// "01/09/26" ou "01/09/2026" -> Date
+function spParseDate(str) {
+  const m = String(str || '').trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})/);
+  if (!m) return null;
+  let y = parseInt(m[3], 10); if (y < 100) y += 2000;
+  return new Date(y, parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+}
+function spScore(v) { return Math.round(Math.max(0, Math.min(100, (1 - (v - 1) / (SP_PLATEAU - 1)) * 100))); }
+function spMoy(a) { return a.length ? Math.round(a.reduce((s, v) => s + v, 0) / a.length * 10) / 10 : null; }
+
+// Transforme les lignes du Sheet en courses { date, dateTxt, pilote, div, res, qualif (null = nq), tour, briefing, x }
+function spRowsToCourses(rows) {
+  return rows.map(r => {
+    const [date, pilote, division, resultat, qualif, tour, briefing, x] = r;
+    const d = spParseDate(date);
+    const res = parseInt(resultat, 10);
+    if (!d || !pilote || isNaN(res)) return null;
+    const qRaw = (qualif || '').trim();
+    const q = /nq/i.test(qRaw) ? null : parseInt(qRaw, 10);
+    const div = parseInt(String(division || '').replace(/\D/g, ''), 10) || null;
+    return {
+      date: d, dateTxt: date.trim().slice(0, 5), pilote: pilote.trim(), div, res,
+      qualif: isNaN(q) ? null : q,
+      tour: /^oui/i.test((tour || '').trim()),
+      briefing: /^oui/i.test((briefing || '').trim()),
+      x: parseInt(x, 10) || 0,
+    };
+  }).filter(Boolean).sort((a, b) => a.date - b.date);
+}
+
+function spCoursesFromJson(p) {
+  return (p.courses || []).map(c => ({
+    date: spParseDate(c.date), dateTxt: c.date.slice(0, 5), pilote: p.nom, div: c.div, res: c.res,
+    qualif: /nq/i.test(c.qualif) ? null : parseInt(c.qualif, 10), tour: c.tour, briefing: false, x: c.x,
+  }));
+}
+
+function spCoursesPour(saison, p) {
+  if (!_sp.rows) return spCoursesFromJson(p);
+  const debut = new Date(saison.debut + 'T00:00:00');
+  const fin = saison.fin ? new Date(saison.fin + 'T23:59:59') : null;
+  const nom = spNorm(p.nom);
+  return _sp.rows.filter(c => spNorm(c.pilote) === nom && c.date >= debut && (!fin || c.date <= fin));
+}
+
+function spCalcul(saison, p) {
+  const toutes = spCoursesPour(saison, p);
+  const m = toutes.filter(c => c.div === p.division);
+  if (!m.length) return { toutes, m, stats: null, jauges: {}, indice: null };
+  const res = m.map(c => c.res), q = m.filter(c => c.qualif != null).map(c => c.qualif);
+  const stats = {
+    courses: m.length, moy_res: spMoy(res), meilleur: Math.min(...res),
+    top10: res.filter(v => v <= 10).length, moy_qualif: spMoy(q), nq: m.length - q.length,
+    tour: m.filter(c => c.tour).length, moy_x: spMoy(m.map(c => c.x)),
+    briefing: _sp.rows ? m.filter(c => c.briefing).length : (p.stats ? p.stats.briefing : 0),
+  };
+  const jauges = {
+    'Vitesse (qualif)': stats.moy_qualif != null ? spScore(stats.moy_qualif) : null,
+    'Résultats': spScore(stats.moy_res),
+    'Propreté': Math.max(0, Math.round(100 - stats.moy_x * 5)),
+    'Finir dans le tour': Math.round(stats.tour / stats.courses * 100),
+  };
+  const indice = p.regularite != null
+    ? Math.round((0.4 * (5 - p.division) * 25 + 0.3 * p.regularite + 0.3 * spScore(stats.moy_res)) * 10) / 10
+    : null;
+  return { toutes, m, stats, jauges, indice };
+}
+
+function spClassement(saison) {
+  const liste = saison.pilotes.map(p => ({ p, ...spCalcul(saison, p) }));
+  liste.sort((a, b) => (b.indice ?? -1) - (a.indice ?? -1));
+  let r = 0; liste.forEach(e => { e.rang = e.indice != null ? ++r : null; });
+  return liste;
+}
+
+// ---------- Graphiques ----------
+function spTip(wrap, html, evt) {
+  let tip = wrap.querySelector('.sp-tip');
+  if (!html) { if (tip) tip.hidden = true; return; }
+  if (!tip) { tip = document.createElement('div'); tip.className = 'sp-tip'; wrap.appendChild(tip); }
+  tip.innerHTML = html; tip.hidden = false;
+  const box = wrap.getBoundingClientRect();
+  let left = evt.clientX - box.left + 14, top = evt.clientY - box.top - 10;
+  if (left + tip.offsetWidth > box.width) left = evt.clientX - box.left - tip.offsetWidth - 14;
+  tip.style.left = Math.max(4, left) + 'px'; tip.style.top = Math.max(4, top) + 'px';
+}
+function spTipHtml(c) {
+  return `<b>${spEsc(c.dateTxt)}</b> <span class="dim">${SP_DIV_LABEL[c.div] || ''}</span><br>`
+    + `Arrivée <b>P${c.res}</b><br>Qualif ${c.qualif != null ? 'P' + c.qualif : '<span class="dim">non disputée</span>'}<br>`
+    + `${c.tour ? 'Dans le tour du leader' : '<span class="dim">Hors du tour du leader</span>'}<br>Incidents ${c.x}x`;
+}
+function spBindHover(wrap, courses) {
+  wrap.querySelectorAll('[data-i]').forEach(el => {
+    el.addEventListener('mousemove', e => spTip(wrap, spTipHtml(courses[el.dataset.i]), e));
+    el.addEventListener('mouseleave', () => spTip(wrap, null));
+  });
+}
+
+function spChartPositions(courses) {
+  const W = 760, H = 290, mL = 40, mR = 16, mT = 14, lane = 34, mB = 26 + lane;
+  const pw = W - mL - mR, ph = H - mT - mB;
+  const maxV = Math.max(20, ...courses.map(c => c.res), ...courses.map(c => c.qualif || 0));
+  const bas = Math.ceil(maxV / 10) * 10;
+  const n = courses.length, step = pw / n;
+  const x = i => mL + step * (i + 0.5);
+  const y = v => mT + ((v - 1) / (bas - 1)) * ph;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Positions à l'arrivée et en qualification, course par course">`;
+  const ticks = [1]; for (let v = 10; v <= bas; v += 10) ticks.push(v);
+  ticks.forEach(v => {
+    s += `<line x1="${mL}" x2="${W - mR}" y1="${y(v)}" y2="${y(v)}" stroke="#2E2820" stroke-width="1"/>`;
+    s += `<text x="${mL - 8}" y="${y(v) + 4}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#96897C">P${v}</text>`;
+  });
+  // qualif : ligne pointillée, interrompue quand la qualif n'a pas été disputée
+  let dq = '', open = false;
+  courses.forEach((c, i) => {
+    if (c.qualif == null) { open = false; return; }
+    dq += `${open ? 'L' : 'M'}${x(i).toFixed(1)} ${y(c.qualif).toFixed(1)} `; open = true;
+  });
+  if (dq) s += `<path d="${dq}" fill="none" stroke="#B8BEC7" stroke-width="1.5" stroke-dasharray="5 4" opacity=".8"/>`;
+  courses.forEach((c, i) => {
+    if (c.qualif != null) s += `<rect x="${(x(i) - 4).toFixed(1)}" y="${(y(c.qualif) - 4).toFixed(1)}" width="8" height="8" transform="rotate(45 ${x(i).toFixed(1)} ${y(c.qualif).toFixed(1)})" fill="#B8BEC7" stroke="#201C16" stroke-width="2"/>`;
+  });
+  // arrivée : ligne pleine, rond plein si dans le tour du leader, rond vide sinon
+  const da = courses.map((c, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)} ${y(c.res).toFixed(1)}`).join(' ');
+  s += `<path d="${da}" fill="none" stroke="#FF5A1F" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>`;
+  courses.forEach((c, i) => {
+    s += `<circle cx="${x(i).toFixed(1)}" cy="${y(c.res).toFixed(1)}" r="6" fill="${c.tour ? '#FF5A1F' : '#201C16'}" stroke="${c.tour ? '#201C16' : '#FF5A1F'}" stroke-width="2.5"/>`;
+    if (c.res <= 3) s += `<text x="${x(i).toFixed(1)}" y="${(y(c.res) + 20).toFixed(1)}" text-anchor="middle" font-family="Oswald, sans-serif" font-size="12" fill="#F2EFEA">P${c.res}</text>`;
+  });
+  // axe des dates + bande "dans le tour"
+  const axe = mT + ph;
+  courses.forEach((c, i) => {
+    s += `<text x="${x(i).toFixed(1)}" y="${axe + 16}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#96897C">${spEsc(c.dateTxt)}</text>`;
+    const ly = axe + 26;
+    s += `<rect x="${(x(i) - Math.min(18, step / 2 - 4)).toFixed(1)}" y="${ly}" width="${(Math.min(36, step - 8)).toFixed(1)}" height="16" rx="4" fill="${c.tour ? '#FF5A1F' : 'none'}" stroke="${c.tour ? 'none' : '#4a4034'}" stroke-width="1"/>`;
+    s += `<text x="${x(i).toFixed(1)}" y="${ly + 12}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="9.5" fill="${c.tour ? '#0A0908' : '#96897C'}">${c.tour ? 'OUI' : 'NON'}</text>`;
+  });
+  s += `<text x="${mL - 8}" y="${axe + 38}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="9" fill="#96897C">TOUR</text>`;
+  courses.forEach((c, i) => {
+    s += `<rect data-i="${i}" x="${(x(i) - step / 2).toFixed(1)}" y="0" width="${step.toFixed(1)}" height="${H}" fill="transparent"/>`;
+  });
+  return s + '</svg>';
+}
+
+function spChartIncidents(courses) {
+  const W = 760, H = 190, mL = 40, mR = 16, mT = 18, mB = 24;
+  const pw = W - mL - mR, ph = H - mT - mB;
+  const maxX = Math.max(10, ...courses.map(c => c.x));
+  const haut = Math.ceil(maxX / 5) * 5;
+  const n = courses.length, step = pw / n, bw = Math.min(34, step * 0.55);
+  const x = i => mL + step * (i + 0.5);
+  const y = v => mT + ph - (v / haut) * ph;
+  let s = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Incidents par course">`;
+  for (let v = 0; v <= haut; v += haut > 20 ? 10 : 5) {
+    s += `<line x1="${mL}" x2="${W - mR}" y1="${y(v)}" y2="${y(v)}" stroke="#2E2820" stroke-width="1"/>`;
+    s += `<text x="${mL - 8}" y="${y(v) + 4}" text-anchor="end" font-family="JetBrains Mono, monospace" font-size="10" fill="#96897C">${v}x</text>`;
+  }
+  courses.forEach((c, i) => {
+    const h = y(0) - y(c.x);
+    if (c.x > 0) {
+      const r = Math.min(4, h);
+      const x0 = x(i) - bw / 2, x1 = x(i) + bw / 2, yt = y(c.x), yb = y(0);
+      s += `<path d="M${x0.toFixed(1)} ${yb} L${x0.toFixed(1)} ${(yt + r).toFixed(1)} Q${x0.toFixed(1)} ${yt.toFixed(1)} ${(x0 + r).toFixed(1)} ${yt.toFixed(1)} L${(x1 - r).toFixed(1)} ${yt.toFixed(1)} Q${x1.toFixed(1)} ${yt.toFixed(1)} ${x1.toFixed(1)} ${(yt + r).toFixed(1)} L${x1.toFixed(1)} ${yb} Z" fill="#FFB000"/>`;
+    }
+    s += `<text x="${x(i).toFixed(1)}" y="${(y(c.x) - 6).toFixed(1)}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10.5" fill="#F2EFEA">${c.x}</text>`;
+    s += `<text x="${x(i).toFixed(1)}" y="${H - 6}" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="10" fill="#96897C">${spEsc(c.dateTxt)}</text>`;
+    s += `<rect data-i="${i}" x="${(x(i) - step / 2).toFixed(1)}" y="0" width="${step.toFixed(1)}" height="${H}" fill="transparent"/>`;
+  });
+  return s + '</svg>';
+}
+
+// ---------- Rendu ----------
+function spRenderSubtabs(classement) {
+  const el = document.getElementById('sp-subtabs');
+  const btn = (id, label, color) => `<button class="sp-subtab ${_sp.vue === id ? 'active' : ''}" data-vue="${spEsc(id)}">${color ? `<span class="sp-dot" style="background:${color}"></span>` : ''}${spEsc(label)}</button>`;
+  el.innerHTML = btn('hierarchie', 'Hiérarchie') + classement.map(e => btn(e.p.nom, e.p.nom_affiche || e.p.nom, SP_DIV_COLORS[e.p.division])).join('');
+  el.querySelectorAll('.sp-subtab').forEach(b => b.onclick = () => { _sp.vue = b.dataset.vue; renderSuiviPilotes(); });
+  const actif = el.querySelector('.active'); if (actif) actif.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+}
+
+function spRenderHierarchie(classement, zone) {
+  zone.innerHTML = `
+    <div class="sp-tablewrap">
+      <table class="sp-table sp-hier">
+        <thead><tr><th>Rang</th><th>Pilote</th><th>Division</th><th style="text-align:right">Courses</th><th style="text-align:right">Moy. arrivée</th><th style="text-align:right">Indice</th></tr></thead>
+        <tbody>${classement.map(e => `
+          <tr tabindex="0" data-vue="${spEsc(e.p.nom)}">
+            <td class="sp-pos">${e.rang ?? '–'}</td>
+            <td><span class="sp-pname"><span class="sp-dot" style="background:${SP_DIV_COLORS[e.p.division]}"></span>${spEsc(e.p.nom_affiche || e.p.nom)}</span></td>
+            <td>${spEsc(e.p.division_label)}</td>
+            <td class="n">${e.stats ? e.stats.courses : 0}</td>
+            <td class="n">${e.stats ? e.stats.moy_res : '–'}</td>
+            <td class="n">${e.indice ?? '–'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>
+    <div class="sp-note">Indice sur 100 combinant la division, la régularité et le résultat moyen en division principale. Clique sur un pilote pour ouvrir son profil.</div>`;
+  zone.querySelectorAll('tr[data-vue]').forEach(tr => {
+    const go = () => { _sp.vue = tr.dataset.vue; renderSuiviPilotes(); };
+    tr.onclick = go; tr.onkeydown = e => { if (e.key === 'Enter') go(); };
+  });
+}
+
+function spRenderProfil(e, prev, zone) {
+  const p = e.p, s = e.stats;
+  if (!s) { zone.innerHTML = `<div class="state-msg">Pas encore de course enregistrée pour ${spEsc(p.nom_affiche || p.nom)} cette saison.</div>`; return; }
+  const jauges = Object.entries(e.jauges).map(([k, v]) => {
+    const pv = prev && prev.jauges ? prev.jauges[k] : null;
+    const delta = v != null && pv != null && v !== pv ? ` <span class="${v > pv ? 'sp-up' : 'sp-down'}">${v > pv ? '+' : ''}${v - pv}</span>` : '';
+    return `<div class="sp-g"><span>${spEsc(k)}</span>
+      <div class="sp-bar">${v != null ? `<i style="width:${v}%"></i>` : ''}${pv != null ? `<em style="left:${pv}%"></em>` : ''}</div>
+      <span class="sp-gv">${v ?? '–'}${delta}</span></div>`;
+  }).join('');
+  const lignes = e.toutes.map(c => `<tr>
+      <td>${spEsc(c.dateTxt)}${c.div !== p.division ? `<span class="sp-tag">pige ${SP_DIV_LABEL[c.div] || ''}</span>` : ''}</td>
+      <td class="n">P${c.res}</td><td class="n">${c.qualif != null ? 'P' + c.qualif : 'nq'}</td>
+      <td>${c.tour ? 'Oui' : 'Non'}</td><td class="n">${c.x}x</td></tr>`).join('');
+  const li = arr => (arr || []).map(t => `<li>${spEsc(t)}</li>`).join('');
+  zone.innerHTML = `
+    <div class="sp-card">
+      <div class="sp-head">
+        <div>
+          <div class="sp-eyebrow">${spEsc(p.titre)}</div>
+          <div class="sp-name">${spEsc(p.nom_affiche || p.nom)}</div>
+          <div class="sp-chips">
+            <span class="sp-chip div" style="background:${SP_DIV_COLORS[p.division]}">${spEsc(p.division_label)}</span>
+            <span class="sp-chip">Briefing ${s.briefing}/${s.courses}</span>
+          </div>
+        </div>
+        <div class="sp-rank"><b>${e.rang ? 'P' + e.rang : '–'}</b><span>hiérarchie Meatball</span></div>
+      </div>
+      <p class="sp-resume">${spEsc(p.resume)}</p>
+      <div class="sp-stats">
+        <div class="sp-stat"><b>${s.courses}</b><span>courses</span></div>
+        <div class="sp-stat"><b>${s.moy_res}</b><span>arrivée moyenne</span></div>
+        <div class="sp-stat"><b>P${s.meilleur}</b><span>meilleur résultat</span></div>
+        <div class="sp-stat"><b>${s.top10}</b><span>tops 10</span></div>
+        <div class="sp-stat"><b>${s.moy_qualif ?? '–'}</b><span>qualif moyenne${s.nq ? ' · ' + s.nq + ' nq' : ''}</span></div>
+        <div class="sp-stat"><b>${s.moy_x}x</b><span>incidents / course</span></div>
+      </div>
+      <div class="sp-charts">
+        <div>
+          <div class="sp-h">Arrivée, qualif et tour du leader</div>
+          <div class="sp-chart" id="sp-chart-pos">
+            ${spChartPositions(e.m)}
+            <div class="sp-legend">
+              <span><i style="width:18px;height:3px;background:#FF5A1F;border-radius:2px"></i>Arrivée</span>
+              <span><i style="width:9px;height:9px;background:#B8BEC7;transform:rotate(45deg)"></i>Qualif</span>
+              <span><i style="width:11px;height:11px;border-radius:50%;background:#FF5A1F"></i>Dans le tour du leader</span>
+              <span><i style="width:11px;height:11px;border-radius:50%;border:2.5px solid #FF5A1F;box-sizing:border-box"></i>Hors du tour</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div class="sp-h">Incidents par course</div>
+          <div class="sp-chart" id="sp-chart-x">${spChartIncidents(e.m)}</div>
+        </div>
+      </div>
+      <div>
+        <div class="sp-h">Jauges</div>
+        <div class="sp-gauges">${jauges}</div>
+        ${prev ? '<div class="sp-note">Trait vertical : valeur de la saison précédente.</div>' : ''}
+      </div>
+      <div class="sp-cols">
+        <div><div class="sp-h">Points forts</div><ul class="sp-list">${li(p.forces)}</ul></div>
+        <div><div class="sp-h">Axes de progression</div><ul class="sp-list">${li(p.axes)}</ul></div>
+      </div>
+      <div class="sp-conseils"><div class="sp-h">Conseils pour progresser</div><ol>${li(p.conseils)}</ol></div>
+      <div>
+        <div class="sp-h">Détail des courses</div>
+        <div class="sp-tablewrap"><table class="sp-table">
+          <thead><tr><th>Date</th><th style="text-align:right">Arrivée</th><th style="text-align:right">Qualif</th><th>Dans le tour</th><th style="text-align:right">Incidents</th></tr></thead>
+          <tbody>${lignes}</tbody></table></div>
+        <div class="sp-note">Graphiques et moyennes sur la division principale. Les piges apparaissent uniquement dans ce tableau.</div>
+      </div>
+      <div class="sp-bravo"><div class="sp-flag" aria-hidden="true"></div><p>${spEsc(p.felicitations)}</p></div>
+    </div>`;
+  spBindHover(zone.querySelector('#sp-chart-pos'), e.m);
+  spBindHover(zone.querySelector('#sp-chart-x'), e.m);
+}
+
+function renderSuiviPilotes() {
+  const zone = document.getElementById('sp-content');
+  if (!_sp.data || !_sp.data.saisons || !_sp.data.saisons.length) return;
+  const saison = _sp.data.saisons[_sp.saisonIdx];
+  const classement = spClassement(saison);
+  if (_sp.vue !== 'hierarchie' && !classement.some(e => e.p.nom === _sp.vue)) _sp.vue = 'hierarchie';
+  spRenderSubtabs(classement);
+  if (_sp.vue === 'hierarchie') { spRenderHierarchie(classement, zone); return; }
+  const e = classement.find(x => x.p.nom === _sp.vue);
+  const saisonPrev = _sp.saisonIdx > 0 ? _sp.data.saisons[_sp.saisonIdx - 1] : null;
+  const pPrev = saisonPrev ? saisonPrev.pilotes.find(x => x.nom === e.p.nom) : null;
+  spRenderProfil(e, pPrev ? spCalcul(saisonPrev, pPrev) : null, zone);
+}
+
+async function loadSuiviPilotes() {
+  const zone = document.getElementById('sp-content');
+  try {
+    const res = await fetch('profils-pilotes.json', { cache: 'no-cache' });
+    if (!res.ok) throw new Error('profils-pilotes.json introuvable (code ' + res.status + ')');
+    _sp.data = await res.json();
+  } catch (err) {
+    zone.innerHTML = `<div class="state-msg error">Impossible de charger les profils : ${spEsc(err.message)}</div>`;
+    return;
+  }
+  try {
+    _sp.rows = spRowsToCourses(await fetchSheetTabCSVByGid('1015066806'));
+  } catch (err) {
+    console.error('RESULTATS LIGUE indisponible, courses figées du JSON utilisées :', err.message);
+    _sp.rows = null;
+  }
+  const saisons = _sp.data.saisons;
+  if (_sp.saisonIdx >= saisons.length || !_sp.seasonInit) { _sp.saisonIdx = saisons.length - 1; _sp.seasonInit = true; }
+  const sel = document.getElementById('sp-saison');
+  sel.innerHTML = saisons.map((s, i) => `<option value="${i}">${spEsc(s.label)}</option>`).join('');
+  sel.value = _sp.saisonIdx;
+  sel.onchange = () => { _sp.saisonIdx = parseInt(sel.value, 10); renderSuiviPilotes(); };
+  document.getElementById('sp-maj').textContent = 'Profils rédigés le ' + saisons[_sp.saisonIdx].maj.split('-').reverse().join('/');
+  renderSuiviPilotes();
+}
+
 async function loadAll() {
   document.getElementById('lastUpdate').textContent = 'Chargement...';
-  await Promise.all([loadRanking(), loadGrades(), loadResultats(), loadRecords(), loadCartes(), loadRaceStatsLigue()]);
+  await Promise.all([loadRanking(), loadGrades(), loadResultats(), loadRecords(), loadCartes(), loadRaceStatsLigue(), loadSuiviPilotes()]);
   const now = new Date();
   document.getElementById('lastUpdate').textContent =
     'Mis à jour ' + now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
