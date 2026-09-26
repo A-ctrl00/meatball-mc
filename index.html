@@ -1545,9 +1545,7 @@
   <div class="tab-nav">
     <button class="tab-btn active" data-tab="news">News</button>
     <button class="tab-btn" data-tab="ranking">Power Ranking</button>
-    <button class="tab-btn" data-tab="resultats">Résultats</button>
     <button class="tab-btn" data-tab="chapitre">Le Convoi</button>
-    <button class="tab-btn" data-tab="records">Records</button>
     <button class="tab-btn" data-tab="tutos" id="tabBtnTutos" style="display:none;">Les Tutos</button>
     <button class="tab-btn" data-tab="ressources" id="tabBtnRessources" style="display:none;">Ressources Graphiques</button>
     <button class="tab-btn" data-tab="suivi">Suivi des Pilotes</button>
@@ -1845,12 +1843,6 @@
       </section>
     </div>
 
-    <div class="tab-panel" id="tab-resultats">
-      <section>
-        <div class="section-title">Résultats</div>
-        <div class="feed-list" id="resultats-list"><div class="state-msg">Chargement des résultats...</div></div>
-      </section>
-    </div>
 
     <div class="tab-panel" id="tab-chapitre">
       <section>
@@ -1859,12 +1851,6 @@
       </section>
     </div>
 
-    <div class="tab-panel" id="tab-records">
-      <section>
-        <div class="section-title">Records</div>
-        <div class="feed-list" id="records-list"><div class="state-msg">Chargement des records...</div></div>
-      </section>
-    </div>
 
     <div class="tab-panel" id="tab-tutos">
       <section>
@@ -2902,8 +2888,10 @@ async function loadResultats() {
   const list = document.getElementById('resultats-list');
   try {
     const rows = await fetchSheetTab('RESULTATS');
-    list.innerHTML = '';
     renderIRatingChart(rows);
+    // L'onglet Résultats a été retiré du site : seul le graphique iRating (Power Ranking) utilise encore ces données.
+    if (!list) return;
+    list.innerHTML = '';
 
     // rows[0] est l'ID Message (colonne technique, pas affichée) ; on affiche du plus récent au plus ancien
     rows.slice().reverse().forEach(row => {
@@ -2935,6 +2923,7 @@ async function loadResultats() {
       list.innerHTML = '<div class="state-msg">Aucun résultat pour le moment.</div>';
     }
   } catch (err) {
+    if (!list) { console.error('Impossible de charger les résultats :', err.message); return; }
     list.innerHTML = `<div class="state-msg error">Impossible de charger les résultats : ${err.message}</div>`;
   }
 }
@@ -3394,7 +3383,7 @@ async function loadSuiviPilotes() {
 
 async function loadAll() {
   document.getElementById('lastUpdate').textContent = 'Chargement...';
-  await Promise.all([loadRanking(), loadGrades(), loadResultats(), loadRecords(), loadCartes(), loadRaceStatsLigue(), loadSuiviPilotes()]);
+  await Promise.all([loadRanking(), loadGrades(), loadResultats(), loadCartes(), loadRaceStatsLigue(), loadSuiviPilotes()]);
   const now = new Date();
   document.getElementById('lastUpdate').textContent =
     'Mis à jour ' + now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
