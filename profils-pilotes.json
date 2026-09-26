@@ -361,7 +361,7 @@
           "nom": "Alexis Joube",
           "nom_affiche": "Alexis Joube",
           "division": 2,
-          "division_label": "IFRN 2 · Division B",
+          "division_label": "IFRN 2 · Access",
           "regularite": 83,
           "stats": {
             "courses": 4,
@@ -439,11 +439,11 @@
             }
           ],
           "titre": "Le long run",
-          "resume": "Après un Daytona manqué, une montée en puissance nette : 4e, 3e puis 2e en division B, et une victoire en pige truck. Souvent parmi les plus rapides en course, et parmi les meilleurs sur la durée. Le point faible est clair : les qualifications.",
+          "resume": "Après un Daytona manqué, une montée en puissance nette : 4e, 3e puis 2e en Access, et une victoire en pige truck. Souvent parmi les plus rapides en course, et parmi les meilleurs sur la durée. Le point faible est clair : les qualifications.",
           "forces": [
             "Meilleur long run du plateau à plusieurs reprises",
             "Stratégie pneus payante en truck à Bristol : dans le rythme des meilleurs avec 100 tours de plus sur ses pneus, puis pneus neufs à 20 tours de la fin pour doubler tout le monde et gagner",
-            "Progression constante en division B",
+            "Progression constante en Access",
             "Assiduité parfaite aux briefings (4 sur 4)"
           ],
           "axes": [
@@ -455,14 +455,14 @@
             "Préparer une stratégie de pit avec deux scénarios avant chaque course (jaune tôt, jaune tard) pour éviter de subir un relais entier sur des pneus usés.",
             "Face à un pilote agressif, noter ce qui a manqué pour passer à Bristol et le travailler en course IA."
           ],
-          "felicitations": "Trois tops 4 d'affilée en division B, une victoire en truck à Bristol. La course à la montée est bien lancée.",
+          "felicitations": "Trois tops 4 d'affilée en Access, une victoire en truck à Bristol. La course à la montée est bien lancée.",
           "rang": 3
         },
         {
           "nom": "Johann Bourgouin",
           "nom_affiche": "Johann Bourgouin",
           "division": 2,
-          "division_label": "IFRN 2 · Division B",
+          "division_label": "IFRN 2 · Access",
           "regularite": 42,
           "stats": {
             "courses": 4,
@@ -522,7 +522,7 @@
             }
           ],
           "titre": "Le sous-marin en plongée",
-          "resume": "Début de saison compliqué en division B, avec des crashs qui n'étaient pas de son fait. Les remarques reviennent sur le même point : trop de prudence, un manque de confiance dans la voiture et un freinage plus précoce que le reste du peloton qui l'expose aux touchettes par l'arrière.",
+          "resume": "Début de saison compliqué en Access, avec des crashs qui n'étaient pas de son fait. Les remarques reviennent sur le même point : trop de prudence, un manque de confiance dans la voiture et un freinage plus précoce que le reste du peloton qui l'expose aux touchettes par l'arrière.",
           "forces": [
             "Assure les points et évite de provoquer les accidents",
             "Capable de bien se qualifier (9e à Daytona)"
