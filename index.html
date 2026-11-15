@@ -1406,6 +1406,39 @@
   .row .pos, .row .score { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 24px; color: #fff; }
   .row.leader .pos, .row.leader .score { color: #ff8a4c; }
   .row .driver-name { font-weight: 600; font-size: 16px; }
+  .pr-row { cursor: pointer; grid-template-columns: 54px 1fr 120px; }
+  .pr-row:hover { background: rgba(255,255,255,0.03); }
+  .pr-qui { min-width: 0; }
+  .pr-stats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .pr-chip { font-size: 12px; color: var(--text-dim); background: rgba(255,255,255,0.06); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
+  .pr-chip b { color: #fff; font-weight: 700; }
+  .pr-chip.fort { background: rgba(255,106,26,0.18); }
+  .pr-chip.fort b { color: #ffb38a; }
+  .pr-fleche { display: inline-block; margin-left: 10px; font-size: 14px; color: var(--text-dim); transition: transform .2s; vertical-align: middle; }
+  .pr-ouvert .pr-fleche { transform: rotate(180deg); }
+  .pr-detail { display: none; padding: 4px 0 22px 54px; }
+  .pr-somme { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14px; color: var(--text-dim); margin-bottom: 12px; }
+  .pr-somme b { color: #fff; font-family: 'Outfit', sans-serif; }
+  .pr-somme .pr-egal b { color: #ff8a4c; font-size: 17px; }
+  .pr-table-wrap { overflow-x: auto; }
+  .pr-table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  .pr-table th { text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-dim); padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .pr-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
+  .pr-table .pr-num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pr-table th:nth-child(n+3) { text-align: right; }
+  .pr-table .plus { color: #8fd18f; }
+  .pr-table .moins { color: #ff7b6b; }
+  .pr-table .zero { color: var(--text-dim); }
+  .pr-table .pr-tot { color: #fff; font-weight: 700; }
+  .pr-note { font-size: 12px; color: var(--text-dim); margin: 10px 0 0; }
+  .pr-astuce { color: var(--text-dim); font-size: 14px; margin: 0 0 12px; }
+  @media (max-width: 700px) {
+    .pr-row { grid-template-columns: 30px 1fr 64px; padding-left: 0; padding-right: 0; }
+    .pr-stats { gap: 4px; }
+    .pr-chip { font-size: 11px; padding: 2px 8px; }
+    .pr-fleche { margin-left: 4px; }
+    .pr-detail { padding-left: 0; }
+  }
   .grade-card { background: var(--panel-2); border: 0; overflow: hidden; position: relative; }
   .grade-card::before { display: none; }
   .grade-car { width: calc(100% + 40px); margin: -20px -20px 14px; height: 150px; object-fit: cover; display: block; }
@@ -1928,6 +1961,7 @@
           <div class="stats-legend-item"><strong>Boost division</strong> — Léger bonus supplémentaire pour les pilotes évoluant dans une division supérieure, car le niveau y est plus relevé et donc plus dur à performer.</div>
           <div class="stats-legend-item">💡 <strong>Pour les rookies</strong> : le plus gros levier de points, c'est de finir dans le tour du leader sans accrocher personne — ça vaut largement plus qu'une prise de risque pour grappiller 2-3 places. Finir propre en division inférieure rapporte une belle place au classement.</div>
         </div>
+        <p class="pr-astuce">Clique sur un pilote pour voir le détail de ses 5 dernières courses et comment ses points sont calculés.</p>
         <div class="board" id="board"><div class="state-msg">Chargement du classement...</div></div>
       </section>
     </div>
@@ -2513,13 +2547,21 @@ async function loadRanking() {
       if (!membre) return;
       _rankingByName[membre] = { rang, points };
       const el = document.createElement('div');
-      el.className = 'row' + (idx === 0 ? ' leader' : '');
+      el.className = 'row pr-row' + (idx === 0 ? ' leader' : '');
+      el.dataset.nom = membre;
       el.innerHTML = `
         <div class="pos">${rang}</div>
-        <div class="driver-name">${membre}</div>
-        <div class="score">${points}</div>
+        <div class="pr-qui"><div class="driver-name">${membre}</div><div class="pr-stats"></div></div>
+        <div class="score">${points}<span class="pr-fleche" aria-hidden="true">▾</span></div>
       `;
+      const det = document.createElement('div');
+      det.className = 'pr-detail';
+      el.addEventListener('click', () => {
+        const ouvert = el.classList.toggle('pr-ouvert');
+        det.style.display = ouvert ? 'block' : 'none';
+      });
       board.appendChild(el);
+      board.appendChild(det);
     });
     if (!board.children.length) {
       board.innerHTML = '<div class="state-msg">Aucune donnée trouvée dans l’onglet RANKING.</div>';
@@ -2704,10 +2746,107 @@ async function loadCartes() {
 }
 
 
+// Calcul identique au sheet (CALCUL_POINTS_DETAIL + RANKING)
+function mcBaremePosition(div, pos) {
+  const t = { 'Ifrn 2': [28, 26, 24, 22, 18, 13], 'Ifrn 3': [26, 24, 22, 20, 16, 11], 'Ifrn 4': [25, 23, 21, 19, 15, 10] }[div]
+    || (['Ifrn 1', 'SBG', 'Virtual Oval', 'HRL ARCA', 'HRL Grand National'].includes(div) ? [30, 28, 26, 25, 20, 15] : null);
+  if (!t || isNaN(pos)) return 0;
+  return pos === 1 ? t[0] : pos <= 2 ? t[1] : pos <= 3 ? t[2] : pos <= 5 ? t[3] : pos <= 10 ? t[4] : t[5];
+}
+function mcDetailRanking(rows, parseDate) {
+  // rows : [date, pilote, division, résultat, qualif, dans le tour, briefing, X, ..., (index 26) points position]
+  const moyX = {};
+  rows.forEach(r => { const x = parseFloat(r[7]); if (r[1] && !isNaN(x)) { const m = moyX[r[1]] = moyX[r[1]] || { s: 0, n: 0 }; m.s += x; m.n++; } });
+  const parPilote = {};
+  rows.forEach((r, i) => {
+    if (!r[1]) return;
+    const d = parseDate(r[0]); if (!d) return;
+    const pos = parseFloat(r[3]);
+    const xBrut = String(r[7] == null ? '' : r[7]).trim();
+    const xEstime = xBrut === '';
+    const m = moyX[r[1]];
+    const x = xEstime ? (m ? Math.round(m.s / m.n) : 0) : parseFloat(xBrut) || 0;
+    const ptsPos = r[26] !== undefined && String(r[26]).trim() !== '' ? parseFloat(r[26]) || 0 : mcBaremePosition(String(r[2]).trim(), pos);
+    const c = {
+      i, date: d, dateTxt: r[0], division: String(r[2] || '').trim(), pos, qualif: r[4],
+      fiab: r[5] === 'Oui' ? 50 : 0, disc: r[6] === 'Oui' ? 20 : 0, ptsPos, x, xEstime, penX: -2 * x,
+    };
+    c.total = c.fiab + c.disc + c.ptsPos + c.penX;
+    (parPilote[r[1]] = parPilote[r[1]] || []).push(c);
+  });
+  const res = {};
+  Object.keys(parPilote).forEach(n => {
+    const cinq = parPilote[n].sort((a, b) => b.date - a.date || a.i - b.i).slice(0, 5);
+    const pos = cinq.map(c => c.pos).filter(p => !isNaN(p));
+    res[n] = {
+      courses: cinq,
+      total: cinq.reduce((s, c) => s + c.total, 0),
+      victoires: pos.filter(p => p === 1).length,
+      podiums: pos.filter(p => p <= 3).length,
+      top5: pos.filter(p => p <= 5).length,
+      dansTour: cinq.filter(c => c.fiab).length,
+      x: cinq.reduce((s, c) => s + c.x, 0),
+      moyPos: pos.length ? pos.reduce((s, p) => s + p, 0) / pos.length : null,
+      fiab: cinq.reduce((s, c) => s + c.fiab, 0), disc: cinq.reduce((s, c) => s + c.disc, 0),
+      ptsPos: cinq.reduce((s, c) => s + c.ptsPos, 0), penX: cinq.reduce((s, c) => s + c.penX, 0),
+    };
+  });
+  return res;
+}
+
+function mcNomLigue(code) { const d = MC_DIVISIONS.find(x => x.code === code); return d ? d.nom : code; }
+function mcSigne(n) { return n > 0 ? '+' + n : String(n); }
+
+function mcEnrichirRanking() {
+  const det = mcDetailRanking(window._ligueRows || [], mcDate);
+  document.querySelectorAll('#board .pr-row').forEach(el => {
+    const d = det[el.dataset.nom];
+    const stats = el.querySelector('.pr-stats');
+    const panneau = el.nextElementSibling;
+    if (!d || !stats || !panneau) return;
+    const n = d.courses.length;
+    const chip = (v, t, fort) => `<span class="pr-chip${fort && v ? ' fort' : ''}"><b>${v}</b> ${t}</span>`;
+    stats.innerHTML =
+      chip(n, n > 1 ? 'courses' : 'course') +
+      chip(d.victoires, d.victoires > 1 ? 'victoires' : 'victoire', true) +
+      chip(d.podiums, d.podiums > 1 ? 'podiums' : 'podium', true) +
+      chip(d.top5, 'top 5') +
+      chip(d.dansTour + '/' + n, 'dans le tour') +
+      chip(d.moyPos === null ? '–' : d.moyPos.toFixed(1).replace('.', ','), 'pos. moy.') +
+      chip(d.x, 'X');
+    const lignes = d.courses.map(c => `
+      <tr>
+        <td>${mcEsc(c.dateTxt)}</td>
+        <td>${mcEsc(mcNomLigue(c.division))}</td>
+        <td class="pr-num">${isNaN(c.pos) ? '–' : 'P' + c.pos}</td>
+        <td class="pr-num ${c.fiab ? 'plus' : 'zero'}">${c.fiab ? '+50' : '0'}</td>
+        <td class="pr-num ${c.disc ? 'plus' : 'zero'}">${c.disc ? '+20' : '0'}</td>
+        <td class="pr-num plus">+${c.ptsPos}</td>
+        <td class="pr-num ${c.penX ? 'moins' : 'zero'}" title="${c.xEstime ? 'X non publié par la ligue : moyenne du pilote' : c.x + ' incidents'}">${c.penX ? c.penX : '0'}${c.xEstime ? '*' : ''}</td>
+        <td class="pr-num pr-tot">${c.total}</td>
+      </tr>`).join('');
+    const estime = d.courses.some(c => c.xEstime);
+    panneau.innerHTML = `
+      <div class="pr-somme">
+        <span><b>${mcSigne(d.fiab)}</b> fiabilité</span>
+        <span><b>${mcSigne(d.disc)}</b> discipline</span>
+        <span><b>${mcSigne(d.ptsPos)}</b> position</span>
+        <span><b>${d.penX}</b> pénalité X</span>
+        <span class="pr-egal">= <b>${d.total}</b> pts</span>
+      </div>
+      <div class="pr-table-wrap"><table class="pr-table">
+        <thead><tr><th>Date</th><th>Ligue</th><th>Arrivée</th><th>Dans le tour</th><th>Briefing</th><th>Position</th><th>X</th><th>Total</th></tr></thead>
+        <tbody>${lignes}</tbody>
+      </table></div>
+      ${estime ? '<p class="pr-note">* Ligue qui ne publie pas les incidents : la pénalité utilise la moyenne de X du pilote, pour ne pas donner de bonus.</p>' : ''}`;
+  });
+}
+
 async function loadAll() {
   document.getElementById('lastUpdate').textContent = 'Chargement...';
   await Promise.all([loadRanking(), loadGrades(), loadCartes(), loadRaceStatsLigue()]);
   if (typeof mcRenderData === 'function') mcRenderData();
+  try { mcEnrichirRanking(); } catch (e) { console.error('Détail du Power Ranking :', e); }
   const now = new Date();
   document.getElementById('lastUpdate').textContent =
     'Mis à jour ' + now.toLocaleDateString('fr-FR') + ' à ' + now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute: '2-digit'});
