@@ -3612,7 +3612,9 @@ function mcRenderRace() {
   const d = new Date(course[0] + 'T00:00:00');
   const j = Math.round((d - auj) / 86400000);
   const div = MC_DIVISIONS.find(x => x.code === course[1]) || { nom: course[1] };
-  const pilotes = mcPilotesDivision(course[1], new Date(2026, 9, 1)).slice(0, 4);
+  // titulaires seulement : en IFRN, un pilote dont la division principale est ailleurs est pigiste
+  const pilotes = mcPilotesDivision(course[1], new Date(2026, 9, 1))
+    .filter(n => !String(course[1]).startsWith('Ifrn') || mcDivisionPrincipale(n) === course[1]);
   const img = (_mcArticles[1] || _mcArticles[0] || {}).img || '';
   el.innerHTML = `
     <div class="mc-race-main">
