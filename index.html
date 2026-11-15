@@ -1518,6 +1518,7 @@
   .mc-divs-right { flex: 1 1 260px; display: flex; flex-direction: column; gap: 12px; }
   .mc-divs-right .lbl { font-size: 15px; color: var(--text-dim); }
   .mc-divs-right .pil { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 23px; line-height: 1.15; }
+  .mc-pige { display: inline-block; vertical-align: middle; margin-left: 8px; padding: 3px 10px; border-radius: 999px; background: var(--panel); color: #ffb38a; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
   .mc-stats { border-top: 1px solid var(--line); padding-top: 16px; margin-top: 6px; display: flex; gap: 28px; }
   .mc-stats div { display: flex; flex-direction: column; gap: 4px; }
   .mc-stats b { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 30px; }
@@ -3682,12 +3683,26 @@ function mcRenderData() {
   mcDecorConvoi();
 }
 
+// Division IFRN principale d'un pilote : celle où il a couru le plus cette saison.
+// Un pilote engagé dans une autre division IFRN que la sienne y est pigiste.
+function mcDivisionPrincipale(nom) {
+  const debut = new Date(2026, 7, 25), compte = {};
+  mcLigneRows().forEach(r => {
+    const code = (r[2] || '').trim();
+    if (r[1] !== nom || !code.startsWith('Ifrn')) return;
+    const d = mcDate(r[0]); if (d && d < debut) return;
+    compte[code] = (compte[code] || 0) + 1;
+  });
+  return Object.keys(compte).sort((a, b) => compte[b] - compte[a])[0] || null;
+}
+
 function mcRenderDivision() {
   const el = document.getElementById('mcDivs');
   if (!el) return;
   const D = MC_DIVISIONS[_mcDiv], N = MC_DIVISIONS[(_mcDiv + 1) % MC_DIVISIONS.length];
   const depuis = D.code.startsWith('Ifrn') ? new Date(2026, 7, 25) : null;
-  const pilotes = mcPilotesDivision(D.code, depuis);
+  const pigiste = n => D.code.startsWith('Ifrn') && mcDivisionPrincipale(n) !== D.code;
+  const pilotes = mcPilotesDivision(D.code, depuis).sort((a, b) => pigiste(a) - pigiste(b));
   let v = 0, p = 0;
   mcLigneRows().forEach(r => {
     if ((r[2] || '').trim() !== D.code) return;
@@ -3712,7 +3727,7 @@ function mcRenderDivision() {
       <div class="mc-divs-right">
         <span class="lbl">${mcEsc(D.nom)} · ${mcEsc(D.sous)}</span>
         <span class="lbl">Pilotes</span>
-        ${pilotes.length ? pilotes.slice(0, 5).map(n => `<span class="pil">${mcEsc(n)}</span>`).join('') : '<span class="mc-note">Aucun résultat pour l\'instant.</span>'}
+        ${pilotes.length ? pilotes.slice(0, 6).map(n => `<span class="pil">${mcEsc(n)}${pigiste(n) ? ' <span class="mc-pige">Pigiste</span>' : ''}</span>`).join('') : '<span class="mc-note">Aucun résultat pour l\'instant.</span>'}
         <div class="mc-stats">
           <div><span class="lbl">Victoires</span><b>${v}</b></div>
           <div class="sep"></div>
