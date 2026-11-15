@@ -3427,7 +3427,7 @@ const MC_DIVISIONS = [
   { code: 'Ifrn 2', grand: ['IFRN', 'ACCESS'], nom: 'IFRN Access', sous: 'IFRN 2' },
   { code: 'Ifrn 3', grand: ['IFRN', 'IGNITE'], nom: 'IFRN Ignite', sous: 'IFRN 3, trucks' },
   { code: 'Ifrn 4', grand: ['IFRN', 'ROOKIE'], nom: 'IFRN Rookie', sous: 'IFRN 4' },
-  { code: 'HRL ARCA', grand: ['HRL', 'ARCA'], nom: 'HRL ARCA', sous: 'Ligue HRL' },
+  { code: 'HRL ARCA', grand: ['HRL', 'ARCA'], nom: 'HRL ARCA', sous: 'Ligue HRL', voiture: 'Maxime Toffolet' },
   { code: 'HRL Grand National', grand: ['HRL', 'GRAND NATIONAL'], nom: 'HRL Grand National', sous: 'Ligue HRL' },
   { code: 'SBG', grand: ['SBG', 'LEGENDS'], nom: 'SBG Legends', sous: 'Saison 5, juillet à août 2026' },
   { code: 'Virtual Oval', grand: ['VIRTUAL', 'OVAL'], nom: 'Virtual Oval', sous: 'Ligue Virtual Oval' },
@@ -3709,7 +3709,8 @@ function mcRenderDivision() {
     const d = mcDate(r[0]); if (depuis && d && d < depuis) return;
     const res = parseFloat(r[3]); if (res === 1) v++; if (res >= 1 && res <= 3) p++;
   });
-  const avecVoiture = pilotes.map(n => (_pilotsByName[n] || {}).carImg).find(Boolean);
+  // voiture affichée : celle du pilote choisi pour la ligue (champ voiture), sinon le premier pilote qui en a une
+  const avecVoiture = (D.voiture && (_pilotsByName[D.voiture] || {}).carImg) || pilotes.map(n => (_pilotsByName[n] || {}).carImg).find(Boolean);
   const img = avecVoiture || ((_mcArticles[_mcDiv % Math.max(1, _mcArticles.length)] || {}).img) || '';
   const fleche = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   el.innerHTML = `
