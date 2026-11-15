@@ -1510,10 +1510,11 @@
   .mc-divs-body { display: flex; flex-wrap: wrap; align-items: center; gap: 44px; }
   .mc-divs-left { flex: 999 1 620px; min-width: 0; display: flex; flex-direction: column; gap: 16px; }
   .mc-divs-stage { position: relative; min-height: 330px; display: flex; align-items: center; }
-  .mc-big { position: relative; z-index: 2; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(80px, 12vw, 200px); line-height: 0.85; letter-spacing: -0.03em; text-shadow: 0 6px 30px rgba(0,10,22,0.6); }
+  .mc-big { position: relative; z-index: 2; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(64px, 9.5vw, 160px); line-height: 0.88; letter-spacing: -0.03em; text-shadow: 0 6px 30px rgba(0,10,22,0.6); }
   .mc-big em { font-style: normal; color: #ff6a1a; }
+  .mc-big em.long { font-size: 0.5em; }
   .mc-divs-stage img { position: absolute; z-index: 1; right: 0; bottom: -40px; width: min(56%, 520px); aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; box-shadow: 0 30px 60px rgba(0,0,0,0.55); }
-  .mc-next-div { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 54px; color: #34496a; padding-top: 28px; }
+  .mc-next-div { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 44px; color: #34496a; padding-top: 28px; }
   .mc-divs-right { flex: 1 1 260px; display: flex; flex-direction: column; gap: 12px; }
   .mc-divs-right .lbl { font-size: 15px; color: var(--text-dim); }
   .mc-divs-right .pil { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 23px; line-height: 1.15; }
@@ -3421,14 +3422,14 @@ const MC_CALENDRIER = [
   ['2026-12-17', 'Ifrn 4', 'Las Vegas 180', 'Las Vegas Motor Speedway', 16, 16],
 ];
 const MC_DIVISIONS = [
-  { code: 'Ifrn 1', grand: ['CU', 'P'], nom: 'IFRN Cup', sous: 'IFRN 1, élite du club' },
-  { code: 'Ifrn 2', grand: ['ACC', 'ESS'], nom: 'IFRN Access', sous: 'IFRN 2' },
-  { code: 'Ifrn 3', grand: ['IGN', 'ITE'], nom: 'IFRN Ignite', sous: 'IFRN 3, trucks' },
-  { code: 'Ifrn 4', grand: ['ROO', 'KIE'], nom: 'IFRN Rookie', sous: 'IFRN 4' },
-  { code: 'HRL ARCA', grand: ['AR', 'CA'], nom: 'HRL ARCA', sous: 'Ligue HRL' },
-  { code: 'HRL Grand National', grand: ['G', 'N'], nom: 'HRL Grand National', sous: 'Ligue HRL' },
-  { code: 'SBG', grand: ['SB', 'G'], nom: 'SBG Legends', sous: 'Saison 5, juillet à août 2026' },
-  { code: 'Virtual Oval', grand: ['OV', 'AL'], nom: 'Virtual Oval', sous: 'Ligue Virtual Oval' },
+  { code: 'Ifrn 1', grand: ['IFRN', 'CUP'], nom: 'IFRN Cup', sous: 'IFRN 1, élite du club' },
+  { code: 'Ifrn 2', grand: ['IFRN', 'ACCESS'], nom: 'IFRN Access', sous: 'IFRN 2' },
+  { code: 'Ifrn 3', grand: ['IFRN', 'IGNITE'], nom: 'IFRN Ignite', sous: 'IFRN 3, trucks' },
+  { code: 'Ifrn 4', grand: ['IFRN', 'ROOKIE'], nom: 'IFRN Rookie', sous: 'IFRN 4' },
+  { code: 'HRL ARCA', grand: ['HRL', 'ARCA'], nom: 'HRL ARCA', sous: 'Ligue HRL' },
+  { code: 'HRL Grand National', grand: ['HRL', 'GRAND NATIONAL'], nom: 'HRL Grand National', sous: 'Ligue HRL' },
+  { code: 'SBG', grand: ['SBG', 'LEGENDS'], nom: 'SBG Legends', sous: 'Saison 5, juillet à août 2026' },
+  { code: 'Virtual Oval', grand: ['VIRTUAL', 'OVAL'], nom: 'Virtual Oval', sous: 'Ligue Virtual Oval' },
 ];
 const MC_MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 const MC_JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
@@ -3702,10 +3703,10 @@ function mcRenderDivision() {
       <div class="mc-divs-left">
         <button type="button" class="mc-arrow" aria-label="Ligue précédente" onclick="mcDivision(-1)">${fleche('m3 10 5-5 5 5')}</button>
         <div class="mc-divs-stage">
-          <span class="mc-big">${D.grand[0]}<em>${D.grand[1]}</em></span>
+          <span class="mc-big">${D.grand[0]}<br><em class="${D.grand[1].length > 8 ? 'long' : ''}">${D.grand[1]}</em></span>
           ${img ? `<img src="${img}" alt="" referrerpolicy="no-referrer">` : ''}
         </div>
-        <span class="mc-next-div">${N.grand.join('')}</span>
+        <span class="mc-next-div">${N.grand.join(' ')}</span>
         <button type="button" class="mc-arrow" aria-label="Ligue suivante" onclick="mcDivision(1)">${fleche('m3 6 5 5 5-5')}</button>
       </div>
       <div class="mc-divs-right">
