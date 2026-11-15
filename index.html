@@ -3875,7 +3875,13 @@ function mcBuildHome() {
   _mcArticles = mcCollectArticles();
   const A = _mcArticles;
   const fleche = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const produits = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).slice(0, 12);
+  // Produits de la boutique dans un ordre aléatoire à chaque visite (mélange de Fisher-Yates)
+  const produits = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).slice();
+  for (let i = produits.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [produits[i], produits[j]] = [produits[j], produits[i]];
+  }
+  produits.splice(12);
   home.innerHTML = `
     <section class="mc-hero" aria-label="À la une">
       ${mcStory(A[0], 'big', true)}
