@@ -3799,10 +3799,13 @@ function mcGarage(dir) {
 }
 
 /** Onglet Le Convoi : tous les membres, du grade le plus haut au plus bas, en vitrine. */
+// Membres présents dans le sheet mais à ne pas afficher dans Le Convoi
+const MC_CONVOI_MASQUES = ['Arnaud Dehu'];
 function mcRenderConvoi() {
   const box = document.getElementById('mcConvoi');
   if (!box || typeof _gradesByName === 'undefined') return;
   const noms = Object.keys(_gradesByName)
+    .filter(n => !MC_CONVOI_MASQUES.includes(n))
     .sort((a, b) => rankOrderForGrade(_gradesByName[a].grade || '') - rankOrderForGrade(_gradesByName[b].grade || ''));
   if (!noms.length) return;
   box.innerHTML = noms.map(n => `<section class="mc-convoi-membre" aria-label="${mcEsc(n)}">${mcVitrineHTML(n)}</section>`).join('');
