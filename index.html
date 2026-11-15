@@ -3427,6 +3427,8 @@ const MC_DIVISIONS = [
   { code: 'Ifrn 4', grand: ['ROO', 'KIE'], nom: 'IFRN Rookie', sous: 'IFRN 4' },
   { code: 'HRL ARCA', grand: ['AR', 'CA'], nom: 'HRL ARCA', sous: 'Ligue HRL' },
   { code: 'HRL Grand National', grand: ['G', 'N'], nom: 'HRL Grand National', sous: 'Ligue HRL' },
+  { code: 'SBG', grand: ['SB', 'G'], nom: 'SBG Legends', sous: 'Saison 5, juillet à août 2026' },
+  { code: 'Virtual Oval', grand: ['OV', 'AL'], nom: 'Virtual Oval', sous: 'Ligue Virtual Oval' },
 ];
 const MC_MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 const MC_JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
@@ -3556,7 +3558,7 @@ function mcBuildHome() {
       <button type="button" class="mc-pill" onclick="mcTab('chapitre')">Découvrir l'équipe</button>
     </section>
 
-    <section class="mc-divs" id="mcDivs" aria-label="Nos divisions"></section>
+    <section class="mc-divs" id="mcDivs" aria-label="Nos ligues"></section>
 
     <section class="mc-allnews" aria-label="Toutes les actus">
       <h2 class="mc-h">Toutes les actus</h2>
@@ -3695,16 +3697,16 @@ function mcRenderDivision() {
   const img = avecVoiture || ((_mcArticles[_mcDiv % Math.max(1, _mcArticles.length)] || {}).img) || '';
   const fleche = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   el.innerHTML = `
-    <h2 class="mc-h">Nos divisions</h2>
+    <h2 class="mc-h">Nos ligues</h2>
     <div class="mc-divs-body">
       <div class="mc-divs-left">
-        <button type="button" class="mc-arrow" aria-label="Division précédente" onclick="mcDivision(-1)">${fleche('m3 10 5-5 5 5')}</button>
+        <button type="button" class="mc-arrow" aria-label="Ligue précédente" onclick="mcDivision(-1)">${fleche('m3 10 5-5 5 5')}</button>
         <div class="mc-divs-stage">
           <span class="mc-big">${D.grand[0]}<em>${D.grand[1]}</em></span>
           ${img ? `<img src="${img}" alt="" referrerpolicy="no-referrer">` : ''}
         </div>
         <span class="mc-next-div">${N.grand.join('')}</span>
-        <button type="button" class="mc-arrow" aria-label="Division suivante" onclick="mcDivision(1)">${fleche('m3 6 5 5 5-5')}</button>
+        <button type="button" class="mc-arrow" aria-label="Ligue suivante" onclick="mcDivision(1)">${fleche('m3 6 5 5 5-5')}</button>
       </div>
       <div class="mc-divs-right">
         <span class="lbl">${mcEsc(D.nom)} · ${mcEsc(D.sous)}</span>
