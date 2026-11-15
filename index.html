@@ -3762,10 +3762,13 @@ function mcVitrineHTML(nom, extra) {
   const s = mcStatsPilote(nom);
   const pos = rows.map(r => parseFloat(r[3])).filter(n => !isNaN(n));
   const moy = pos.length ? (pos.reduce((a, b) => a + b, 0) / pos.length).toFixed(1).replace('.', ',') : '–';
-  // Sans victoire ni podium : on montre le nombre de courses de ligue et la position moyenne
-  const stats = (s.v || s.p)
-    ? [['Victoires', s.v], ['Podiums', s.p]]
-    : [['Courses de ligue', rows.length || '–'], ['Position moyenne', moy]];
+  // Deux chiffres : victoires et podiums s'ils ne sont pas à 0, complétés par la position moyenne
+  // puis le nombre de courses de ligue
+  const stats = [];
+  if (s.v) stats.push(['Victoires', s.v]);
+  if (s.p) stats.push(['Podiums', s.p]);
+  if (stats.length < 2) stats.push(['Position moyenne', moy]);
+  if (stats.length < 2) stats.unshift(['Courses de ligue', rows.length || '–']);
   const nomJs = nom.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   return `
     <div class="mc-car${v.img ? '' : ' sans-img'}">
