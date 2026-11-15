@@ -2385,7 +2385,7 @@ function openPilotSheet(nom) {
         <div class="pilot-sheet-info-value">${g.prochaineEtape || '—'}</div>
       </div>
       <div class="pilot-sheet-info-box">
-        <div class="pilot-sheet-info-label">Ancienneté</div>
+        <div class="pilot-sheet-info-label">Expérience sur oval</div>
         <div class="pilot-sheet-info-value">${g.anciennete || '—'}</div>
       </div>
       <div class="pilot-sheet-info-box">
@@ -2606,7 +2606,7 @@ async function loadGrades() {
         </div>
         <div class="divisions">${divisionDots}</div>
         <div class="objective">${prochaineEtape || ''}</div>
-        <div class="card-footer"><span>Ancienneté</span><span>${anciennete || ''}</span></div>
+        <div class="card-footer"><span>Expérience sur oval</span><span>${anciennete || ''}</span></div>
       `;
       gradesEl.appendChild(card);
     });
