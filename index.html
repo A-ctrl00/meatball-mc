@@ -1418,6 +1418,13 @@
   .mc-car-stats > div + div { border-left: 1px solid var(--line); padding-left: 22px; }
   .mc-car-stats b { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 30px; }
   .mc-car-info .mc-pill { align-self: flex-start; }
+  .mc-car-stats b.petit { font-size: 16px; line-height: 1.25; margin-top: 6px; }
+  .mc-car-grade { display: flex; align-items: center; gap: 10px; margin: 6px 0 4px; }
+  .mc-car-grade .grade-patch { width: 34px; height: 34px; }
+  .mc-car.sans-img .mc-car-scene { padding-top: 0; min-height: clamp(130px, 19vw, 300px); display: flex; align-items: center; }
+  .mc-car.sans-img .mc-car-grand { position: static; justify-content: flex-start; gap: .18em; }
+  .mc-convoi-membre { padding: clamp(28px, 4vw, 56px) 0; border-top: 1px solid var(--line); }
+  .mc-convoi-membre:first-child { border-top: 0; padding-top: 0; }
   @media (max-width: 860px) {
     .mc-car { grid-template-columns: 1fr; }
   }
@@ -2062,6 +2069,7 @@
         <div class="convoi-hero" role="img" aria-label="La Mustang 00 d'Alexis Joube dans le garage du Meatball MC">
           <h1 class="convoi-hero-titre">Le<br>Convoi</h1>
         </div>
+        <div id="mcConvoi"></div>
         <div class="grades" id="grades"><div class="state-msg">Chargement des membres...</div></div>
       </section>
     </div>
@@ -3739,35 +3747,63 @@ const MC_VOITURES = [
   { pilote: 'Alexis Joube', grand: 'AJ', num: '00', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-00-joube.jpg' },
 ];
 let _mcVoitI = 0;
+function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(m => m[0].toUpperCase()).join('').slice(0, 3); }
+
+/** Bloc de présentation façon RB22 pour un pilote (avec ou sans rendu de voiture). */
+function mcVitrineHTML(nom, extra) {
+  const v = MC_VOITURES.find(x => x.pilote === nom) || {};
+  const carte = (typeof _pilotsByName !== 'undefined' && _pilotsByName[nom]) || {};
+  const g = (typeof _gradesByName !== 'undefined' && _gradesByName[nom]) || {};
+  const num = String(v.num || carte.num || '').trim();
+  const rows = mcLigneRows().filter(r => r[1] === nom);
+  const s = mcStatsPilote(nom);
+  const grade = g.grade || '';
+  const patch = grade && typeof patchForGrade === 'function' ? patchForGrade(grade) : '';
+  const tier = grade && typeof tierForGrade === 'function' ? tierForGrade(grade) : '';
+  const nomJs = nom.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+  return `
+    <div class="mc-car${v.img ? '' : ' sans-img'}">
+      <div class="mc-car-scene">
+        <div class="mc-car-grand" aria-hidden="true"><span>${mcEsc(v.grand || mcInitiales(nom))}</span>${num ? `<span class="o">${mcEsc(num)}</span>` : ''}</div>
+        ${v.img ? `<img class="mc-car-img" src="${v.img}" alt="${mcEsc((v.modele || 'Voiture') + (num ? ' n°' + num : '') + ' de ' + nom)}" loading="lazy">` : ''}
+      </div>
+      <div class="mc-car-info">
+        <span class="l">Le pilote</span>
+        <b class="nm">${mcEsc(nom)}</b>
+        ${grade ? `<div class="mc-car-grade">${patch ? `<img class="grade-patch" src="${patch}" alt="">` : ''}<span class="grade-badge tier-${tier}">${mcEsc(grade)}</span></div>` : ''}
+        ${v.modele || num ? `<span class="l">${[v.modele, num ? '#' + num : ''].filter(Boolean).map(mcEsc).join(' · ')}</span>` : ''}
+        <div class="mc-car-stats">
+          <div><span class="l">Victoires</span><b>${rows.length ? s.v : '–'}</b></div>
+          <div><span class="l">Podiums</span><b>${rows.length ? s.p : '–'}</b></div>
+          ${g.anciennete ? `<div><span class="l">Expérience</span><b class="petit">${mcEsc(g.anciennete)}</b></div>` : ''}
+        </div>
+        <button type="button" class="mc-pill small" onclick="openPilotSheet('${nomJs}')">Plus de détails</button>
+        ${extra || ''}
+      </div>
+    </div>`;
+}
+
 function mcGarage(dir) {
   if (dir) _mcVoitI = (_mcVoitI + dir + MC_VOITURES.length) % MC_VOITURES.length;
   const box = document.getElementById('mcGarage');
   if (!box || !MC_VOITURES.length) return;
-  const v = MC_VOITURES[_mcVoitI];
-  const rows = (window._ligueRows || []).filter(r => r && r[1] === v.pilote);
-  const pos = rows.map(r => parseFloat(r[3])).filter(n => !isNaN(n));
-  const vic = pos.filter(n => n === 1).length, pod = pos.filter(n => n <= 3).length;
   const fl = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  box.innerHTML = `
-    <div class="mc-car">
-      <div class="mc-car-scene">
-        <div class="mc-car-grand" aria-hidden="true"><span>${mcEsc(v.grand)}</span><span class="o">${mcEsc(v.num)}</span></div>
-        <img class="mc-car-img" src="${v.img}" alt="${mcEsc(v.modele)} n°${mcEsc(v.num)} de ${mcEsc(v.pilote)}">
-      </div>
-      <div class="mc-car-info">
-        <span class="l">Le pilote</span>
-        <b class="nm">${mcEsc(v.pilote)}</b>
-        <span class="l">${mcEsc(v.modele)} · #${mcEsc(v.num)}</span>
-        <div class="mc-car-stats">
-          <div><span class="l">Victoires</span><b>${rows.length ? vic : '–'}</b></div>
-          <div><span class="l">Podiums</span><b>${rows.length ? pod : '–'}</b></div>
-        </div>
-        <button type="button" class="mc-pill small" onclick="openPilotSheet('${v.pilote.replace(/'/g, "\\'")}')">Plus de détails</button>
-        ${MC_VOITURES.length > 1 ? `<div class="mc-arrows" style="margin-top:18px">
-          <button type="button" class="mc-arrow" aria-label="Voiture précédente" onclick="mcGarage(-1)">${fl('M10 3 5 8l5 5')}</button>
-          <button type="button" class="mc-arrow" aria-label="Voiture suivante" onclick="mcGarage(1)">${fl('m6 3 5 5-5 5')}</button></div>` : ''}
-      </div>
-    </div>`;
+  const fleches = MC_VOITURES.length > 1 ? `<div class="mc-arrows" style="margin-top:18px">
+    <button type="button" class="mc-arrow" aria-label="Voiture précédente" onclick="mcGarage(-1)">${fl('M10 3 5 8l5 5')}</button>
+    <button type="button" class="mc-arrow" aria-label="Voiture suivante" onclick="mcGarage(1)">${fl('m6 3 5 5-5 5')}</button></div>` : '';
+  box.innerHTML = mcVitrineHTML(MC_VOITURES[_mcVoitI].pilote, fleches);
+}
+
+/** Onglet Le Convoi : tous les membres, du grade le plus haut au plus bas, en vitrine. */
+function mcRenderConvoi() {
+  const box = document.getElementById('mcConvoi');
+  if (!box || typeof _gradesByName === 'undefined') return;
+  const noms = Object.keys(_gradesByName)
+    .sort((a, b) => rankOrderForGrade(_gradesByName[a].grade || '') - rankOrderForGrade(_gradesByName[b].grade || ''));
+  if (!noms.length) return;
+  box.innerHTML = noms.map(n => `<section class="mc-convoi-membre" aria-label="${mcEsc(n)}">${mcVitrineHTML(n)}</section>`).join('');
+  const g = document.getElementById('grades');
+  if (g) g.style.display = 'none';
 }
 
 // Captures de victoires de l'équipe (dossier assets/victoires)
@@ -3995,6 +4031,7 @@ const mcPluriel = (n, mot) => n + ' ' + mot + (n > 1 ? 's' : '');
 function mcRenderData() {
   mcWinsCompter();
   mcGarage(0);
+  mcRenderConvoi();
   // Top 3 du Power Ranking
   const top = document.getElementById('mcTop3');
   if (top && typeof _rankingByName !== 'undefined') {
