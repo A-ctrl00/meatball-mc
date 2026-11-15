@@ -1395,6 +1395,39 @@
   .tab-btn:hover::after, .tab-btn.active::after { transform: scaleX(1); }
   .tab-btn[data-tab="login"]::after { display: none; }
 
+  /* Victoires en course (accueil), façon Red Bull Racing */
+  .mc-wins {
+    position: relative; width: 100vw; margin-left: calc(50% - 50vw); overflow: hidden;
+    background: var(--btn); color: #fff; padding: clamp(28px, 4vw, 56px) clamp(16px, 4vw, 56px) clamp(24px, 3vw, 40px);
+    margin-top: 48px; margin-bottom: 48px;
+  }
+  .mc-wins-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; }
+  .mc-wins-titre { margin: 0; font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(46px, 7.5vw, 120px); line-height: .9; letter-spacing: -0.02em; }
+  .mc-arrow.mc-arrow-clair { background: rgba(255,255,255,0.16); }
+  .mc-arrow.mc-arrow-clair:hover { background: rgba(255,255,255,0.3); }
+  .mc-wins-scene { position: relative; height: clamp(260px, 36vw, 560px); margin-top: clamp(10px, 2vw, 24px); }
+  .mc-win {
+    position: absolute; left: 50%; top: 0; margin: 0; width: min(52vw, 860px); aspect-ratio: 16 / 9;
+    border-radius: 10px; overflow: hidden; box-shadow: 0 24px 60px rgba(0,0,0,.35);
+    transition: transform .7s cubic-bezier(.2,.7,.2,1), opacity .7s; will-change: transform;
+  }
+  .mc-win img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .mc-win.centre { transform: translateX(-50%); opacity: 1; z-index: 3; }
+  .mc-win.suivante { transform: translate(52%, 14%) rotate(9deg) scale(.86); opacity: 1; z-index: 2; }
+  .mc-win.precedente { transform: translate(-160%, 14%) rotate(-9deg) scale(.86); opacity: 0; z-index: 1; }
+  .mc-win.cachee { transform: translate(140%, 20%) rotate(14deg) scale(.8); opacity: 0; z-index: 0; }
+  .mc-wins-nombre {
+    position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 34%); z-index: 4; pointer-events: none;
+    font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(90px, 14vw, 230px); line-height: 1; letter-spacing: -0.03em;
+    text-shadow: 0 8px 40px rgba(0,0,0,.25); font-variant-numeric: tabular-nums;
+  }
+  .mc-wins-legende { position: relative; z-index: 4; text-align: center; margin: clamp(56px, 7vw, 100px) 0 0; font-weight: 600; min-height: 1.4em; opacity: .9; }
+  @media (max-width: 700px) {
+    .mc-win { width: 84vw; }
+    .mc-win.suivante { transform: translate(40%, 12%) rotate(8deg) scale(.8); opacity: .9; z-index: 2; }
+    .mc-wins-scene { height: calc(84vw * 9 / 16 + 30px); }
+  }
+
   /* Le Convoi : bandeau garage plein écran */
   .convoi-hero {
     position: relative; width: 100vw; margin-left: calc(50% - 50vw); margin-top: -28px; margin-bottom: 40px;
@@ -3672,6 +3705,55 @@ function mcCloseArticle() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('mcReader').classList.contains('open')) mcCloseArticle(); });
 
+// Captures de victoires de l'équipe (dossier assets/victoires)
+const MC_VICTOIRES = [
+  { img: 'assets/victoires/ciappara-73-a.jpg', legende: 'Nicolas Ciappara · #73' },
+  { img: 'assets/victoires/joube-00-bristol.jpg', legende: 'Alexis Joube · #00' },
+  { img: 'assets/victoires/daries-1-truck.jpg', legende: 'Thomas Daries · #1' },
+  { img: 'assets/victoires/daries-1-michigan.jpg', legende: 'Thomas Daries · #1' },
+  { img: 'assets/victoires/joube-phoenix.jpg', legende: 'Alexis Joube' },
+  { img: 'assets/victoires/ciappara-73-b.jpg', legende: 'Nicolas Ciappara · #73' },
+  { img: 'assets/victoires/joube-00-truck.jpg', legende: 'Alexis Joube · #00' },
+  { img: 'assets/victoires/fedex-11.jpg', legende: '' },
+  { img: 'assets/victoires/fedex-44-phoenix.jpg', legende: '' },
+];
+let _mcWinI = 0, _mcWinTimer = null;
+function mcWinsPlacer() {
+  const n = MC_VICTOIRES.length;
+  document.querySelectorAll('#mcWinsScene .mc-win').forEach(f => {
+    const d = ((+f.dataset.i - _mcWinI) % n + n) % n;
+    f.className = 'mc-win ' + (d === 0 ? 'centre' : d === 1 ? 'suivante' : d === n - 1 ? 'precedente' : 'cachee');
+  });
+  const l = document.getElementById('mcWinsLegende');
+  if (l) l.textContent = MC_VICTOIRES[_mcWinI].legende || '';
+}
+function mcWins(dir) {
+  _mcWinI = (_mcWinI + dir + MC_VICTOIRES.length) % MC_VICTOIRES.length;
+  mcWinsPlacer();
+  mcWinsAuto();
+}
+function mcWinsAuto() {
+  clearInterval(_mcWinTimer);
+  _mcWinTimer = setInterval(() => {
+    if (document.hidden || !document.getElementById('mcWinsScene') || !document.getElementById('mcWinsScene').offsetParent) return;
+    _mcWinI = (_mcWinI + 1) % MC_VICTOIRES.length; mcWinsPlacer();
+  }, 5000);
+}
+function mcWinsCompter() {
+  const el = document.getElementById('mcWinsNombre');
+  if (!el) return;
+  const rows = (window._ligueRows || []).filter(r => r && r[1]);
+  if (!rows.length) return;
+  const total = rows.filter(r => parseFloat(r[3]) === 1).length;
+  const debut = performance.now();
+  const anim = t => {
+    const k = Math.min(1, (t - debut) / 1200);
+    el.textContent = Math.round(total * (1 - Math.pow(1 - k, 3)));
+    if (k < 1) requestAnimationFrame(anim);
+  };
+  requestAnimationFrame(anim);
+}
+
 function mcBuildHome() {
   const home = document.getElementById('mcHome');
   if (!home) return;
@@ -3703,6 +3785,21 @@ function mcBuildHome() {
         <button type="button" class="mc-pill small" style="margin-top:10px" onclick="mcTab('ranking')">Classement complet</button>
       </div>
       <div class="mc-race" id="mcRace"></div>
+    </section>
+
+    <section class="mc-wins" aria-label="Victoires en course">
+      <div class="mc-wins-head">
+        <h2 class="mc-wins-titre">Victoires en<br>course</h2>
+        <div class="mc-arrows">
+          <button type="button" class="mc-arrow mc-arrow-clair" aria-label="Victoire précédente" onclick="mcWins(-1)">${fleche('M10 3 5 8l5 5')}</button>
+          <button type="button" class="mc-arrow mc-arrow-clair" aria-label="Victoire suivante" onclick="mcWins(1)">${fleche('m6 3 5 5-5 5')}</button>
+        </div>
+      </div>
+      <div class="mc-wins-scene" id="mcWinsScene">
+        ${MC_VICTOIRES.map((v, i) => `<figure class="mc-win" data-i="${i}"><img src="${v.img}" alt="${mcEsc(v.legende || 'Victoire du Meatball MC')}" loading="lazy"></figure>`).join('')}
+        <div class="mc-wins-nombre" id="mcWinsNombre">–</div>
+      </div>
+      <p class="mc-wins-legende" id="mcWinsLegende"></p>
     </section>
 
     <section class="mc-shop" aria-label="Boutique">
@@ -3753,6 +3850,18 @@ function mcBuildHome() {
     </section>`;
   mcRenderRace();
   mcRenderData();
+  mcWinsPlacer();
+  mcWinsAuto();
+  const scene = document.getElementById('mcWinsScene');
+  if (scene) {
+    let x0 = null;
+    scene.addEventListener('touchstart', e => { x0 = e.touches[0].clientX; }, { passive: true });
+    scene.addEventListener('touchend', e => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0; x0 = null;
+      if (Math.abs(dx) > 40) mcWins(dx < 0 ? 1 : -1);
+    });
+  }
 }
 
 function mcRail(dir) {
@@ -3812,6 +3921,7 @@ function mcStatsPilote(nom) {
 const mcPluriel = (n, mot) => n + ' ' + mot + (n > 1 ? 's' : '');
 
 function mcRenderData() {
+  mcWinsCompter();
   // Top 3 du Power Ranking
   const top = document.getElementById('mcTop3');
   if (top && typeof _rankingByName !== 'undefined') {
