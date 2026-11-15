@@ -3753,13 +3753,15 @@ function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(
 function mcVitrineHTML(nom, extra) {
   const v = MC_VOITURES.find(x => x.pilote === nom) || {};
   const carte = (typeof _pilotsByName !== 'undefined' && _pilotsByName[nom]) || {};
-  const g = (typeof _gradesByName !== 'undefined' && _gradesByName[nom]) || {};
   const num = String(v.num || carte.num || '').trim();
   const rows = mcLigneRows().filter(r => r[1] === nom);
   const s = mcStatsPilote(nom);
-  const grade = g.grade || '';
-  const patch = grade && typeof patchForGrade === 'function' ? patchForGrade(grade) : '';
-  const tier = grade && typeof tierForGrade === 'function' ? tierForGrade(grade) : '';
+  const pos = rows.map(r => parseFloat(r[3])).filter(n => !isNaN(n));
+  const moy = pos.length ? (pos.reduce((a, b) => a + b, 0) / pos.length).toFixed(1).replace('.', ',') : '–';
+  // Sans victoire ni podium : on montre le nombre de courses de ligue et la position moyenne
+  const stats = (s.v || s.p)
+    ? [['Victoires', s.v], ['Podiums', s.p]]
+    : [['Courses de ligue', rows.length || '–'], ['Position moyenne', moy]];
   const nomJs = nom.replace(/\\/g, '\\\\').replace(/'/g, "\\'");
   return `
     <div class="mc-car${v.img ? '' : ' sans-img'}">
@@ -3768,14 +3770,9 @@ function mcVitrineHTML(nom, extra) {
         ${v.img ? `<img class="mc-car-img" src="${v.img}" alt="${mcEsc((v.modele || 'Voiture') + (num ? ' n°' + num : '') + ' de ' + nom)}" loading="lazy">` : ''}
       </div>
       <div class="mc-car-info">
-        <span class="l">Le pilote</span>
         <b class="nm">${mcEsc(nom)}</b>
-        ${grade ? `<div class="mc-car-grade">${patch ? `<img class="grade-patch" src="${patch}" alt="">` : ''}<span class="grade-badge tier-${tier}">${mcEsc(grade)}</span></div>` : ''}
-        ${v.modele || num ? `<span class="l">${[v.modele, num ? '#' + num : ''].filter(Boolean).map(mcEsc).join(' · ')}</span>` : ''}
         <div class="mc-car-stats">
-          <div><span class="l">Victoires</span><b>${rows.length ? s.v : '–'}</b></div>
-          <div><span class="l">Podiums</span><b>${rows.length ? s.p : '–'}</b></div>
-          ${g.anciennete ? `<div><span class="l">Expérience</span><b class="petit">${mcEsc(g.anciennete)}</b></div>` : ''}
+          ${stats.map(([l, n]) => `<div><span class="l">${l}</span><b>${n}</b></div>`).join('')}
         </div>
         <button type="button" class="mc-pill small" onclick="openPilotSheet('${nomJs}')">Plus de détails</button>
         ${extra || ''}
