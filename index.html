@@ -1395,6 +1395,33 @@
   .tab-btn:hover::after, .tab-btn.active::after { transform: scaleX(1); }
   .tab-btn[data-tab="login"]::after { display: none; }
 
+  /* Nos voitures (accueil), façon RB22 */
+  .mc-garage { position: relative; margin: 56px 0; }
+  .mc-garage > .mc-h { margin-bottom: 28px; }
+  .mc-car { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: clamp(20px, 4vw, 56px); align-items: center; }
+  .mc-car-scene { position: relative; padding-top: clamp(20px, 5vw, 80px); }
+  .mc-car-grand {
+    position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; pointer-events: none;
+    font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(110px, 21vw, 330px); line-height: .8; letter-spacing: -0.04em; color: #fff;
+  }
+  .mc-car-grand .o { color: var(--orange); }
+  .mc-car-img {
+    position: relative; display: block; width: 100%; height: auto; margin-top: clamp(-30px, -2vw, -10px);
+    -webkit-mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
+            mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
+  }
+  .mc-car-info { display: flex; flex-direction: column; gap: 6px; }
+  .mc-car-info .l { color: var(--text-dim); font-size: 15px; }
+  .mc-car-info .nm { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 28px; line-height: 1.1; }
+  .mc-car-stats { display: flex; margin: 18px 0 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .mc-car-stats > div { flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .mc-car-stats > div + div { border-left: 1px solid var(--line); padding-left: 22px; }
+  .mc-car-stats b { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 30px; }
+  .mc-car-info .mc-pill { align-self: flex-start; }
+  @media (max-width: 860px) {
+    .mc-car { grid-template-columns: 1fr; }
+  }
+
   /* Victoires en course (accueil), façon Red Bull Racing */
   .mc-wins {
     position: relative; width: 100vw; margin-left: calc(50% - 50vw); overflow: hidden;
@@ -3705,6 +3732,42 @@ function mcCloseArticle() {
 }
 document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.getElementById('mcReader').classList.contains('open')) mcCloseArticle(); });
 
+// Voitures en vitrine (rendu photo réaliste, fond bleu nuit)
+const MC_VOITURES = [
+  { pilote: 'Alexis Joube', grand: 'AJ', num: '00', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-00-joube.jpg' },
+];
+let _mcVoitI = 0;
+function mcGarage(dir) {
+  if (dir) _mcVoitI = (_mcVoitI + dir + MC_VOITURES.length) % MC_VOITURES.length;
+  const box = document.getElementById('mcGarage');
+  if (!box || !MC_VOITURES.length) return;
+  const v = MC_VOITURES[_mcVoitI];
+  const rows = (window._ligueRows || []).filter(r => r && r[1] === v.pilote);
+  const pos = rows.map(r => parseFloat(r[3])).filter(n => !isNaN(n));
+  const vic = pos.filter(n => n === 1).length, pod = pos.filter(n => n <= 3).length;
+  const fl = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  box.innerHTML = `
+    <div class="mc-car">
+      <div class="mc-car-scene">
+        <div class="mc-car-grand" aria-hidden="true"><span>${mcEsc(v.grand)}</span><span class="o">${mcEsc(v.num)}</span></div>
+        <img class="mc-car-img" src="${v.img}" alt="${mcEsc(v.modele)} n°${mcEsc(v.num)} de ${mcEsc(v.pilote)}">
+      </div>
+      <div class="mc-car-info">
+        <span class="l">Le pilote</span>
+        <b class="nm">${mcEsc(v.pilote)}</b>
+        <span class="l">${mcEsc(v.modele)} · #${mcEsc(v.num)}</span>
+        <div class="mc-car-stats">
+          <div><span class="l">Victoires</span><b>${rows.length ? vic : '–'}</b></div>
+          <div><span class="l">Podiums</span><b>${rows.length ? pod : '–'}</b></div>
+        </div>
+        <button type="button" class="mc-pill small" onclick="openPilotSheet('${v.pilote.replace(/'/g, "\\'")}')">Plus de détails</button>
+        ${MC_VOITURES.length > 1 ? `<div class="mc-arrows" style="margin-top:18px">
+          <button type="button" class="mc-arrow" aria-label="Voiture précédente" onclick="mcGarage(-1)">${fl('M10 3 5 8l5 5')}</button>
+          <button type="button" class="mc-arrow" aria-label="Voiture suivante" onclick="mcGarage(1)">${fl('m6 3 5 5-5 5')}</button></div>` : ''}
+      </div>
+    </div>`;
+}
+
 // Captures de victoires de l'équipe (dossier assets/victoires)
 const MC_VICTOIRES = [
   { img: 'assets/victoires/ciappara-73-a.jpg', legende: 'Nicolas Ciappara · #73' },
@@ -3800,6 +3863,11 @@ function mcBuildHome() {
         <div class="mc-wins-nombre" id="mcWinsNombre">–</div>
       </div>
       <p class="mc-wins-legende" id="mcWinsLegende"></p>
+    </section>
+
+    <section class="mc-garage" aria-label="Nos voitures">
+      <h2 class="mc-h">Nos voitures</h2>
+      <div id="mcGarage"></div>
     </section>
 
     <section class="mc-shop" aria-label="Boutique">
@@ -3922,6 +3990,7 @@ const mcPluriel = (n, mot) => n + ' ' + mot + (n > 1 ? 's' : '');
 
 function mcRenderData() {
   mcWinsCompter();
+  mcGarage(0);
   // Top 3 du Power Ranking
   const top = document.getElementById('mcTop3');
   if (top && typeof _rankingByName !== 'undefined') {
