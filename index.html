@@ -1405,6 +1405,7 @@
     font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(110px, 21vw, 330px); line-height: .8; letter-spacing: -0.04em; color: #fff;
   }
   .mc-car-grand .o { color: var(--orange); }
+  .mc-car-grand.long { font-size: clamp(84px, 16vw, 250px); gap: .12em; }
   .mc-car-img {
     position: relative; display: block; width: 100%; height: auto; margin-top: clamp(-30px, -2vw, -10px);
     -webkit-mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
@@ -3746,6 +3747,7 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.g
 const MC_VOITURES = [
   { pilote: 'Alexis Joube', grand: 'AJ', num: '00', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-00-joube.jpg' },
   { pilote: 'Cedric Colleau', grand: 'CC', num: '14', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-14-colleau.jpg' },
+  { pilote: 'Maxime Toffolet', grand: 'MT', num: '204', modele: 'ARCA', img: 'assets/voiture-204-toffolet.jpg' },
 ];
 let _mcVoitI = 0;
 function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(m => m[0].toUpperCase()).join('').slice(0, 3); }
@@ -3767,7 +3769,7 @@ function mcVitrineHTML(nom, extra) {
   return `
     <div class="mc-car${v.img ? '' : ' sans-img'}">
       <div class="mc-car-scene">
-        <div class="mc-car-grand" aria-hidden="true"><span>${mcEsc(v.grand || mcInitiales(nom))}</span>${num ? `<span class="o">${mcEsc(num)}</span>` : ''}</div>
+        <div class="mc-car-grand${((v.grand || mcInitiales(nom)) + num).length > 4 ? ' long' : ''}" aria-hidden="true"><span>${mcEsc(v.grand || mcInitiales(nom))}</span>${num ? `<span class="o">${mcEsc(num)}</span>` : ''}</div>
         ${v.img ? `<img class="mc-car-img" src="${v.img}" alt="${mcEsc((v.modele || 'Voiture') + (num ? ' n°' + num : '') + ' de ' + nom)}" loading="lazy">` : ''}
       </div>
       <div class="mc-car-info">
