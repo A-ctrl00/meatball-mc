@@ -460,6 +460,26 @@
   "Homme": "Men",
   "Femme": "Women",
   "victoires": "wins",
-  "podiums": "podiums"
+  "podiums": "podiums",
+  "Dernière soirée": "Last race night",
+  "Calendrier": "Calendar",
+  "Victoire": "Win",
+  "Podium": "Podium",
+  "Top 5": "Top 5",
+  "Pilotes à confirmer": "Drivers to be confirmed",
+  "Aucune course programmée pour le moment.": "No races scheduled for now.",
+  "Les saisons HRL et Virtual Oval sont terminées : leurs prochaines dates seront ajoutées dès leur publication.": "The HRL and Virtual Oval seasons are over: their next dates will be added as soon as they are published.",
+  "janv.": "Jan",
+  "févr.": "Feb",
+  "mars": "Mar",
+  "avr.": "Apr",
+  "mai": "May",
+  "juin": "Jun",
+  "juil.": "Jul",
+  "août": "Aug",
+  "sept.": "Sep",
+  "oct.": "Oct",
+  "nov.": "Nov",
+  "déc.": "Dec"
  }
 }
