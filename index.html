@@ -4085,14 +4085,11 @@ function mcRenderRace() {
   // titulaires seulement : en IFRN, un pilote dont la division principale est ailleurs est pigiste
   const pilotes = mcPilotesDivision(course[1], new Date(2026, 9, 1))
     .filter(n => !String(course[1]).startsWith('Ifrn') || mcDivisionPrincipale(n) === course[1]);
-  // Fond : la voiture d'un des pilotes engagés, tirée au hasard (rendu de vitrine, sinon photo de sa carte)
-  const photos = pilotes.map(n => {
-    const v = MC_VOITURES.find(x => x.pilote === n);
-    if (v && v.img) return v.img;
-    const c = (typeof _pilotsByName !== 'undefined' && _pilotsByName[n]) || {};
-    return c.carImg || '';
-  }).filter(Boolean);
-  const img = photos.length ? photos[Math.floor(Math.random() * photos.length)] : ((_mcArticles[1] || _mcArticles[0] || {}).img || '');
+  // Fond : rendu de profil (vitrine « Nos voitures ») d'un pilote engagé, tiré au hasard ;
+  // si aucun engagé n'a encore son rendu, une autre voiture du club au hasard
+  const rendus = MC_VOITURES.filter(v => v.img && pilotes.includes(v.pilote));
+  const choix = rendus.length ? rendus : MC_VOITURES.filter(v => v.img);
+  const img = choix.length ? choix[Math.floor(Math.random() * choix.length)].img : '';
   el.innerHTML = `
     <div class="mc-race-main">
       ${img ? `<img src="${img}" alt="" referrerpolicy="no-referrer">` : ''}
