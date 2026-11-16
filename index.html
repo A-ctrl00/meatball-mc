@@ -2898,8 +2898,11 @@ async function loadCartes() {
 
 // Calcul identique au sheet (CALCUL_POINTS_DETAIL + RANKING)
 function mcBaremePosition(div, pos) {
-  const t = { 'Ifrn 2': [28, 26, 24, 22, 18, 13], 'Ifrn 3': [26, 24, 22, 20, 16, 11], 'Ifrn 4': [25, 23, 21, 19, 15, 10] }[div]
-    || (['Ifrn 1', 'SBG', 'Virtual Oval', 'HRL ARCA', 'HRL Grand National'].includes(div) ? [30, 28, 26, 25, 20, 15] : null);
+  // niveau lu dans l'onglet LIGUES (1 à 4), comme la colonne AA du Sheet
+  const BAREMES = [null, [30, 28, 26, 25, 20, 15], [28, 26, 24, 22, 18, 13], [26, 24, 22, 20, 16, 11], [25, 23, 21, 19, 15, 10]];
+  const d = typeof MC_DIVISIONS !== 'undefined' && MC_DIVISIONS.find(x => x.code === div);
+  const niv = d ? (d.niveau || { 'Ifrn 2': 2, 'Ifrn 3': 3, 'Ifrn 4': 4 }[div] || 1) : 0;
+  const t = BAREMES[niv];
   if (!t || isNaN(pos)) return 0;
   return pos === 1 ? t[0] : pos <= 2 ? t[1] : pos <= 3 ? t[2] : pos <= 5 ? t[3] : pos <= 10 ? t[4] : t[5];
 }
@@ -2995,7 +2998,9 @@ function mcEnrichirRanking() {
 
 async function loadAll() {
   document.getElementById('lastUpdate').textContent = 'Chargement...';
-  await Promise.all([loadRanking(), loadGrades(), loadCartes(), loadRaceStatsLigue()]);
+  await Promise.all([loadRanking(), loadGrades(), loadCartes(), loadRaceStatsLigue(),
+    // l'attente laisse le temps aux scripts plus bas dans la page d'être lus avant de charger les onglets de config
+    (async () => { if (document.readyState === 'loading') await new Promise(r => document.addEventListener('DOMContentLoaded', r)); if (typeof mcChargerConfig === 'function') await mcChargerConfig(); })().catch(e => console.error('Config :', e))]);
   if (typeof mcRenderData === 'function') mcRenderData();
   try { mcEnrichirRanking(); } catch (e) { console.error('Détail du Power Ranking :', e); }
   const now = new Date();
@@ -3814,6 +3819,41 @@ const MC_VOITURES = [
   { pilote: 'Johann Bourgouin', grand: 'JB', num: '10', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-10-bourgouin.jpg' },
 ];
 let _mcVoitI = 0;
+
+// ===== Onglets LIGUES, CALENDRIER et VOITURES du Sheet =====
+// Le site lit ces trois onglets : ajouter une ligue, une course ou une voiture se fait
+// directement dans le Sheet. Les listes ci-dessus servent de secours si le Sheet ne répond pas.
+const MC_GID = { ligues: 1906196126, calendrier: 494383415, voitures: 1160347114 };
+function mcDateIso(v) {
+  const t = String(v || '').trim();
+  let m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (m) return (m[3].length === 2 ? '20' + m[3] : m[3]) + '-' + m[2].padStart(2, '0') + '-' + m[1].padStart(2, '0');
+  m = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  return m ? m[0] : '';
+}
+function mcRemplacer(cible, liste) { if (liste.length) cible.splice(0, cible.length, ...liste); }
+async function mcChargerConfig() {
+  const lire = gid => fetchSheetTabCSVByGid(gid).catch(e => { console.warn('Onglet ' + gid + ' :', e.message); return []; });
+  const [ligues, cal, voit] = await Promise.all([lire(MC_GID.ligues), lire(MC_GID.calendrier), lire(MC_GID.voitures)]);
+  mcRemplacer(MC_DIVISIONS, ligues.filter(r => (r[0] || '').trim()).map(r => {
+    const d = { code: r[0].trim(), nom: (r[1] || r[0]).trim(), sous: (r[2] || '').trim(),
+      niveau: parseInt(r[3], 10) || 1, publieX: /^oui$/i.test((r[4] || '').trim()), categorie: (r[5] || '').trim(),
+      grand: [(r[6] || r[0]).trim().toUpperCase(), (r[7] || '').trim().toUpperCase()] };
+    if ((r[8] || '').trim()) d.voiture = r[8].trim();
+    return d;
+  }));
+  mcRemplacer(MC_CALENDRIER, cal.map(r => [mcDateIso(r[0]), (r[1] || '').trim(), (r[2] || '').trim(), (r[3] || '').trim(),
+    (r[4] || '').trim(), (r[5] || '').trim()]).filter(c => c[0] && c[1]).sort((a, b) => a[0].localeCompare(b[0])));
+  mcRemplacer(MC_VOITURES, voit.filter(r => (r[0] || '').trim()).map(r => {
+    const nom = r[0].trim();
+    const img = (r[4] || '').trim();
+    return { pilote: nom, num: (r[1] || '').trim().replace(/^'/, ''), grand: (r[2] || '').trim() || mcInitiales(nom),
+      modele: (r[3] || '').trim(), img: /drive\.google\.com/.test(img) ? toDriveDirectImage(img) : img.replace(/^https?:\/\/(www\.)?meatball-mc\.fr\//, '') };
+  }));
+  if (_mcVoitI >= MC_VOITURES.length) _mcVoitI = 0;
+  if (_mcDiv >= MC_DIVISIONS.length) _mcDiv = 0;
+}
+
 function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(m => m[0].toUpperCase()).join('').slice(0, 3); }
 
 /** Bloc de présentation façon RB22 pour un pilote (avec ou sans rendu de voiture). */
