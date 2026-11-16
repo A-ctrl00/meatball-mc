@@ -137,13 +137,14 @@
   function majBouton() {
     const b = document.getElementById('langBtn');
     if (!b) return;
-    const versEn = window.MC_LANG !== 'en';
-    b.innerHTML = versEn ? DRAPEAU_GB + '<span>EN</span>' : DRAPEAU_FR + '<span>FR</span>';
-    b.setAttribute('aria-label', versEn ? 'English version' : 'Version française');
-    b.setAttribute('title', versEn ? 'English version' : 'Version française');
+    // Le drapeau montre la langue affichée ; un clic passe à l'autre langue
+    const enFrancais = window.MC_LANG !== 'en';
+    b.innerHTML = enFrancais ? DRAPEAU_FR + '<span>FR</span>' : DRAPEAU_GB + '<span>EN</span>';
+    b.setAttribute('aria-label', enFrancais ? 'Langue : français. Switch to English' : 'Language: English. Passer en français');
+    b.setAttribute('title', enFrancais ? 'Switch to English' : 'Passer en français');
   }
-  const DRAPEAU_GB = '<svg viewBox="0 0 60 30" width="26" height="13" aria-hidden="true"><clipPath id="gbc"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="gbt"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#gbc)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gbt)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
-  const DRAPEAU_FR = '<svg viewBox="0 0 3 2" width="20" height="13" aria-hidden="true"><path fill="#002654" d="M0 0h1v2H0z"/><path fill="#fff" d="M1 0h1v2H1z"/><path fill="#CE1126" d="M2 0h1v2H2z"/></svg>';
+  const DRAPEAU_GB = '<svg viewBox="0 0 60 30" width="30" height="15" aria-hidden="true"><clipPath id="gbc"><path d="M0,0 v30 h60 v-30 z"/></clipPath><clipPath id="gbt"><path d="M30,15 h30 v15 z v15 h-30 z h-30 v-15 z v-15 h30 z"/></clipPath><g clip-path="url(#gbc)"><path d="M0,0 v30 h60 v-30 z" fill="#012169"/><path d="M0,0 L60,30 M60,0 L0,30" stroke="#fff" stroke-width="6"/><path d="M0,0 L60,30 M60,0 L0,30" clip-path="url(#gbt)" stroke="#C8102E" stroke-width="4"/><path d="M30,0 v30 M0,15 h60" stroke="#fff" stroke-width="10"/><path d="M30,0 v30 M0,15 h60" stroke="#C8102E" stroke-width="6"/></g></svg>';
+  const DRAPEAU_FR = '<svg viewBox="0 0 3 2" width="22" height="15" aria-hidden="true"><path fill="#002654" d="M0 0h1v2H0z"/><path fill="#fff" d="M1 0h1v2H1z"/><path fill="#CE1126" d="M2 0h1v2H2z"/></svg>';
   document.addEventListener('DOMContentLoaded', () => {
     majBouton();
     if (lang === 'en') demarrer();
