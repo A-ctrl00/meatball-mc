@@ -1653,7 +1653,9 @@
     flex: 0 0 300px; height: 420px; border-radius: 8px; overflow: hidden; position: relative; background: #eceef1;
     scroll-snap-align: start; border: 0; padding: 0; cursor: pointer; text-align: left; font: inherit;
   }
-  .mc-product img { position: absolute; left: 0; right: 0; top: 0; height: calc(100% - 96px); width: 100%; object-fit: contain; padding: 20px; box-sizing: border-box; }
+  /* Photos produits : recadrées pour remplir toute la carte ; les jaquettes de jeu restent entières */
+  .mc-product img { position: absolute; inset: 0; height: 100%; width: 100%; object-fit: cover; object-position: center 40%; }
+  .mc-product.jeu img { height: calc(100% - 96px); object-fit: contain; padding: 20px; box-sizing: border-box; }
   .mc-product div { position: absolute; left: 0; right: 0; bottom: 0; padding: 70px 22px 22px; background: linear-gradient(180deg, rgba(0,18,38,0) 0%, rgba(0,18,38,0.88) 45%, #001226 100%); display: flex; flex-direction: column; gap: 8px; }
   .mc-product b { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 20px; line-height: 1.15; color: #fff; }
   .mc-product span { font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 16px; color: #fff; }
@@ -4006,7 +4008,7 @@ function mcBuildHome() {
         ${produits.map(p => {
           const img = (p.images && p.images[0]) || p.img || '';
           const prix = p.price ? p.price.toFixed(2).replace('.', ',') + ' €' : 'Gratuit';
-          return `<button type="button" class="mc-product" onclick="mcTab('shop')"><img src="${img}" alt="" loading="lazy"><div><b>${mcEsc(p.name)}</b><span>${prix}</span></div></button>`;
+          return `<button type="button" class="mc-product${p.gamePage ? ' jeu' : ''}" onclick="mcTab('shop')"><img src="${img}" alt="" loading="lazy"><div><b>${mcEsc(p.name)}</b><span>${prix}</span></div></button>`;
         }).join('')}
       </div>
     </section>
