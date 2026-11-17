@@ -17,7 +17,10 @@ import fs from 'node:fs';
 const SHEET = '1xyAVmXsdmOs_8q6jFZkJLd9prrofzAQJ_YlI-Ssf84E';
 const GID_CALENDRIER = 494383415;
 const GID_RESULTATS = 1015066806;
-const JOURS_RESULTATS = 3; // on n'annonce que les résultats des 3 derniers jours (pas les saisies d'anciennes courses)
+// On annonce une soirée de résultats dès qu'elle apparaît dans le Sheet, si la course date de moins de 21 jours :
+// certaines ligues (IFRN) publient leurs résultats plusieurs jours après, mais une saisie d'anciennes courses
+// (comme la SBG de l'été) ne doit rien reposter.
+const JOURS_RESULTATS = 21;
 const SITE = process.env.SITE_URL || 'https://meatball-mc.fr/';
 const WEBHOOK = process.env.DISCORD_WEBHOOK_COURSES;
 const ETAT = process.argv[2] || 'annonces.json';
