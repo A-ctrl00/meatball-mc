@@ -25,7 +25,7 @@
   const R = [
     [/^(\d{1,2}) (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre) (\d{4})(, (.+))?$/,
       (m, j, mo, a, x, suite) => MOIS[mo] + ' ' + j + ', ' + a + (suite ? ', ' + mot(suite) : '')],
-    [/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche) (\d{1,2}) (\S+) (\d{4})$/, (m, jo, j, mo, a) => JOURS[jo] + ' ' + (MOIS[mo] || mo) + ' ' + j + ', ' + a],
+    [/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche) (\d{1,2}) (\S+) (\d{4})( · (\d{2})h(\d{2}))?$/, (m, jo, j, mo, a, x, h, mi) => JOURS[jo] + ' ' + (MOIS[mo] || mo) + ' ' + j + ', ' + a + (h ? ' · ' + h + ':' + mi : '')],
     [/^Mis à jour (.+) à (.+)$/, (m, d, h) => 'Updated ' + d + ' at ' + h],
     [/^Course (\d+) sur (\d+)$/, (m, a, b) => 'Race ' + a + ' of ' + b],
     [/^(\d+) ventes?$/, (m, n) => pl(n, 'sale', 'sales')],

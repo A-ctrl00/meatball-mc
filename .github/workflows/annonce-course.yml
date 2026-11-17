@@ -1,0 +1,79 @@
+# Annonce Discord des courses du soir : photo du cadre « Prochaine course » du site,
+# 4 heures avant le départ (ou à 17h si l'heure n'est pas renseignée dans CALENDRIER).
+name: Annonce des courses sur Discord
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+    inputs:
+      essai:
+        description: "Essai : poster tout de suite la prochaine course du calendrier"
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: annonce-course
+  cancel-in-progress: false
+
+jobs:
+  annonce:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Les courses déjà annoncées sont notées sur une branche à part (pour ne pas relancer le site)
+      - name: Lire l'état des annonces
+        run: |
+          mkdir -p etat
+          if git ls-remote --exit-code --heads origin etat-annonces >/dev/null; then
+            git fetch -q origin etat-annonces
+            git show origin/etat-annonces:annonces.json > etat/annonces.json || echo '{}' > etat/annonces.json
+          else
+            echo '{}' > etat/annonces.json
+          fi
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Y a-t-il une course à annoncer ?
+        id: verif
+        env:
+          VERIF_SEUL: '1'
+          ESSAI: ${{ inputs.essai && '1' || '0' }}
+          DISCORD_WEBHOOK_COURSES: ${{ secrets.DISCORD_WEBHOOK_COURSES }}
+        run: |
+          cd outils && npm init -y >/dev/null && npm i -s playwright@1.47.2 >/dev/null
+          node annonce-course.mjs ../etat/annonces.json
+
+      - name: Installer le navigateur
+        if: steps.verif.outputs.a_faire == '1'
+        run: cd outils && npx playwright install --with-deps chromium
+
+      - name: Photographier et poster
+        if: steps.verif.outputs.a_faire == '1'
+        env:
+          ESSAI: ${{ inputs.essai && '1' || '0' }}
+          DISCORD_WEBHOOK_COURSES: ${{ secrets.DISCORD_WEBHOOK_COURSES }}
+        run: cd outils && node annonce-course.mjs ../etat/annonces.json
+
+      - name: Enregistrer l'état
+        if: steps.verif.outputs.a_faire == '1' && !inputs.essai
+        run: |
+          cp etat/annonces.json /tmp/annonces.json
+          git config user.name "Meatball MC"
+          git config user.email "actions@users.noreply.github.com"
+          if git ls-remote --exit-code --heads origin etat-annonces >/dev/null; then
+            git checkout -q -B etat-annonces origin/etat-annonces
+          else
+            git checkout -q --orphan etat-annonces && git rm -rqf .
+          fi
+          cp /tmp/annonces.json annonces.json
+          git add annonces.json
+          git commit -qm "Annonces postées" || exit 0
+          git push -q origin etat-annonces

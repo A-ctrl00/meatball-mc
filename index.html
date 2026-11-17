@@ -3889,6 +3889,8 @@ function mcDateIso(v) {
   m = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
   return m ? m[0] : '';
 }
+// Heure de départ « 21:15 » (vide si absente ou illisible)
+function mcHeure(v) { const m = String(v || '').trim().match(/^(\d{1,2})[:h](\d{2})/); return m ? m[1].padStart(2, '0') + ':' + m[2] : ''; }
 function mcRemplacer(cible, liste) { if (liste.length) cible.splice(0, cible.length, ...liste); }
 async function mcChargerConfig() {
   const lire = gid => fetchSheetTabCSVByGid(gid).catch(e => { console.warn('Onglet ' + gid + ' :', e.message); return []; });
@@ -3901,7 +3903,7 @@ async function mcChargerConfig() {
     return d;
   }));
   mcRemplacer(MC_CALENDRIER, cal.map(r => [mcDateIso(r[0]), (r[1] || '').trim(), (r[2] || '').trim(), (r[3] || '').trim(),
-    (r[4] || '').trim(), (r[5] || '').trim()]).filter(c => c[0] && c[1]).sort((a, b) => a[0].localeCompare(b[0])));
+    (r[4] || '').trim(), (r[5] || '').trim(), mcHeure(r[6])]).filter(c => c[0] && c[1]).sort((a, b) => a[0].localeCompare(b[0])));
   mcRemplacer(MC_VOITURES, voit.filter(r => (r[0] || '').trim()).map(r => {
     const nom = r[0].trim();
     const img = (r[4] || '').trim();
@@ -4445,11 +4447,12 @@ function mcEngagesCourse(c) {
     .filter(n => !String(c[1]).startsWith('Ifrn') || mcDivisionPrincipale(n) === c[1]);
 }
 
-function mcRenderRace() {
+// cible (facultatif) : une course précise du calendrier, utilisé par l'annonce Discord automatique
+function mcRenderRace(cible) {
   const el = document.getElementById('mcRace');
   if (!el) return;
   const auj = new Date(); auj.setHours(0, 0, 0, 0);
-  const course = MC_CALENDRIER.find(c => new Date(c[0] + 'T00:00:00') >= auj);
+  const course = cible || MC_CALENDRIER.find(c => new Date(c[0] + 'T00:00:00') >= auj);
   if (!course) { el.innerHTML = '<div class="mc-race-next"><h3>Saison terminée</h3><span class="mc-note">Rendez-vous la saison prochaine.</span></div>'; return; }
   const d = new Date(course[0] + 'T00:00:00');
   const j = Math.round((d - auj) / 86400000);
@@ -4464,8 +4467,8 @@ function mcRenderRace() {
   el.innerHTML = `
     <div class="mc-race-main">
       ${img ? `<img src="${img}" alt="" referrerpolicy="no-referrer">` : ''}
-      <h2>${mcEsc(div.nom)} · ${mcEsc(course[2])}</h2>
-      <span>${MC_JOURS[d.getDay()].replace(/^./, c => c.toUpperCase())} ${d.getDate()} ${MC_MOIS[d.getMonth()]} ${d.getFullYear()}</span>
+      <h2>${mcEsc(div.nom)}${course[2] && course[2] !== div.nom ? ' · ' + mcEsc(course[2]) : ''}</h2>
+      <span>${MC_JOURS[d.getDay()].replace(/^./, c => c.toUpperCase())} ${d.getDate()} ${MC_MOIS[d.getMonth()]} ${d.getFullYear()}${course[6] ? ' · ' + mcEsc(course[6].replace(':', 'h')) : ''}</span>
       <span>${mcEsc(course[3])}</span>
     </div>
     <div class="mc-race-next">
@@ -4714,7 +4717,7 @@ mcBuildHome();
   const R = [
     [/^(\d{1,2}) (janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre) (\d{4})(, (.+))?$/,
       (m, j, mo, a, x, suite) => MOIS[mo] + ' ' + j + ', ' + a + (suite ? ', ' + mot(suite) : '')],
-    [/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche) (\d{1,2}) (\S+) (\d{4})$/, (m, jo, j, mo, a) => JOURS[jo] + ' ' + (MOIS[mo] || mo) + ' ' + j + ', ' + a],
+    [/^(Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche) (\d{1,2}) (\S+) (\d{4})( · (\d{2})h(\d{2}))?$/, (m, jo, j, mo, a, x, h, mi) => JOURS[jo] + ' ' + (MOIS[mo] || mo) + ' ' + j + ', ' + a + (h ? ' · ' + h + ':' + mi : '')],
     [/^Mis à jour (.+) à (.+)$/, (m, d, h) => 'Updated ' + d + ' at ' + h],
     [/^Course (\d+) sur (\d+)$/, (m, a, b) => 'Race ' + a + ' of ' + b],
     [/^(\d+) ventes?$/, (m, n) => pl(n, 'sale', 'sales')],
