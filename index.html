@@ -3823,9 +3823,20 @@ function mcCollectArticles() {
     const titre = (card.querySelector('.article-title') || {}).textContent || '';
     const p = card.querySelector('.article-body > p:not(.article-subhead)');
     const resume = p ? p.textContent.trim() : '';
-    return { i, card, img: img ? img.src : '', alt: img ? img.alt : '', date: date.trim(), titre: titre.trim(), resume };
+    // identifiant stable tiré du titre français (lien direct meatball-mc.fr/#article-…), gardé même si la page passe en anglais
+    if (!card.dataset.mcId) card.dataset.mcId = mcSlugArticle(titre);
+    return { i, card, id: card.dataset.mcId, img: img ? img.src : '', alt: img ? img.alt : '', date: date.trim(), titre: titre.trim(), resume };
   });
 }
+function mcSlugArticle(t) { return String(t || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 80); }
+// Lien direct vers un article : meatball-mc.fr/#article-titre-de-l-article
+function mcArticleDepuisAdresse() {
+  if (!location.hash.startsWith('#article-')) return;
+  const id = decodeURIComponent(location.hash.slice(9));
+  const a = (_mcArticles.length ? _mcArticles : mcCollectArticles()).find(x => x.id === id);
+  if (a) mcOpenArticle(a.i);
+}
+window.addEventListener('hashchange', mcArticleDepuisAdresse);
 function mcTitre(t) { return t; }
 function mcStory(a, cls, avecResume) {
   if (!a) return '';
@@ -4296,6 +4307,7 @@ function mcBuildHome() {
   const home = document.getElementById('mcHome');
   if (!home) return;
   _mcArticles = mcCollectArticles();
+  setTimeout(mcArticleDepuisAdresse, 0);
   const A = _mcArticles;
   const fleche = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   // Produits de la boutique dans un ordre aléatoire à chaque visite (mélange de Fisher-Yates)
