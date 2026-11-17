@@ -4013,7 +4013,7 @@ function mcVitrineHTML(nom, extra, sansBouton) {
   // Deux chiffres : victoires et podiums s'ils ne sont pas à 0, complétés par la position moyenne
   // puis le nombre de courses de ligue
   const stats = [];
-  if (s.v) stats.push(['Victoires', s.v]);
+  if (s.v) stats.push(['Victoires en ligue', s.v]);
   if (s.p) stats.push(['Podiums', s.p]);
   if (stats.length < 2) stats.push(['Position moyenne', moy]);
   if (stats.length < 2) stats.unshift(['Courses de ligue', rows.length || '–']);
