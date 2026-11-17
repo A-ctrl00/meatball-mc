@@ -4715,6 +4715,7 @@ mcBuildHome();
     [/^(.+) · Manche (\d+)\/(\d+)$/, (m, l, a, b) => tr1(l) + ' · Round ' + a + '/' + b],
     [/^(.+) · Manche (\d+)\/(\d+) ·$/, (m, l, a, b) => tr1(l) + ' · Round ' + a + '/' + b + ' ·'],
     [/^Pilotes : (.+)$/, (m, l) => 'Drivers: ' + l],
+    [/^Saison (\d+), (\S+) à (\S+) (\d{4})$/, (m, n, a, b, an) => 'Season ' + n + ', ' + (MOIS[a] || a) + ' to ' + (MOIS[b] || b) + ' ' + an],
     [/^Division (IFRN )?: (.+)$/, (m, i, d) => 'Division' + (i ? ' IFRN' : '') + ': ' + mot(d)],
     [/^Power Ranking : (\d+)e, (\d+) pts$/, (m, r, p) => 'Power Ranking: #' + r + ', ' + p + ' pts'],
     [/^P(\d+) à P(\d+)$/, (m, a, b) => 'P' + a + ' to P' + b],
