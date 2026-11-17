@@ -1538,7 +1538,8 @@
   .pr-table th { text-align: left; font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .04em; color: var(--text-dim); padding: 6px 10px; border-bottom: 1px solid var(--line); white-space: nowrap; }
   .pr-table td { padding: 8px 10px; border-bottom: 1px solid rgba(255,255,255,0.05); white-space: nowrap; }
   .pr-table .pr-num { text-align: right; font-variant-numeric: tabular-nums; }
-  .pr-table th:nth-child(n+3) { text-align: right; }
+  .pr-table th:nth-child(n+4) { text-align: right; }
+  .pr-table td.pr-circ { color: var(--text-dim); white-space: normal; min-width: 150px; }
   .pr-table .plus { color: #8fd18f; }
   .pr-table .moins { color: #ff7b6b; }
   .pr-table .zero { color: var(--text-dim); }
@@ -3051,7 +3052,7 @@ function mcDetailRanking(rows, parseDate) {
     const x = xEstime ? (m ? Math.round(m.s / m.n) : 0) : parseFloat(xBrut) || 0;
     const ptsPos = r[26] !== undefined && String(r[26]).trim() !== '' ? parseFloat(r[26]) || 0 : mcBaremePosition(String(r[2]).trim(), pos);
     const c = {
-      i, date: d, dateTxt: r[0], division: String(r[2] || '').trim(), pos, qualif: r[4],
+      i, date: d, dateTxt: r[0], division: String(r[2] || '').trim(), circuit: String(r[9] || '').trim(), pos, qualif: r[4],
       fiab: r[5] === 'Oui' ? 50 : 0, disc: r[6] === 'Oui' ? 20 : 0, ptsPos, x, xEstime, penX: -2 * x,
     };
     c.total = c.fiab + c.disc + c.ptsPos + c.penX;
@@ -3103,6 +3104,7 @@ function mcEnrichirRanking() {
       <tr>
         <td>${mcEsc(c.dateTxt)}</td>
         <td>${mcEsc(mcNomLigue(c.division))}</td>
+        <td class="pr-circ">${mcEsc(c.circuit || '–')}</td>
         <td class="pr-num">${isNaN(c.pos) ? '–' : 'P' + c.pos}</td>
         <td class="pr-num ${c.fiab ? 'plus' : 'zero'}">${c.fiab ? '+50' : '0'}</td>
         <td class="pr-num ${c.disc ? 'plus' : 'zero'}">${c.disc ? '+20' : '0'}</td>
@@ -3120,7 +3122,7 @@ function mcEnrichirRanking() {
         <span class="pr-egal">= <b>${d.total}</b> pts</span>
       </div>
       <div class="pr-table-wrap"><table class="pr-table">
-        <thead><tr><th>Date</th><th>Ligue</th><th>Arrivée</th><th>Dans le tour</th><th>Briefing</th><th>Position</th><th>X</th><th>Total</th></tr></thead>
+        <thead><tr><th>Date</th><th>Ligue</th><th>Circuit</th><th>Arrivée</th><th>Dans le tour</th><th>Briefing</th><th>Position</th><th>X</th><th>Total</th></tr></thead>
         <tbody>${lignes}</tbody>
       </table></div>
       ${estime ? '<p class="pr-note">* Ligue qui ne publie pas les incidents : la pénalité utilise la moyenne de X du pilote, pour ne pas donner de bonus.</p>' : ''}`;
