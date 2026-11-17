@@ -1769,6 +1769,31 @@
     .mc-pp-tab td, .mc-pp-tab th { padding: 8px 6px; }
   }
 
+  /* Cadre « Résultats » posté sur Discord (outils/annonce-course.mjs) */
+  .mc-res { width: 420px; background: radial-gradient(ellipse 120% 60% at 50% 0%, #0f2a4a 0%, #001226 60%); color: #fff; padding: 26px 22px 20px; font-family: 'Inter', sans-serif; }
+  .mc-res-k { font: 700 13px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); }
+  .mc-res h2 { margin: 6px 0 2px; font: 900 30px/1.05 'Outfit', sans-serif; text-transform: uppercase; }
+  .mc-res-c { color: #c9d3e0; font-size: 14px; }
+  .mc-res-p { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.12); }
+  .mc-res-p .mc-car-scene { padding-top: 34px; }
+  .mc-res-p .mc-car-grand { font-size: 118px; }
+  .mc-res-p .mc-car-grand.long { font-size: 88px; }
+  .mc-res-p.sans-img .mc-car-scene { padding-top: 0; min-height: 120px; display: flex; align-items: center; }
+  .mc-res-p.sans-img .mc-car-grand { position: static; justify-content: flex-start; gap: .18em; }
+  .mc-res-l { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 4px; }
+  .mc-res-nm { font: 800 22px/1.1 'Outfit', sans-serif; }
+  .mc-res-tag { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; font: 800 11px 'Outfit', sans-serif; letter-spacing: .1em; text-transform: uppercase; background: #24364f; color: #dfe7f1; }
+  .mc-res-tag.or { background: #FFC53D; color: #1a1200; }
+  .mc-res-tag.pod { background: var(--orange); color: #fff; }
+  .mc-res-sf { display: flex; gap: 16px; text-align: right; }
+  .mc-res-sf span { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #9fb0c6; }
+  .mc-res-sf b { font: 900 34px/1 'Outfit', sans-serif; }
+  .mc-res-sf .fin b { color: var(--orange); font-size: 44px; }
+  .mc-res-d { font: 700 13px 'Outfit', sans-serif; margin-top: 4px; text-align: right; }
+  .mc-res-d.plus { color: #66BB6A; } .mc-res-d.moins { color: #EF5350; }
+  .mc-res-f { margin-top: 22px; display: flex; justify-content: space-between; align-items: center; font: 700 12px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9fb0c6; }
+  .mc-res-f img { height: 34px; }
+
   /* Lecture d'un article */
   .mc-reader { position: fixed; inset: 0; z-index: 200; background: rgba(0, 8, 18, 0.88); display: none; overflow-y: auto; padding: 40px 16px; }
   .mc-reader.open { display: block; }
@@ -4224,6 +4249,61 @@ function mcPiloteDepuisAdresse() {
   if (!location.hash.startsWith('#pilote-')) return;
   const n = mcNomDepuisSlug(location.hash.slice(8));
   if (n) mcOuvrirPilote(n, true);
+}
+
+/**
+ * Cadre « Résultats » d'une soirée pour une ligue, façon post d'équipe sur les réseaux :
+ * voiture, initiales et numéro de chaque pilote, place de départ et d'arrivée.
+ * date : 'jj/mm/aa' comme dans RESULTATS LIGUE ; code : code de la ligue. Utilisé par l'annonce Discord.
+ */
+function mcCadreResultats(date, code) {
+  const rows = mcLigneRows().filter(r => String(r[0]).trim() === date && String(r[2]).trim() === code);
+  if (!rows.length) return '';
+  const num = v => { const n = parseFloat(v); return isNaN(n) ? 999 : n; };
+  rows.sort((a, b) => num(a[3]) - num(b[3]));
+  const div = MC_DIVISIONS.find(x => x.code === code) || { nom: code };
+  const d = mcDate(date);
+  const iso = d ? d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') : '';
+  const course = MC_CALENDRIER.find(c => c[0] === iso && c[1] === code);
+  const circuit = String(rows[0][9] || (course ? course[3] : '') || '').trim();
+  const titre = div.nom + (course && course[2] && course[2] !== div.nom ? ' · ' + course[2] : '');
+  const logo = typeof mcLogo === 'function' ? mcLogo() : '';
+  const blocs = rows.map(r => {
+    const nom = r[1];
+    const v = MC_VOITURES.find(x => x.pilote === nom) || {};
+    const carte = (typeof _pilotsByName !== 'undefined' && _pilotsByName[nom]) || {};
+    const n = String(v.num || carte.num || '').trim();
+    const ini = v.grand || mcInitiales(nom);
+    const pos = parseInt(r[3], 10);
+    const q = String(r[4] || '').trim();
+    const qn = parseInt(q, 10);
+    const nq = /nq/i.test(q) || isNaN(qn);
+    const gain = !nq && !isNaN(pos) ? qn - pos : null;
+    const tag = pos === 1 ? '<span class="mc-res-tag or">Victoire</span>' : pos <= 3 ? '<span class="mc-res-tag pod">Podium</span>' : pos <= 5 ? '<span class="mc-res-tag">Top 5</span>' : pos <= 10 ? '<span class="mc-res-tag">Top 10</span>' : '';
+    return `<div class="mc-res-p${v.img ? '' : ' sans-img'}">
+      <div class="mc-car-scene">
+        <div class="mc-car-grand${(ini + n).length > 4 ? ' long' : ''}" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
+        ${v.img ? `<img class="mc-car-img" src="${v.img}" alt="">` : ''}
+      </div>
+      <div class="mc-res-l">
+        <div><div class="mc-res-nm">${mcEsc(nom)}</div>${tag}</div>
+        <div>
+          <div class="mc-res-sf">
+            <div><span>Départ</span><b>${nq ? (q ? mcEsc(q.toUpperCase()) : '–') : 'P' + qn}</b></div>
+            <div class="fin"><span>Arrivée</span><b>${isNaN(pos) ? '–' : 'P' + pos}</b></div>
+          </div>
+          ${gain ? `<div class="mc-res-d ${gain > 0 ? 'plus' : 'moins'}">${gain > 0 ? '▲ ' + gain + (gain > 1 ? ' places gagnées' : ' place gagnée') : '▼ ' + (-gain) + (gain < -1 ? ' places perdues' : ' place perdue')}</div>` : ''}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+  return `<div class="mc-res">
+    <div class="mc-res-k">Résultats${d ? ' · ' + MC_JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MC_MOIS[d.getMonth()] + ' ' + d.getFullYear() : ''}</div>
+    <h2>${mcEsc(titre)}</h2>
+    ${circuit ? `<div class="mc-res-c">${mcEsc(circuit)}</div>` : ''}
+    ${blocs}
+    <div class="mc-res-f"><span>meatball-mc.fr</span>${logo ? `<img src="${logo}" alt="">` : '<span>Meatball MC</span>'}</div>
+  </div>`;
 }
 
 function mcGarage(dir) {

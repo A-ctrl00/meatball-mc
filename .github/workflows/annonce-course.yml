@@ -1,6 +1,10 @@
-# Annonce Discord des courses du soir : photo du cadre « Prochaine course » du site,
-# 4 heures avant le départ (ou à 17h si l'heure n'est pas renseignée dans CALENDRIER).
-name: Annonce des courses sur Discord
+# Annonces Discord :
+#  - courses du soir : photo du cadre « Prochaine course » du site, 4 heures avant le départ
+#    (ou à 17h si l'heure n'est pas renseignée dans CALENDRIER) ;
+#  - nouveaux articles : photo du cadre de l'article et lien direct, dès qu'il est en ligne ;
+#  - résultats : cadre « Résultats » (voiture, départ, arrivée de chaque pilote) dès qu'une soirée
+#    apparaît dans RESULTATS LIGUE.
+name: Annonces Discord (courses, articles, résultats)
 
 on:
   schedule:
@@ -8,9 +12,10 @@ on:
   workflow_dispatch:
     inputs:
       essai:
-        description: "Essai : poster tout de suite la prochaine course du calendrier"
-        type: boolean
-        default: false
+        description: "Essai : poster tout de suite la prochaine course ou les derniers résultats"
+        type: choice
+        options: ['non', 'course', 'resultats']
+        default: 'non'
 
 permissions:
   contents: write
@@ -33,6 +38,8 @@ jobs:
           if git ls-remote --exit-code --heads origin etat-annonces >/dev/null; then
             git fetch -q origin etat-annonces
             git show origin/etat-annonces:annonces.json > etat/annonces.json || echo '{}' > etat/annonces.json
+            git show origin/etat-annonces:articles.json > etat/articles.json 2>/dev/null || rm -f etat/articles.json
+            git show origin/etat-annonces:resultats.json > etat/resultats.json 2>/dev/null || rm -f etat/resultats.json
           else
             echo '{}' > etat/annonces.json
           fi
@@ -45,7 +52,7 @@ jobs:
         id: verif
         env:
           VERIF_SEUL: '1'
-          ESSAI: ${{ inputs.essai && '1' || '0' }}
+          ESSAI: ${{ inputs.essai || 'non' }}
           DISCORD_WEBHOOK_COURSES: ${{ secrets.DISCORD_WEBHOOK_COURSES }}
         run: |
           cd outils && npm init -y >/dev/null && npm i -s playwright@1.47.2 >/dev/null
@@ -58,14 +65,16 @@ jobs:
       - name: Photographier et poster
         if: steps.verif.outputs.a_faire == '1'
         env:
-          ESSAI: ${{ inputs.essai && '1' || '0' }}
+          ESSAI: ${{ inputs.essai || 'non' }}
           DISCORD_WEBHOOK_COURSES: ${{ secrets.DISCORD_WEBHOOK_COURSES }}
         run: cd outils && node annonce-course.mjs ../etat/annonces.json
 
       - name: Enregistrer l'état
-        if: steps.verif.outputs.a_faire == '1' && !inputs.essai
+        if: (steps.verif.outputs.a_faire == '1' || steps.verif.outputs.etat_change == '1') && (inputs.essai || 'non') == 'non'
         run: |
           cp etat/annonces.json /tmp/annonces.json
+          cp etat/articles.json /tmp/articles.json 2>/dev/null || true
+          cp etat/resultats.json /tmp/resultats.json 2>/dev/null || true
           git config user.name "Meatball MC"
           git config user.email "actions@users.noreply.github.com"
           if git ls-remote --exit-code --heads origin etat-annonces >/dev/null; then
@@ -74,6 +83,7 @@ jobs:
             git checkout -q --orphan etat-annonces && git rm -rqf .
           fi
           cp /tmp/annonces.json annonces.json
-          git add annonces.json
+          for f in articles.json resultats.json; do if [ -f /tmp/$f ]; then cp /tmp/$f $f; fi; done
+          git add annonces.json $(ls articles.json resultats.json 2>/dev/null)
           git commit -qm "Annonces postées" || exit 0
           git push -q origin etat-annonces
