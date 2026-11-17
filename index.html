@@ -3904,7 +3904,7 @@ async function mcChargerConfig() {
     return d;
   }));
   mcRemplacer(MC_CALENDRIER, cal.map(r => [mcDateIso(r[0]), (r[1] || '').trim(), (r[2] || '').trim(), (r[3] || '').trim(),
-    (r[4] || '').trim(), (r[5] || '').trim(), (r[6] || '').trim()]).filter(c => c[0] && c[1]).sort((a, b) => a[0].localeCompare(b[0])));
+    (r[4] || '').trim(), (r[5] || '').trim()]).filter(c => c[0] && c[1]).sort((a, b) => a[0].localeCompare(b[0])));
   mcRemplacer(MC_VOITURES, voit.filter(r => (r[0] || '').trim()).map(r => {
     const nom = r[0].trim();
     const img = (r[4] || '').trim();
@@ -4429,11 +4429,9 @@ function mcPilotesDivision(code, depuis) {
   return Object.keys(compte).sort((a, b) => compte[b] - compte[a]);
 }
 
-// Pilotes d'une course du calendrier : ceux écrits dans la colonne « Pilotes engagés » de CALENDRIER
-// s'il y en a, sinon les titulaires de la ligue d'après les résultats (en IFRN, sans les pigistes)
+// Pilotes d'une course du calendrier : ceux qui ont déjà au moins une course dans la ligue
+// (d'après RESULTATS LIGUE ; en IFRN, sans les pigistes)
 function mcEngagesCourse(c) {
-  const liste = String(c[6] || '').split(/[,;]/).map(x => x.trim()).filter(Boolean);
-  if (liste.length) return liste;
   return mcPilotesDivision(c[1], new Date(2026, 9, 1))
     .filter(n => !String(c[1]).startsWith('Ifrn') || mcDivisionPrincipale(n) === c[1]);
 }
