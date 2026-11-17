@@ -4045,7 +4045,6 @@ function mcOuvrirPilote(nom, sansHistorique) {
   const dansTour = courses.filter(c => c.fiab).length;
   const xs = courses.filter(c => !c.xEstime).map(c => c.x);
   const xMoy = xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
-  const brief = courses.filter(c => c.disc).length;
   // Ligues et couleurs
   const ligues = [...new Set(courses.map(c => c.division))];
   const couleur = code => MC_PP_COULEURS[Math.max(0, ligues.indexOf(code)) % MC_PP_COULEURS.length];
@@ -4094,7 +4093,6 @@ function mcOuvrirPilote(nom, sansHistorique) {
           ${kpi('Places gagnées en course', gainMoy == null ? '–' : (gainMoy > 0 ? '+' : '') + mcVirgule(gainMoy))}
           ${kpi('Dans le tour du leader', nb ? Math.round(dansTour / nb * 100) + ' %' : '–')}
           ${kpi('X moyen', mcVirgule(xMoy))}
-          ${kpi('Briefings', brief)}
         </div>
         <span class="mc-note">Courses de ligue saisies dans le Sheet de l'équipe. Places gagnées : moyenne entre la place de départ et la place d'arrivée.</span>
       </section>
