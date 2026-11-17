@@ -4004,15 +4004,23 @@ async function mcChargerConfig() {
 
 // Voitures d'un pilote : une ligne par catégorie dans l'onglet VOITURES (colonne F = catégorie de LIGUES).
 // Avec une ligue : la voiture de la catégorie de cette ligue, sinon une autre voiture du pilote au hasard.
-// Sans ligue : sa voiture principale (la première ligne du pilote).
+// Sans ligue (Convoi, page pilote) : la voiture de sa division IFRN principale (truck en Ignite,
+// O'Reilly en Access…), sinon sa première ligne.
 function mcVoitureDe(nom, code) {
   const liste = MC_VOITURES.filter(v => v.pilote === nom);
   if (!liste.length) return {};
   const avecImg = liste.filter(v => v.img);
-  if (!code) return avecImg[0] || liste[0];
-  const cat = String((MC_DIVISIONS.find(d => d.code === code) || {}).categorie || '').trim().toLowerCase();
-  const meme = cat ? liste.filter(v => String(v.cat || '').trim().toLowerCase() === cat) : [];
-  if (meme.length) return meme.find(v => v.img) || meme[0];
+  const deCat = c => {
+    const cat = String((MC_DIVISIONS.find(d => d.code === c) || {}).categorie || '').trim().toLowerCase();
+    const meme = cat ? liste.filter(v => String(v.cat || '').trim().toLowerCase() === cat) : [];
+    return meme.find(v => v.img) || meme[0];
+  };
+  if (!code) {
+    const div = typeof mcDivisionPrincipale === 'function' ? mcDivisionPrincipale(nom) : null;
+    return (div && deCat(div)) || avecImg[0] || liste[0];
+  }
+  const meme = deCat(code);
+  if (meme) return meme;
   const pool = avecImg.length ? avecImg : liste;
   return pool[Math.floor(Math.random() * pool.length)];
 }
