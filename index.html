@@ -3949,8 +3949,22 @@ function mcVitrineHTML(nom, extra, sansBouton) {
 }
 
 // ===== Page pilote : tout ce qu'on sait d'un pilote, à partir du Sheet =====
-// pas de jaune ni d'or dans les couleurs de ligue : l'or est réservé aux victoires
-const MC_PP_COULEURS = ['#FF6A1A', '#4FC3F7', '#81C784', '#BA68C8', '#F06292', '#4DB6AC', '#A1887F', '#90A4AE', '#E57373'];
+// Une couleur fixe et bien distincte par ligue, la même sur toutes les pages pilotes.
+// Pas de jaune ni d'or : l'or est réservé aux victoires.
+const MC_PP_COULEUR_LIGUE = {
+  'Ifrn 1': '#EF5350',            // rouge
+  'Ifrn 2': '#43A047',            // vert
+  'Ifrn 3': '#AB47BC',            // violet
+  'Ifrn 4': '#8D6E63',            // brun
+  'SBG': '#FF6A1A',               // orange
+  'SBG Indy': '#00BFA5',          // turquoise
+  'Virtual Oval': '#4FC3F7',      // bleu ciel
+  'HRL ARCA': '#F48FB1',          // rose
+  'HRL Grand National': '#F5F5F5',// blanc
+  'EuroAmerican 532': '#3D5AFE',  // bleu roi
+};
+// Couleurs de secours pour une ligue ajoutée plus tard dans l'onglet LIGUES
+const MC_PP_COULEURS = ['#C0CA33', '#5C6BC0', '#26A69A', '#FF8A65', '#90A4AE', '#CE93D8'];
 function mcSansAccent(t) { return String(t || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase(); }
 function mcSlug(nom) { return mcSansAccent(nom).replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
 function mcVirgule(n, d) { return n == null || isNaN(n) ? '–' : (+n).toFixed(d == null ? 1 : d).replace('.', window.MC_LANG === 'en' ? '.' : ','); }
@@ -4047,7 +4061,8 @@ function mcOuvrirPilote(nom, sansHistorique) {
   const xMoy = xs.length ? xs.reduce((a, b) => a + b, 0) / xs.length : null;
   // Ligues et couleurs
   const ligues = [...new Set(courses.map(c => c.division))];
-  const couleur = code => MC_PP_COULEURS[Math.max(0, ligues.indexOf(code)) % MC_PP_COULEURS.length];
+  const autres = ligues.filter(c => !MC_PP_COULEUR_LIGUE[c]);
+  const couleur = code => MC_PP_COULEUR_LIGUE[code] || MC_PP_COULEURS[Math.max(0, autres.indexOf(code)) % MC_PP_COULEURS.length];
   const divPrinc = mcDivisionPrincipale(nom);
   // Ligues où il court en ce moment : au moins une course sur les 60 derniers jours (la plus récente d'abord)
   const il60 = new Date(); il60.setHours(0, 0, 0, 0); il60.setDate(il60.getDate() - 60);
