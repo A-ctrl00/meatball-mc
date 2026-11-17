@@ -40,7 +40,7 @@
     [/^(.+) · Manche (\d+)\/(\d+)$/, (m, l, a, b) => tr1(l) + ' · Round ' + a + '/' + b],
     [/^(.+) · Manche (\d+)\/(\d+) ·$/, (m, l, a, b) => tr1(l) + ' · Round ' + a + '/' + b + ' ·'],
     [/^Pilotes : (.+)$/, (m, l) => 'Drivers: ' + l],
-    [/^Division : (.+)$/, (m, d) => 'Division: ' + mot(d)],
+    [/^Division (IFRN )?: (.+)$/, (m, i, d) => 'Division' + (i ? ' IFRN' : '') + ': ' + mot(d)],
     [/^Power Ranking : (\d+)e, (\d+) pts$/, (m, r, p) => 'Power Ranking: #' + r + ', ' + p + ' pts'],
     [/^P(\d+) à P(\d+)$/, (m, a, b) => 'P' + a + ' to P' + b],
     [/^Victoire de (.+?), (.+)$/, (m, n, l) => de(n, 'win') + ', ' + mot(l)],
