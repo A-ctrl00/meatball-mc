@@ -3857,14 +3857,14 @@ const MC_CALENDRIER = [
   ['2026-12-19', 'HRL ARCA', 'Charlotte 85', 'Charlotte Motor Speedway', 10, 10],
 ].sort((a, b) => a[0].localeCompare(b[0]));
 const MC_DIVISIONS = [
-  { code: 'Ifrn 1', grand: ['IFRN', 'CUP'], nom: 'IFRN Cup', sous: 'IFRN 1, élite du club' },
-  { code: 'Ifrn 2', grand: ['IFRN', 'ACCESS'], nom: 'IFRN Access', sous: 'IFRN 2' },
-  { code: 'Ifrn 3', grand: ['IFRN', 'IGNITE'], nom: 'IFRN Ignite', sous: 'IFRN 3, trucks' },
-  { code: 'Ifrn 4', grand: ['IFRN', 'ROOKIE'], nom: 'IFRN Rookie', sous: 'IFRN 4' },
-  { code: 'HRL ARCA', grand: ['HRL', 'ARCA'], nom: 'HRL ARCA', sous: 'Ligue HRL', voiture: 'Maxime Toffolet' },
-  { code: 'HRL Grand National', grand: ['HRL', 'GRAND NATIONAL'], nom: 'HRL Grand National', sous: 'Ligue HRL' },
-  { code: 'SBG', grand: ['SBG', 'LEGENDS'], nom: 'SBG Legends', sous: 'Saison 5, juillet à août 2026' },
-  { code: 'Virtual Oval', grand: ['VIRTUAL', 'OVAL'], nom: 'Virtual Oval', sous: 'Ligue Virtual Oval' },
+  { code: 'Ifrn 1', grand: ['IFRN', 'CUP'], nom: 'IFRN Cup', sous: 'IFRN 1, élite du club', categorie: 'NASCAR Next Gen Cup' },
+  { code: 'Ifrn 2', grand: ['IFRN', 'ACCESS'], nom: 'IFRN Access', sous: 'IFRN 2', categorie: 'NASCAR Xfinity' },
+  { code: 'Ifrn 3', grand: ['IFRN', 'IGNITE'], nom: 'IFRN Ignite', sous: 'IFRN 3, trucks', categorie: 'NASCAR Truck' },
+  { code: 'Ifrn 4', grand: ['IFRN', 'ROOKIE'], nom: 'IFRN Rookie', sous: 'IFRN 4', categorie: 'ARCA' },
+  { code: 'HRL ARCA', grand: ['HRL', 'ARCA'], nom: 'HRL ARCA', sous: 'Ligue HRL', voiture: 'Maxime Toffolet', categorie: 'ARCA' },
+  { code: 'HRL Grand National', grand: ['HRL', 'GRAND NATIONAL'], nom: 'HRL Grand National', sous: 'Ligue HRL', categorie: 'NASCAR Gen 4' },
+  { code: 'SBG', grand: ['SBG', 'LEGENDS'], nom: 'SBG Legends', sous: 'Saison 5, juillet à août 2026', categorie: 'Legends' },
+  { code: 'Virtual Oval', grand: ['VIRTUAL', 'OVAL'], nom: 'Virtual Oval', sous: 'Ligue Virtual Oval', categorie: 'NASCAR Next Gen Cup' },
 ];
 const MC_MOIS = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
 const MC_JOURS = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi'];
@@ -3950,16 +3950,17 @@ document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.g
 
 // Voitures en vitrine (rendu photo réaliste, fond bleu nuit)
 const MC_VOITURES = [
-  { pilote: 'Thomas Daries', grand: 'TD', num: '1', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-1-daries-v2.jpg' },
-  { pilote: 'Alexis Joube', grand: 'AJ', num: '00', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-00-joube.jpg' },
-  { pilote: 'Cedric Colleau', grand: 'CC', num: '14', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-14-colleau.jpg' },
-  { pilote: 'Maxime Toffolet', grand: 'MT', num: '204', modele: 'ARCA', img: 'assets/voiture-204-toffolet.jpg' },
+  { pilote: 'Thomas Daries', grand: 'TD', num: '1', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-1-daries-v2.jpg', cat: 'NASCAR Next Gen Cup' },
+  { pilote: 'Alexis Joube', grand: 'AJ', num: '00', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-00-joube.jpg', cat: 'NASCAR Next Gen Cup' },
+  { pilote: 'Cedric Colleau', grand: 'CC', num: '14', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-14-colleau.jpg', cat: 'NASCAR Next Gen Cup' },
+  { pilote: 'Maxime Toffolet', grand: 'MT', num: '204', modele: 'ARCA', img: 'assets/voiture-204-toffolet.jpg', cat: 'ARCA' },
   { pilote: 'Terry Despois', grand: 'TD', num: '45', modele: 'Ford Mustang', img: 'assets/voiture-45-despois.jpg' },
-  { pilote: 'Kevin Charles', grand: 'KC', num: '279', modele: 'ARCA', img: 'assets/voiture-279-charles.jpg' },
-  { pilote: 'Etienne Senamaud', grand: 'ES', num: '184', modele: 'Truck', img: 'assets/voiture-184-senamaud-v2.jpg' },
-  { pilote: 'Christophe Gasse', grand: 'CG', num: '142', modele: 'Truck', img: 'assets/voiture-142-gasse.jpg' },
-  { pilote: 'Johann Bourgouin', grand: 'JB', num: '10', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-10-bourgouin.jpg' },
-  { pilote: 'Damien Przybylski', grand: 'DP', num: '51', modele: 'Chevrolet Camaro Next Gen', img: 'assets/voiture-51-przybylski.jpg' },
+  { pilote: 'Kevin Charles', grand: 'KC', num: '279', modele: 'ARCA', img: 'assets/voiture-279-charles.jpg', cat: 'ARCA' },
+  { pilote: 'Etienne Senamaud', grand: 'ES', num: '184', modele: 'Truck', img: 'assets/voiture-184-senamaud-v2.jpg', cat: 'NASCAR Truck' },
+  { pilote: 'Christophe Gasse', grand: 'CG', num: '142', modele: 'Truck', img: 'assets/voiture-142-gasse.jpg', cat: 'NASCAR Truck' },
+  { pilote: 'Johann Bourgouin', grand: 'JB', num: '10', modele: 'Ford Mustang Next Gen', img: 'assets/voiture-10-bourgouin.jpg', cat: 'NASCAR Next Gen Cup' },
+  { pilote: 'Damien Przybylski', grand: 'DP', num: '51', modele: 'Chevrolet Camaro Next Gen', img: 'assets/voiture-51-przybylski.jpg', cat: 'NASCAR Next Gen Cup' },
+  { pilote: 'Damien Przybylski', grand: 'DP', num: '103', modele: 'Chevrolet Silverado Truck', img: 'assets/voiture-103-przybylski-truck.jpg', cat: 'NASCAR Truck' },
 ];
 let _mcVoitI = 0;
 
@@ -3993,17 +3994,33 @@ async function mcChargerConfig() {
     const nom = r[0].trim();
     const img = (r[4] || '').trim();
     return { pilote: nom, num: (r[1] || '').trim().replace(/^'/, ''), grand: (r[2] || '').trim() || mcInitiales(nom),
-      modele: (r[3] || '').trim(), img: /drive\.google\.com/.test(img) ? toDriveDirectImage(img) : img.replace(/^https?:\/\/(www\.)?meatball-mc\.fr\//, '') };
+      modele: (r[3] || '').trim(), img: /drive\.google\.com/.test(img) ? toDriveDirectImage(img) : img.replace(/^https?:\/\/(www\.)?meatball-mc\.fr\//, ''),
+      cat: (r[5] || '').trim() };
   }));
   if (_mcVoitI >= MC_VOITURES.length) _mcVoitI = 0;
   if (_mcDiv >= MC_DIVISIONS.length) _mcDiv = 0;
 }
 
+// Voitures d'un pilote : une ligne par catégorie dans l'onglet VOITURES (colonne F = catégorie de LIGUES).
+// Avec une ligue : la voiture de la catégorie de cette ligue, sinon une autre voiture du pilote au hasard.
+// Sans ligue : sa voiture principale (la première ligne du pilote).
+function mcVoitureDe(nom, code) {
+  const liste = MC_VOITURES.filter(v => v.pilote === nom);
+  if (!liste.length) return {};
+  const avecImg = liste.filter(v => v.img);
+  if (!code) return avecImg[0] || liste[0];
+  const cat = String((MC_DIVISIONS.find(d => d.code === code) || {}).categorie || '').trim().toLowerCase();
+  const meme = cat ? liste.filter(v => String(v.cat || '').trim().toLowerCase() === cat) : [];
+  if (meme.length) return meme.find(v => v.img) || meme[0];
+  const pool = avecImg.length ? avecImg : liste;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
 function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(m => m[0].toUpperCase()).join('').slice(0, 3); }
 
 /** Bloc de présentation façon RB22 pour un pilote (avec ou sans rendu de voiture). */
-function mcVitrineHTML(nom, extra, sansBouton) {
-  const v = MC_VOITURES.find(x => x.pilote === nom) || {};
+function mcVitrineHTML(nom, extra, sansBouton, voiture) {
+  const v = voiture || mcVoitureDe(nom);
   const carte = (typeof _pilotsByName !== 'undefined' && _pilotsByName[nom]) || {};
   const num = String(v.num || carte.num || '').trim();
   const rows = mcLigneRows().filter(r => r[1] === nom);
@@ -4322,7 +4339,7 @@ function mcCadreResultats(date, code) {
   const logo = typeof mcLogo === 'function' ? mcLogo() : '';
   const blocs = rows.map(r => {
     const nom = r[1];
-    const v = MC_VOITURES.find(x => x.pilote === nom) || {};
+    const v = mcVoitureDe(nom, code);
     const carte = (typeof _pilotsByName !== 'undefined' && _pilotsByName[nom]) || {};
     const n = String(v.num || carte.num || '').trim();
     const ini = v.grand || mcInitiales(nom);
@@ -4366,7 +4383,7 @@ function mcGarage(dir) {
   const fleches = MC_VOITURES.length > 1 ? `<div class="mc-arrows" style="margin-top:18px">
     <button type="button" class="mc-arrow" aria-label="Voiture précédente" onclick="mcGarage(-1)">${fl('M10 3 5 8l5 5')}</button>
     <button type="button" class="mc-arrow" aria-label="Voiture suivante" onclick="mcGarage(1)">${fl('m6 3 5 5-5 5')}</button></div>` : '';
-  box.innerHTML = mcVitrineHTML(MC_VOITURES[_mcVoitI].pilote, fleches);
+  box.innerHTML = mcVitrineHTML(MC_VOITURES[_mcVoitI].pilote, fleches, false, MC_VOITURES[_mcVoitI]);
 }
 
 /** Onglet Le Convoi : tous les membres, du grade le plus haut au plus bas, en vitrine. */
@@ -4633,7 +4650,7 @@ function mcRenderRace(cible) {
   const pilotes = mcEngagesCourse(course);
   // Fond : rendu de profil (vitrine « Nos voitures ») d'un pilote engagé, tiré au hasard ;
   // si aucun engagé n'a encore son rendu, une autre voiture du club au hasard
-  const rendus = MC_VOITURES.filter(v => v.img && pilotes.includes(v.pilote));
+  const rendus = pilotes.map(p => mcVoitureDe(p, course[1])).filter(v => v.img);
   const choix = rendus.length ? rendus : MC_VOITURES.filter(v => v.img);
   const img = choix.length ? choix[Math.floor(Math.random() * choix.length)].img : '';
   el.innerHTML = `
