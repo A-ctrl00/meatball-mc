@@ -1600,6 +1600,8 @@
   /* Dernière soirée */
   .mc-soiree, .mc-cal { margin: 56px 0; }
   .mc-soiree-date { margin: 10px 0 18px; color: var(--amber); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 14px; }
+  .mc-soiree-cartes { display: flex; flex-wrap: wrap; gap: 18px; }
+  .mc-soiree-cartes .mc-res { border-radius: 16px; }
   .mc-soiree-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 16px; }
   .mc-soiree-ligue { background: var(--panel); border-radius: 14px; padding: 22px 24px; }
   .mc-soiree-ligue h3 { margin: 0 0 10px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 22px; }
@@ -1769,30 +1771,59 @@
     .mc-pp-tab td, .mc-pp-tab th { padding: 8px 6px; }
   }
 
-  /* Cadre « Résultats » posté sur Discord (outils/annonce-course.mjs) */
-  .mc-res { width: 420px; background: radial-gradient(ellipse 120% 60% at 50% 0%, #0f2a4a 0%, #001226 60%); color: #fff; padding: 26px 22px 20px; font-family: 'Inter', sans-serif; }
-  .mc-res-k { font: 700 13px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); }
-  .mc-res h2 { margin: 6px 0 2px; font: 900 30px/1.05 'Outfit', sans-serif; text-transform: uppercase; }
-  .mc-res-c { color: #c9d3e0; font-size: 14px; }
-  .mc-res-p { margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,.12); }
-  .mc-res-p .mc-car-scene { padding-top: 34px; }
-  .mc-res-p .mc-car-grand { font-size: 118px; }
-  .mc-res-p .mc-car-grand.long { font-size: 88px; }
-  .mc-res-p.sans-img .mc-car-scene { padding-top: 0; min-height: 120px; display: flex; align-items: center; }
-  .mc-res-p.sans-img .mc-car-grand { position: static; justify-content: flex-start; gap: .18em; }
-  .mc-res-l { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-top: 4px; }
-  .mc-res-nm { font: 800 22px/1.1 'Outfit', sans-serif; }
-  .mc-res-tag { display: inline-block; margin-top: 6px; padding: 3px 10px; border-radius: 999px; font: 800 11px 'Outfit', sans-serif; letter-spacing: .1em; text-transform: uppercase; background: #24364f; color: #dfe7f1; }
+  /* Cadre « Résultats » posté sur Discord (outils/annonce-course.mjs) : format portrait Instagram 4:5
+     (360 × 450, photographié à 3× = 1080 × 1350). La mise en page s'adapte au nombre de pilotes. */
+  .mc-res { width: min(360px, 100%); aspect-ratio: 4 / 5; box-sizing: border-box; display: flex; flex-direction: column; overflow: hidden;
+    background: radial-gradient(ellipse 120% 60% at 50% 0%, #0f2a4a 0%, #001226 62%); color: #fff; padding: 18px 18px 12px; font-family: 'Inter', sans-serif; }
+  .mc-res-k { font: 700 10px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: var(--orange); }
+  .mc-res h2 { margin: 4px 0 1px; font: 900 24px/1.05 'Outfit', sans-serif; text-transform: uppercase; }
+  .mc-res-c { color: #c9d3e0; font-size: 11px; }
+  .mc-res-g { flex: 1; min-height: 0; display: grid; gap: 8px; margin-top: 10px; grid-auto-rows: minmax(0, 1fr); }
+  .mc-res-p { position: relative; min-height: 0; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.08); padding: 6px 10px 8px; }
+  .mc-res-sc { position: relative; flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
+  .mc-res-gh { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; font: 900 var(--gh, 64px)/.85 'Outfit', sans-serif; letter-spacing: -0.04em; color: #fff; opacity: .95; }
+  .mc-res-gh .o { color: var(--orange); }
+  .mc-res-sc img { position: relative; max-width: 100%; max-height: 100%; object-fit: contain;
+    -webkit-mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); }
+  .mc-res-p.sans-img .mc-res-gh { position: static; justify-content: center; gap: .2em; align-self: center; margin: auto; }
+  .mc-res-l { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
+  .mc-res-nm { font: 800 var(--nm, 15px)/1.1 'Outfit', sans-serif; }
+  .mc-res-tag { display: inline-block; margin-top: 3px; padding: 2px 7px; border-radius: 999px; font: 800 8px 'Outfit', sans-serif; letter-spacing: .1em; text-transform: uppercase; background: #24364f; color: #dfe7f1; }
   .mc-res-tag.or { background: #FFC53D; color: #1a1200; }
   .mc-res-tag.pod { background: var(--orange); color: #fff; }
-  .mc-res-sf { display: flex; gap: 16px; text-align: right; }
-  .mc-res-sf span { display: block; font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: #9fb0c6; }
-  .mc-res-sf b { font: 900 34px/1 'Outfit', sans-serif; }
-  .mc-res-sf .fin b { color: var(--orange); font-size: 44px; }
-  .mc-res-d { font: 700 13px 'Outfit', sans-serif; margin-top: 4px; text-align: right; }
+  .mc-res-sf { display: flex; gap: 10px; text-align: right; }
+  .mc-res-sf span { display: block; font-size: 7px; letter-spacing: .1em; text-transform: uppercase; color: #9fb0c6; }
+  .mc-res-sf b { font: 900 var(--sf, 20px)/1 'Outfit', sans-serif; }
+  .mc-res-sf .fin b { color: var(--orange); font-size: calc(var(--sf, 20px) * 1.25); }
+  .mc-res-d { font: 700 8px 'Outfit', sans-serif; margin-top: 2px; text-align: right; }
   .mc-res-d.plus { color: #66BB6A; } .mc-res-d.moins { color: #EF5350; }
-  .mc-res-f { margin-top: 22px; display: flex; justify-content: space-between; align-items: center; font: 700 12px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9fb0c6; }
-  .mc-res-f img { height: 34px; }
+  .mc-res-f { margin-top: 8px; display: flex; justify-content: space-between; align-items: center; font: 700 9px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9fb0c6; }
+  .mc-res-f img { height: 24px; }
+  .mc-res.q1 { --gh: 120px; --nm: 22px; --sf: 30px; }
+  .mc-res.q2 { --gh: 84px; --nm: 18px; --sf: 24px; }
+  /* Initiales + numéro dans le texte (à partir de 3 pilotes, la voiture prend toute la place) */
+  .mc-res-id { display: none; font: 900 var(--id, 26px)/.95 'Outfit', sans-serif; letter-spacing: -0.03em; }
+  .mc-res-id .o { color: var(--orange); }
+  .mc-res.q3 { --nm: 13px; --sf: 20px; --id: 30px; }
+  .mc-res.q4 { --gh: 44px; --nm: 11px; --sf: 16px; --id: 20px; }
+  .mc-res.q5, .mc-res.q6 { --gh: 36px; --nm: 10px; --sf: 13px; --id: 15px; }
+  .mc-res.q5 .mc-res-g, .mc-res.q6 .mc-res-g { gap: 6px; }
+  .mc-res.q3 .mc-res-p:not(.sans-img) .mc-res-gh, .mc-res.q4 .mc-res-p:not(.sans-img) .mc-res-gh,
+  .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-gh, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-gh { display: none; }
+  .mc-res.q3 .mc-res-p:not(.sans-img) .mc-res-id, .mc-res.q4 .mc-res-p:not(.sans-img) .mc-res-id,
+  .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-id, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-id { display: block; }
+  .mc-res.q3 .mc-res-p, .mc-res.q4 .mc-res-p, .mc-res.q5 .mc-res-p, .mc-res.q6 .mc-res-p { flex-direction: row; align-items: center; gap: 10px; padding: 4px 12px 4px 4px; }
+  .mc-res.q3 .mc-res-sc, .mc-res.q4 .mc-res-sc, .mc-res.q5 .mc-res-sc, .mc-res.q6 .mc-res-sc { flex: 0 0 50%; height: 100%; align-items: center; }
+  .mc-res.q3 .mc-res-l { flex: 1; flex-direction: column; align-items: flex-start; justify-content: center; gap: 4px; }
+  .mc-res.q4 .mc-res-l, .mc-res.q5 .mc-res-l, .mc-res.q6 .mc-res-l { flex: 1; flex-direction: column; align-items: flex-start; justify-content: center; gap: 1px; }
+  .mc-res.q5 .mc-res-tag, .mc-res.q6 .mc-res-tag { display: none; }
+  .mc-res.q5 .mc-res-d, .mc-res.q6 .mc-res-d { margin-top: 0; font-size: 7px; }
+  .mc-res.q5 .mc-res-l > div:first-child, .mc-res.q6 .mc-res-l > div:first-child { display: flex; align-items: baseline; gap: 6px; }
+  .mc-res.q5 .mc-res-sf span, .mc-res.q6 .mc-res-sf span { font-size: 6px; }
+  .mc-res.q5 .mc-res-sf, .mc-res.q6 .mc-res-sf { gap: 8px; }
+  .mc-res.q3 .mc-res-sf, .mc-res.q4 .mc-res-sf, .mc-res.q5 .mc-res-sf, .mc-res.q6 .mc-res-sf { justify-content: flex-start; text-align: left; }
+  .mc-res.q3 .mc-res-d, .mc-res.q4 .mc-res-d, .mc-res.q5 .mc-res-d, .mc-res.q6 .mc-res-d { text-align: left; }
 
   /* Lecture d'un article */
   .mc-reader { position: fixed; inset: 0; z-index: 200; background: rgba(0, 8, 18, 0.88); display: none; overflow-y: auto; padding: 40px 16px; }
@@ -4261,6 +4292,7 @@ function mcCadreResultats(date, code) {
   if (!rows.length) return '';
   const num = v => { const n = parseFloat(v); return isNaN(n) ? 999 : n; };
   rows.sort((a, b) => num(a[3]) - num(b[3]));
+  rows.splice(6); // 6 pilots au plus pour tenir dans le format Instagram
   const div = MC_DIVISIONS.find(x => x.code === code) || { nom: code };
   const d = mcDate(date);
   const iso = d ? d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') : '';
@@ -4281,12 +4313,12 @@ function mcCadreResultats(date, code) {
     const gain = !nq && !isNaN(pos) ? qn - pos : null;
     const tag = pos === 1 ? '<span class="mc-res-tag or">Victoire</span>' : pos <= 3 ? '<span class="mc-res-tag pod">Podium</span>' : pos <= 5 ? '<span class="mc-res-tag">Top 5</span>' : pos <= 10 ? '<span class="mc-res-tag">Top 10</span>' : '';
     return `<div class="mc-res-p${v.img ? '' : ' sans-img'}">
-      <div class="mc-car-scene">
-        <div class="mc-car-grand${(ini + n).length > 4 ? ' long' : ''}" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
-        ${v.img ? `<img class="mc-car-img" src="${v.img}" alt="">` : ''}
+      <div class="mc-res-sc">
+        <div class="mc-res-gh" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
+        ${v.img ? `<img src="${v.img}" alt="">` : ''}
       </div>
       <div class="mc-res-l">
-        <div><div class="mc-res-nm">${mcEsc(nom)}</div>${tag}</div>
+        <div><div class="mc-res-id"><span>${mcEsc(ini)}</span> ${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div><div class="mc-res-nm">${mcEsc(nom)}</div>${tag}</div>
         <div>
           <div class="mc-res-sf">
             <div><span>Départ</span><b>${nq ? (q ? mcEsc(q.toUpperCase()) : '–') : 'P' + qn}</b></div>
@@ -4297,11 +4329,11 @@ function mcCadreResultats(date, code) {
       </div>
     </div>`;
   }).join('');
-  return `<div class="mc-res">
+  return `<div class="mc-res q${Math.min(rows.length, 6)}">
     <div class="mc-res-k">Résultats${d ? ' · ' + MC_JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MC_MOIS[d.getMonth()] + ' ' + d.getFullYear() : ''}</div>
     <h2>${mcEsc(titre)}</h2>
     ${circuit ? `<div class="mc-res-c">${mcEsc(circuit)}</div>` : ''}
-    ${blocs}
+    <div class="mc-res-g">${blocs}</div>
     <div class="mc-res-f"><span>meatball-mc.fr</span>${logo ? `<img src="${logo}" alt="">` : '<span>Meatball MC</span>'}</div>
   </div>`;
 }
@@ -4584,28 +4616,7 @@ function mcRenderSoiree() {
   const num = v => { const n = parseFloat(v); return isNaN(n) ? 999 : n; };
   const nomLigue = c => (MC_DIVISIONS.find(x => x.code === c) || { nom: c }).nom;
   el.innerHTML = `
-    <p class="mc-soiree-date">${MC_JOURS[d.getDay()].replace(/^./, c => c.toUpperCase())} ${d.getDate()} ${MC_MOIS[d.getMonth()]} ${d.getFullYear()}</p>
-    <div class="mc-soiree-grid">
-      ${Object.keys(parLigue).map(c => {
-        const liste = parLigue[c].slice().sort((a, b) => num(a[3]) - num(b[3]));
-        return `<div class="mc-soiree-ligue">
-          <h3>${mcEsc(nomLigue(c))}</h3>
-          ${liste.map(r => {
-            const pos = num(r[3]);
-            const x = String(r[7] == null ? '' : r[7]).trim();
-            const badge = pos === 1 ? '<span class="mc-badge or">Victoire</span>' : pos <= 3 ? '<span class="mc-badge">Podium</span>' : pos <= 5 ? '<span class="mc-badge sobre">Top 5</span>' : '';
-            const det = [String(r[4] || '').trim() ? 'Départ P' + mcEsc(String(r[4]).replace(/\D.*$/, '')) : '',
-                         r[5] === 'Oui' ? 'Dans le tour' : '',
-                         x !== '' ? x + ' X' : ''].filter(Boolean);
-            return `<div class="mc-soiree-pilote">
-              <b class="p">${pos < 999 ? 'P' + pos : '–'}</b>
-              <span class="who"><b>${mcEsc(r[1])}</b><span>${det.join(' · ')}</span></span>
-              ${badge}
-            </div>`;
-          }).join('')}
-        </div>`;
-      }).join('')}
-    </div>`;
+    <div class="mc-soiree-cartes">${Object.keys(parLigue).map(c => mcCadreResultats(String(parLigue[c][0][0]).trim(), c)).join('')}</div>`;
 }
 
 /** Prochaines courses de toutes les ligues (IFRN : titulaires de la division). */
@@ -4824,6 +4835,9 @@ mcBuildHome();
     [/^(.+) · Manche (\d+)\/(\d+)$/, (m, l, a, b) => tr1(l) + ' · Round ' + a + '/' + b],
     [/^(.+) · Manche (\d+)\/(\d+) ·$/, (m, l, a, b) => tr1(l) + ' · Round ' + a + '/' + b + ' ·'],
     [/^Pilotes : (.+)$/, (m, l) => 'Drivers: ' + l],
+    [/^▲ (\d+) places? gagnées?$/, (m, n) => '▲ ' + pl(n, 'place gained', 'places gained')],
+    [/^▼ (\d+) places? perdues?$/, (m, n) => '▼ ' + pl(n, 'place lost', 'places lost')],
+    [/^Résultats · (\S+) (\d{1,2}) (\S+) (\d{4})$/, (m, jo, j, mo, a) => 'Results · ' + (JOURS[jo.replace(/^./, c => c.toUpperCase())] || jo) + ' ' + (MOIS[mo] || mo) + ' ' + j + ', ' + a],
     [/^Saison (\d+), (\S+) à (\S+) (\d{4})$/, (m, n, a, b, an) => 'Season ' + n + ', ' + (MOIS[a] || a) + ' to ' + (MOIS[b] || b) + ' ' + an],
     [/^Division (IFRN )?: (.+)$/, (m, i, d) => 'Division' + (i ? ' IFRN' : '') + ': ' + mot(d)],
     [/^Power Ranking : (\d+)e, (\d+) pts$/, (m, r, p) => 'Power Ranking: #' + r + ', ' + p + ' pts'],
