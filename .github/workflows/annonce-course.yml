@@ -3,8 +3,10 @@
 #    (ou à 17h si l'heure n'est pas renseignée dans CALENDRIER) ;
 #  - nouveaux articles : photo du cadre de l'article et lien direct, dès qu'il est en ligne ;
 #  - résultats : cadre « Résultats » (voiture, départ, arrivée de chaque pilote) dès qu'une soirée
-#    apparaît dans RESULTATS LIGUE.
-name: Annonces Discord (courses, articles, résultats)
+#    apparaît dans RESULTATS LIGUE ;
+#  - victoires : les victoires déclarées avec /victoire et validées sur Discord sont mises en ligne
+#    (photo dans assets/victoires, données dans assets/victoires.json).
+name: Annonces Discord (courses, articles, résultats, victoires)
 
 on:
   schedule:
@@ -87,3 +89,39 @@ jobs:
           git add annonces.json $(ls articles.json resultats.json 2>/dev/null)
           git commit -qm "Annonces postées" || exit 0
           git push -q origin etat-annonces
+
+  victoires:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pages: write
+    env:
+      RELAIS_CLE: ${{ secrets.RELAIS_CLE }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Récupérer les victoires validées
+        id: recup
+        run: |
+          if [ -z "$RELAIS_CLE" ]; then echo "Secret RELAIS_CLE absent"; exit 0; fi
+          pip install -q pillow
+          python3 outils/victoires.py recuperer
+          if [ -n "$(git status --porcelain assets)" ]; then echo "nouveau=1" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Mettre en ligne
+        if: steps.recup.outputs.nouveau == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git config user.name "Meatball MC"
+          git config user.email "actions@users.noreply.github.com"
+          git add assets
+          git commit -qm "Victoire validée sur Discord"
+          git pull -q --rebase origin main
+          git push -q origin HEAD:main
+          gh api -X POST repos/${{ github.repository }}/pages/builds >/dev/null || true
+
+      - name: Marquer « En ligne » sur Discord
+        if: env.RELAIS_CLE != ''
+        run: python3 outils/victoires.py marquer

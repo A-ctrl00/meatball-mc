@@ -1750,6 +1750,7 @@
   .mc-pp-kpi span { font-size: 13px; color: var(--text-dim); }
   .mc-pp-kpi b { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 30px; line-height: 1; }
   .mc-pp-kpi small { font-size: 11px; color: var(--text-dim); }
+  .mc-pp-mot { display: block; margin-top: 4px; font-style: italic; }
   .mc-pp-kpi.fort b { color: var(--orange); }
   .mc-pp-grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 460px), 1fr)); gap: 18px; }
   .mc-pp-box { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; min-width: 0; }
@@ -4237,7 +4238,7 @@ function mcOuvrirPilote(nom, sansHistorique) {
       </section>
 
       ${wins.length ? `<section class="mc-pp-sec"><h2>Ses victoires en images</h2>
-        <div class="mc-pp-wins">${wins.map(w => `<figure><img src="${w.img}" alt="Victoire de ${mcEsc(nom)}, ${mcEsc(w.ligue)}" loading="lazy"><figcaption>${[w.ligue, w.circuit, w.date].filter(Boolean).map(mcEsc).join(' · ')}</figcaption></figure>`).join('')}</div>
+        <div class="mc-pp-wins">${wins.map(w => `<figure><img src="${w.img}" alt="Victoire de ${mcEsc(nom)}, ${mcEsc(w.ligue)}" loading="lazy"><figcaption>${[w.ligue, w.circuit, w.date].filter(Boolean).map(mcEsc).join(' · ')}${w.mot ? `<em class="mc-pp-mot">« ${mcEsc(w.mot)} »</em>` : ''}</figcaption></figure>`).join('')}</div>
       </section>` : ''}
 
       <section class="mc-pp-sec">
@@ -4397,6 +4398,25 @@ const MC_VICTOIRES = [
   { img: 'assets/victoires/daries-1-michigan.jpg', pilote: 'Thomas Daries', num: '1', ligue: 'Officiel iRacing', circuit: 'Michigan', horsSheet: true },
   { img: 'assets/victoires/joube-phoenix.jpg', pilote: 'Alexis Joube', ligue: 'Officiel iRacing', circuit: 'Phoenix', horsSheet: true },
 ];
+// Victoires déclarées sur Discord avec /victoire puis validées (ajoutées par le robot GitHub)
+async function mcChargerVictoires() {
+  let liste = [];
+  try { liste = await (await fetch('assets/victoires.json', { cache: 'no-cache' })).json(); } catch (e) { return; }
+  if (!Array.isArray(liste) || !liste.length) return;
+  const vues = new Set(MC_VICTOIRES.map(v => v.img));
+  liste.filter(v => v && v.img && v.pilote && !vues.has(v.img)).forEach(v => MC_VICTOIRES.push(v));
+  const t = v => { const m = String(v.date || '').match(/^(\d{2})\/(\d{2})\/(\d{4})$/); return m ? +(m[3] + m[2] + m[1]) : 0; };
+  const ordre = MC_VICTOIRES.map((v, i) => [v, i]).sort((a, b) => (t(b[0]) - t(a[0])) || (a[1] - b[1])).map(x => x[0]);
+  MC_VICTOIRES.splice(0, MC_VICTOIRES.length, ...ordre);
+  const scene = document.getElementById('mcWinsScene');
+  if (scene) {
+    scene.querySelectorAll('.mc-win').forEach(f => f.remove());
+    scene.insertAdjacentHTML('afterbegin', MC_VICTOIRES.map((v, i) => `<figure class="mc-win" data-i="${i}"><img src="${v.img}" alt="${mcEsc('Victoire de ' + v.pilote + (v.ligue ? ', ' + v.ligue : ''))}" loading="lazy"></figure>`).join(''));
+    _mcWinI = 0; mcWinsPlacer(); mcWinsCompter();
+  }
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => setTimeout(mcChargerVictoires, 0));
+else setTimeout(mcChargerVictoires, 0);
 let _mcWinI = 0, _mcWinTimer = null;
 function mcWinsPlacer() {
   const n = MC_VICTOIRES.length;
