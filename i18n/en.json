@@ -495,7 +495,6 @@
   "Courses de ligue saisies dans le Sheet de l'équipe. Places gagnées : moyenne entre la place de départ et la place d'arrivée.": "League races entered in the team Sheet. Places gained: average difference between starting and finishing position.",
   "Graphiques": "Charts",
   "Position à l'arrivée": "Finishing position",
-  "Course après course. Les points dorés sont les victoires, la ligne pointillée la moyenne.": "Race after race. Gold dots are wins, the dotted line is the average.",
   "Points Power Ranking": "Power Ranking points",
   "Par course. En orange, les 5 dernières : ce sont elles qui comptent au classement.": "Per race. In orange, the last 5: these are the ones that count in the standings.",
   "Répartition des arrivées": "Finishing positions",
@@ -524,6 +523,7 @@
   "Aucune course pour le moment.": "No races yet.",
   "Aucune arrivée pour le moment.": "No finishes yet.",
   "Division IFRN max": "Highest IFRN division",
-  "Ligues et divisions IFRN": "Leagues and IFRN divisions"
+  "Ligues et divisions IFRN": "Leagues and IFRN divisions",
+  "Course après course, couleur par ligue. Les victoires sont entourées d'or, la ligne pointillée est la moyenne.": "Race after race, coloured by league. Wins are circled in gold, the dotted line is the average."
  }
 }
