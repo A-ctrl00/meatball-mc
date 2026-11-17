@@ -4075,7 +4075,6 @@ function mcOuvrirPilote(nom, sansHistorique) {
       <section>
         ${mcVitrineHTML(nom, `<div class="mc-pp-tags">
           ${grade ? `<span class="mc-pp-tag">${patch ? `<img src="${patch}" alt="">` : ''}${mcEsc(grade)}</span>` : ''}
-          ${divPrinc ? `<span class="mc-pp-tag or">Division IFRN : ${mcEsc(mcNomLigue(divPrinc).replace(/^IFRN\s+/, ''))}</span>` : ''}
           ${rk ? `<span class="mc-pp-tag">Power Ranking : ${mcEsc(rk.rang)}e, ${mcEsc(rk.points)} pts</span>` : ''}
           ${liguesActuelles.map(c => `<span class="mc-pp-tag petit"><i style="background:${couleur(c)}"></i>${mcEsc(mcNomLigue(c))}${String(c).startsWith('Ifrn') && divPrinc && c !== divPrinc ? ' <em>pige</em>' : ''}</span>`).join('')}
         </div>`, true)}
