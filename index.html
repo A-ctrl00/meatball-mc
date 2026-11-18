@@ -1968,6 +1968,10 @@
   .gta-voit .gh span { background: linear-gradient(180deg, #fff 30%, rgba(255,255,255,0)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .gta-voit .gh .o { background: linear-gradient(180deg, #F01070 20%, rgba(251,98,4,0)); -webkit-background-clip: text; background-clip: text; }
   .gta-voit img { position: relative; width: 100%; height: auto; display: block; }
+  .gta-drapeau { display: inline-block; width: 1.35em; height: auto; margin-right: .4em; vertical-align: -.12em; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.18); }
+  .gta-marque { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.22); font: 800 .78em 'Outfit', sans-serif; letter-spacing: .08em; text-transform: uppercase; vertical-align: .05em; }
+  .gta-marque-logo { display: inline-block; height: 1.3em; width: auto; vertical-align: -.3em; }
+  .gta-voit .marque .gta-marque-logo { height: 46px; }
   .gta-voit .marque { position: relative; margin-bottom: 10%; font: 800 13px 'Outfit', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #F0B000; }
   .gta-voit.grand { width: min(300px, 100%); flex: 0 0 auto; }
   .gta-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 12px 0; }
@@ -4321,7 +4325,28 @@ function gtaManchesCourues() { return [...new Set(GTA.resultats.map(r => r.Manch
 function gtaPilote(nom) {
   return GTA.pilotes.find(p => p.Pilote === nom) || GTA.classement.find(p => p.Pilote === nom) || GTA.resultats.find(p => p.Pilote === nom) || { Pilote: nom };
 }
-function gtaLienPilote(nom) { return `<a class="gta-lien" href="#gta-pilote-${gtaSlug(nom)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(nom))});return false">${mcEsc(nom)}</a>`; }
+// Drapeau du pays choisi à l'inscription (nom anglais ou français → code ISO)
+const GTA_PAYS = { france: 'fr', belgium: 'be', belgique: 'be', switzerland: 'ch', suisse: 'ch', luxembourg: 'lu', monaco: 'mc', canada: 'ca',
+  'united states': 'us', usa: 'us', 'etats-unis': 'us', 'united kingdom': 'gb', uk: 'gb', 'royaume-uni': 'gb', england: 'gb-eng', angleterre: 'gb-eng', scotland: 'gb-sct', ecosse: 'gb-sct', wales: 'gb-wls', 'pays de galles': 'gb-wls',
+  ireland: 'ie', irlande: 'ie', germany: 'de', allemagne: 'de', spain: 'es', espagne: 'es', portugal: 'pt', italy: 'it', italie: 'it', netherlands: 'nl', 'pays-bas': 'nl', austria: 'at', autriche: 'at',
+  poland: 'pl', pologne: 'pl', 'czech republic': 'cz', czechia: 'cz', tchequie: 'cz', sweden: 'se', suede: 'se', norway: 'no', norvege: 'no', denmark: 'dk', danemark: 'dk', finland: 'fi', finlande: 'fi',
+  greece: 'gr', grece: 'gr', hungary: 'hu', hongrie: 'hu', romania: 'ro', roumanie: 'ro', croatia: 'hr', croatie: 'hr', slovenia: 'si', slovenie: 'si', slovakia: 'sk', slovaquie: 'sk',
+  morocco: 'ma', maroc: 'ma', algeria: 'dz', algerie: 'dz', tunisia: 'tn', tunisie: 'tn', senegal: 'sn', 'ivory coast': 'ci', "cote d'ivoire": 'ci', reunion: 're', 'la reunion': 're',
+  mexico: 'mx', mexique: 'mx', brazil: 'br', bresil: 'br', argentina: 'ar', argentine: 'ar', chile: 'cl', chili: 'cl', colombia: 'co', colombie: 'co',
+  australia: 'au', australie: 'au', 'new zealand': 'nz', 'nouvelle-zelande': 'nz', japan: 'jp', japon: 'jp', china: 'cn', chine: 'cn', thailand: 'th', thailande: 'th', vietnam: 'vn', philippines: 'ph',
+  india: 'in', inde: 'in', 'south africa': 'za', 'afrique du sud': 'za', turkey: 'tr', turquie: 'tr', israel: 'il', 'united arab emirates': 'ae', 'emirats arabes unis': 'ae', ukraine: 'ua', russia: 'ru', russie: 'ru' };
+function gtaDrapeau(pays) {
+  const k = String(pays || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
+  const c = GTA_PAYS[k] || (/^[a-z]{2}$/.test(k) ? k : '');
+  return c ? `<img class="gta-drapeau" src="https://flagcdn.com/w40/${c}.png" alt="${mcEsc(pays)}" title="${mcEsc(pays)}" loading="lazy">` : '';
+}
+// Marque de la voiture : logo si le fichier est fourni (GTA_MARQUES), sinon le nom en badge
+const GTA_MARQUES = {}; // ex. { Chevrolet: 'assets/marque-chevrolet.png', Ford: 'assets/marque-ford.png' }
+function gtaMarque(m) {
+  if (!m) return '';
+  return GTA_MARQUES[m] ? `<img class="gta-marque-logo" src="${GTA_MARQUES[m]}" alt="${mcEsc(m)}" title="${mcEsc(m)}" loading="lazy">` : `<span class="gta-marque">${mcEsc(m)}</span>`;
+}
+function gtaLienPilote(nom) { return `${gtaDrapeau(gtaPilote(nom).Pays)}<a class="gta-lien" href="#gta-pilote-${gtaSlug(nom)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(nom))});return false">${mcEsc(nom)}</a>`; }
 function gtaLienManche(n, txt) { return `<a class="gta-lien" href="#gta-manche-${n}" onclick="gtaOuvrirManche('${n}');return false">${txt}</a>`; }
 function gtaVide(msg) { return `<div class="gta-vide">${msg}</div>`; }
 const GTA_ATTENTE = 'Les résultats arriveront après la première manche, le 21 décembre.';
@@ -4331,7 +4356,7 @@ function gtaTable(cols, rows, cls = '') {
 function gtaVoiture(p, grand) {
   const ini = mcInitiales(p.Pilote || ''), num = p['Numéro'] || '';
   const img = GTA_VOITURES[p.Pilote];
-  return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? `<img src="${img}" alt="" loading="lazy">` : `<div class="marque">${mcEsc(p.Voiture || '')}</div>`}</div>`;
+  return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? `<img src="${img}" alt="" loading="lazy">` : `<div class="marque">${GTA_MARQUES[p.Voiture] ? gtaMarque(p.Voiture) : mcEsc(p.Voiture || '')}</div>`}</div>`;
 }
 
 // ---------- Sous-onglets ----------
@@ -4360,7 +4385,7 @@ function gtaRendreClassement() {
   const cl = GTA.classement.filter(r => gtaNum(r.Courses) > 0 || gtaNum(r.Total) > 0);
   el.innerHTML = cl.length ? gtaTable([
     { t: '#', num: 1, f: r => `<b>${mcEsc(r.Rang)}</b>` },
-    { t: 'Pilote', f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${gtaLienPilote(r.Pilote)}` },
+    { t: 'Pilote', f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${gtaLienPilote(r.Pilote)} ${gtaMarque(r.Voiture || gtaPilote(r.Pilote).Voiture)}` },
     { t: 'Équipe', f: r => mcEsc(r['Équipe']) },
     { t: 'Pts', num: 1, f: r => `<b class="gta-pts">${mcEsc(r.Total)}</b>` },
     { t: window.MC_LANG === 'en' ? 'W' : 'V', num: 1, f: r => mcEsc(r.Victoires) },
@@ -4393,7 +4418,7 @@ function gtaRendreResultats() {
 function gtaTableResultats(rows) {
   return gtaTable([
     { t: 'Pos', num: 1, f: r => `<b>${mcEsc(r.Position)}</b>` },
-    { t: 'Pilote', f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${gtaLienPilote(r.Pilote)}` },
+    { t: 'Pilote', f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${gtaLienPilote(r.Pilote)} ${gtaMarque(r.Voiture || gtaPilote(r.Pilote).Voiture)}` },
     { t: 'Équipe', f: r => mcEsc(r['Équipe']) },
     { t: 'Tours', num: 1, f: r => mcEsc(r.Tours) },
     { t: 'En tête', num: 1, f: r => mcEsc(r['Tours en tête']) },
@@ -4434,7 +4459,7 @@ function gtaRendreEquipes() {
   pil.forEach(p => { const e = p['Équipe'] || 'Pilotes indépendants'; (parE[e] = parE[e] || []).push(p); });
   const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || parE[b].length - parE[a].length || a.localeCompare(b));
   el.innerHTML = ordre.map(e => `<div class="gta-equipe"><h3 class="gta-h3">${mcEsc(e)} <span>${parE[e].length} pilote${parE[e].length > 1 ? 's' : ''}</span></h3>
-    <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#gta-pilote-${gtaSlug(p.Pilote)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${gtaVoiture(p)}<div class="nom">${mcEsc(p.Pilote)}</div><div class="det">#${mcEsc(p['Numéro'])} · ${mcEsc(p.Voiture || '')}${p.Pays ? ' · ' + mcEsc(p.Pays) : ''}</div></a>`).join('')}</div></div>`).join('');
+    <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#gta-pilote-${gtaSlug(p.Pilote)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${gtaVoiture(p)}<div class="nom">${gtaDrapeau(p.Pays)}${mcEsc(p.Pilote)}</div><div class="det">#${mcEsc(p['Numéro'])} ${gtaMarque(p.Voiture)}</div></a>`).join('')}</div></div>`).join('');
 }
 
 function gtaStatsPilotes() {
@@ -4473,7 +4498,7 @@ function gtaRendreStats() {
     </div>
     <div class="gta-leaders">${cartes.map(([t, c]) => `<div class="gta-leader"><span>${t}</span><b>${gtaLienPilote(c.o.Pilote)}</b><em>${c.v}</em></div>`).join('')}</div>
     <h3 class="gta-h3">Chevrolet contre Ford</h3>
-    <div class="gta-kpis">${Object.entries(marques).filter(([m]) => m !== '?').map(([m, o]) => `<div><span>${mcEsc(m)}</span><b>${o.v} victoire${o.v > 1 ? 's' : ''}</b><em>${o.p3} podium${o.p3 > 1 ? 's' : ''} · ${o.d} départ${o.d > 1 ? 's' : ''}</em></div>`).join('')}</div>
+    <div class="gta-kpis">${Object.entries(marques).filter(([m]) => m !== '?').map(([m, o]) => `<div><span>${gtaMarque(m)}</span><b>${o.v} victoire${o.v > 1 ? 's' : ''}</b><em>${o.p3} podium${o.p3 > 1 ? 's' : ''} · ${o.d} départ${o.d > 1 ? 's' : ''}</em></div>`).join('')}</div>
     ${meilleursTours.length ? `<h3 class="gta-h3">Meilleur tour de chaque manche</h3>` + gtaTable([
       { t: 'Manche', f: x => gtaLienManche(x.m, 'M' + x.m) }, { t: 'Pilote', f: x => gtaLienPilote(x.r.Pilote) }, { t: 'Temps (s)', num: 1, f: x => mcEsc(x.r['Meilleur tour (s)']) }], meilleursTours) : ''}
     <h3 class="gta-h3">Tous les pilotes</h3>` + gtaTable([
@@ -4521,7 +4546,7 @@ function gtaOuvrirPilote(nom) {
   const dec = GTA.decisions.filter(d => d.Pilote === nom);
   history.replaceState(null, '', '#gta-pilote-' + gtaSlug(nom));
   gtaFenetre(`<div class="gta-fiche-tete">${gtaVoiture(p, true)}<div><span class="gta-kicker">${mcEsc(p['Équipe'] || 'Pilote indépendant')}</span><h2 class="gta-titre-deg">${mcEsc(nom)}</h2>
-      <p class="gta-sous-titre">#${mcEsc(p['Numéro'] || '')} · ${mcEsc(p.Voiture || '')}${p.Pays ? ' · ' + mcEsc(p.Pays) : ''}</p></div></div>
+      <p class="gta-sous-titre">${gtaDrapeau(gtaPilote(p.Pilote).Pays || p.Pays)}#${mcEsc(p['Numéro'] || '')} ${gtaMarque(p.Voiture)}</p></div></div>
     <div class="gta-kpis">
       <div><span>Classement</span><b>${cl.Rang ? cl.Rang + (cl.Rang === '1' ? 'er' : 'e') : '–'}</b><em>${cl.Total ? mcEsc(cl.Total) + ' pts' : ''}</em></div>
       <div><span>Victoires</span><b>${st ? st.v : 0}</b></div><div><span>Top 5</span><b>${st ? st.p5 : 0}</b></div>
