@@ -4344,7 +4344,7 @@ function gtaDrapeau(pays) {
   return c ? `<img class="gta-drapeau" src="https://flagcdn.com/w40/${c}.png" alt="${mcEsc(pays)}" title="${mcEsc(pays)}" width="40" height="30">` : '';
 }
 // Marque de la voiture : logo si le fichier est fourni (GTA_MARQUES), sinon le nom en badge
-const GTA_MARQUES = { Chevrolet: 'assets/marque-chevrolet.png', Ford: 'assets/marque-ford.png' };
+const GTA_MARQUES = { Chevrolet: 'assets/marque-chevrolet.png?v=2', Ford: 'assets/marque-ford.png' };
 function gtaMarque(m) {
   if (!m) return '';
   return GTA_MARQUES[m] ? `<img class="gta-marque-logo" src="${GTA_MARQUES[m]}" alt="${mcEsc(m)}" title="${mcEsc(m)}">` : `<span class="gta-marque">${mcEsc(m)}</span>`;
