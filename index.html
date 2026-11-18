@@ -1802,6 +1802,7 @@
   .mc-res-gh .o { color: var(--orange); }
   .mc-res-sc img { position: relative; max-width: 100%; max-height: 100%; object-fit: contain;
     -webkit-mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); }
+  .mc-res-sc img.detoure { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 10px 14px rgba(0,0,0,.55)); }
   .mc-res-p.sans-img .mc-res-gh { position: static; justify-content: center; gap: .2em; align-self: center; margin: auto; }
   .mc-res-l { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
   .mc-res-nm { font: 800 var(--nm, 15px)/1.1 'Outfit', sans-serif; }
@@ -4741,6 +4742,10 @@ function mcVoitureDe(nom, code) {
   return pool[Math.floor(Math.random() * pool.length)];
 }
 
+// Version détourée (fond transparent) des rendus de voitures : assets/detoure/voiture-….webp.
+// Les lettres derrière la voiture restent visibles tout autour, sans rectangle sombre.
+function mcDetoure(src) { const m = String(src || '').match(/^(?:https?:\/\/(?:www\.)?meatball-mc\.fr\/)?assets\/(voiture-[^/]+)\.jpe?g$/i); return m ? 'assets/detoure/' + m[1] + '.webp' : src; }
+
 function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(m => m[0].toUpperCase()).join('').slice(0, 3); }
 
 /** Bloc de présentation façon RB22 pour un pilote (avec ou sans rendu de voiture). */
@@ -5077,7 +5082,7 @@ function mcCadreResultats(date, code) {
     return `<div class="mc-res-p${v.img ? '' : ' sans-img'}">
       <div class="mc-res-sc">
         <div class="mc-res-gh" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
-        ${v.img ? `<img src="${v.img}" alt="">` : ''}
+        ${v.img ? `<img class="detoure" src="${mcDetoure(v.img)}" alt="" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${v.img}'}">` : ''}
       </div>
       <div class="mc-res-l">
         <div><div class="mc-res-id"><span>${mcEsc(ini)}</span> ${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div><div class="mc-res-nm">${mcEsc(nom)}</div>${tag}</div>
