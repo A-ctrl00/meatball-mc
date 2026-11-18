@@ -1849,6 +1849,16 @@
   .mc-reader.open { display: block; }
   .mc-reader-box { max-width: 860px; margin: 0 auto; position: relative; }
   .mc-reader-close { position: sticky; top: 0; float: right; z-index: 2; width: 48px; height: 48px; border-radius: 999px; border: 0; background: var(--btn); color: #fff; font-size: 22px; cursor: pointer; }
+  /* Sur téléphone, l'article prend tout l'écran et la croix flotte par-dessus la photo */
+  @media (max-width: 640px) {
+    .mc-reader { padding: 0; background: var(--black, #000); }
+    .mc-reader-box { max-width: none; }
+    .mc-reader-close { position: fixed; top: 12px; right: 12px; float: none; width: 42px; height: 42px; font-size: 19px; box-shadow: 0 4px 14px rgba(0,0,0,.45); }
+    .mc-reader .article-card { border-radius: 0; border: 0; min-height: 100vh; }
+    .mc-reader .article-img { max-height: 46vh; }
+    .mc-reader .article-body { padding: 18px 18px 40px; }
+    body:has(.mc-reader.open) .cart-fab { display: none; }
+  }
 
   .site-footer { padding: 28px clamp(16px, 4vw, 48px); display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 14px; font-size: 13px; color: var(--text-dim); border-top: 1px solid var(--line); }
   .site-footer .meta { text-align: left; }
