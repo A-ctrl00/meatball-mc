@@ -4338,7 +4338,7 @@ const GTA_PAYS = { france: 'fr', belgium: 'be', belgique: 'be', switzerland: 'ch
 function gtaDrapeau(pays) {
   const k = String(pays || '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().trim();
   const c = GTA_PAYS[k] || (/^[a-z]{2}$/.test(k) ? k : '');
-  return c ? `<img class="gta-drapeau" src="https://flagcdn.com/w40/${c}.png" alt="${mcEsc(pays)}" title="${mcEsc(pays)}" loading="lazy">` : '';
+  return c ? `<img class="gta-drapeau" src="https://flagcdn.com/w40/${c}.png" alt="${mcEsc(pays)}" title="${mcEsc(pays)}" width="40" height="30">` : '';
 }
 // Marque de la voiture : logo si le fichier est fourni (GTA_MARQUES), sinon le nom en badge
 const GTA_MARQUES = {}; // ex. { Chevrolet: 'assets/marque-chevrolet.png', Ford: 'assets/marque-ford.png' }
