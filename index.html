@@ -2815,6 +2815,11 @@ async function fetchSheetTabCSVByGid(gid) {
   return allRows.slice(1).filter(r => r.some(cell => cell.trim() !== ''));
 }
 
+// Pilotes qui ne roulent plus avec l'équipe : retirés du Convoi, du Power Ranking, des grades,
+// des cartes, des listes de pilotes des ligues et des engagés (leurs anciens résultats restent dans le Sheet)
+const MC_PILOTES_PARTIS = ['Arnaud Dehu'];
+const mcParti = n => MC_PILOTES_PARTIS.includes(String(n || '').trim());
+
 let _rankingByName = {};
 
 async function loadRanking() {
@@ -2823,8 +2828,9 @@ async function loadRanking() {
     const rows = await fetchSheetTab('RANKING');
     board.innerHTML = '';
     _rankingByName = {};
-    rows.forEach((row, idx) => {
-      const [rang, membre, points] = row;
+    rows.filter(row => row[1] && !mcParti(row[1])).forEach((row, idx) => {
+      const [, membre, points] = row;
+      const rang = idx + 1; // renuméroté sans les pilotes partis
       if (!membre) return;
       _rankingByName[membre] = { rang, points };
       const el = document.createElement('div');
@@ -2861,7 +2867,7 @@ async function loadGrades() {
     gradesEl.innerHTML = '';
     _gradesByName = {};
     const sortedRows = rows
-      .filter(row => row[0]) // garde seulement les lignes avec un nom de membre
+      .filter(row => row[0] && !mcParti(row[0])) // garde seulement les membres actifs
       .sort((a, b) => rankOrderForGrade(a[1] || '') - rankOrderForGrade(b[1] || ''));
     sortedRows.forEach(row => {
       const [membre, grade, divisionMax, prochaineEtape, anciennete] = row;
@@ -3006,7 +3012,7 @@ async function loadCartes() {
         const [num, nom, ovr, vit, lrg, rac, con, fgt, saf, carImg, spec1Nom, spec1Texte, spec2Nom, spec2Texte] = row;
         return { num, nom, ovr, vit, lrg, rac, con, fgt, saf, carImg: toDriveDirectImage(carImg), spec1Nom, spec1Texte, spec2Nom, spec2Texte };
       })
-      .filter(p => p.nom && p.ovr !== undefined && String(p.ovr).trim() !== '' && !isNaN(parseFloat(p.ovr)))
+      .filter(p => p.nom && !mcParti(p.nom) && p.ovr !== undefined && String(p.ovr).trim() !== '' && !isNaN(parseFloat(p.ovr)))
       .sort((a, b) => (parseFloat(b.ovr) || 0) - (parseFloat(a.ovr) || 0));
 
     pilots.forEach(p => {
@@ -4412,7 +4418,7 @@ function mcGarage(dir) {
 
 /** Onglet Le Convoi : tous les membres, du grade le plus haut au plus bas, en vitrine. */
 // Membres présents dans le sheet mais à ne pas afficher dans Le Convoi
-const MC_CONVOI_MASQUES = ['Arnaud Dehu'];
+const MC_CONVOI_MASQUES = MC_PILOTES_PARTIS;
 function mcRenderConvoi() {
   const box = document.getElementById('mcConvoi');
   if (!box || typeof _gradesByName === 'undefined') return;
@@ -4650,7 +4656,7 @@ function mcPilotesDivision(code, depuis) {
     if (depuis && d && d < depuis) return;
     compte[r[1]] = (compte[r[1]] || 0) + 1;
   });
-  return Object.keys(compte).sort((a, b) => compte[b] - compte[a]);
+  return Object.keys(compte).filter(n => !mcParti(n)).sort((a, b) => compte[b] - compte[a]);
 }
 
 // Pilotes d'une course du calendrier : ceux qui ont déjà au moins une course dans la ligue
