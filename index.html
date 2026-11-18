@@ -1845,6 +1845,7 @@
   .mc-res.q3 .mc-res-d, .mc-res.q4 .mc-res-d, .mc-res.q5 .mc-res-d, .mc-res.q6 .mc-res-d { text-align: center; }
 
   /* Lecture d'un article */
+  .mc-resume { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
   .mc-reader { position: fixed; inset: 0; z-index: 200; background: rgba(0, 8, 18, 0.88); display: none; overflow-y: auto; padding: 40px 16px; }
   .mc-reader.open { display: block; }
   .mc-reader-box { max-width: 860px; margin: 0 auto; position: relative; }
@@ -4618,7 +4619,8 @@ window.addEventListener('hashchange', mcArticleDepuisAdresse);
 function mcTitre(t) { return t; }
 function mcStory(a, cls, avecResume) {
   if (!a) return '';
-  const resume = avecResume && a.resume ? `<p>${mcEsc(a.resume.length > 210 ? a.resume.slice(0, 207) + '…' : a.resume)}</p>` : '';
+  // texte entier coupé par le CSS (4 lignes) : le traducteur reconnaît ainsi la phrase complète
+  const resume = avecResume && a.resume ? `<p class="mc-resume">${mcEsc(a.resume)}</p>` : '';
   return `<button type="button" class="mc-story ${cls || ''}" onclick="mcOpenArticle(${a.i})">
       ${a.img ? `<img src="${a.img}" alt="${mcEsc(a.alt)}" loading="lazy">` : ''}
       <span class="mc-story-body">
