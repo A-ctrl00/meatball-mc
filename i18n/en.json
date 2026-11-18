@@ -99,7 +99,8 @@
   "<b>1er</b> 50 · <b>2e</b> 46 · <b>3e</b> 42 · <b>4e</b> 39 · <b>5e</b> 36": "<b>1st</b> 50 · <b>2nd</b> 46 · <b>3rd</b> 42 · <b>4th</b> 39 · <b>5th</b> 36",
   "<b>6e à 10e</b> 33, 30, 28, 26, 24": "<b>6th to 10th</b> 33, 30, 28, 26, 24",
   "<b>11e à 32e</b> de 23 à 2 (un point de moins par place)": "<b>11th to 32nd</b> 23 down to 2 (one point less per place)",
-  "<b>33e et au-delà</b> 1": "<b>33rd and beyond</b> 1"
+  "<b>33e et au-delà</b> 1": "<b>33rd and beyond</b> 1",
+  "Fondée par <strong>Nicolas Ciappara</strong>, aussi commissaire de course. Architecture technique (Discord, site et classements) par <strong>Alexis Joube</strong>.": "Founded by <strong>Nicolas Ciappara</strong>, who is also the race steward. Technical architecture (Discord, site and standings) by <strong>Alexis Joube</strong>."
  },
  "txt": {
   "Date": "Date",
@@ -650,6 +651,14 @@
   "Un conseil : surveillez le site, les prochaines news ne devraient plus tarder.": "A tip: keep an eye on the site, the next news shouldn't be long.",
   "La ligue": "The league",
   "Les premières news de la ligue arrivent bientôt.": "The league's first news is coming soon.",
-  "Un retour aux sources qui devrait plaire aux nostalgiques des grandes années de la Cup, et donner des idées à plus d'un pilote.": "A return to the roots that should please fans of the great Cup years, and give ideas to more than one driver."
+  "Un retour aux sources qui devrait plaire aux nostalgiques des grandes années de la Cup, et donner des idées à plus d'un pilote.": "A return to the roots that should please fans of the great Cup years, and give ideas to more than one driver.",
+  "Ligue iRacing NASCAR en voitures Gen 4 Grand National.": "An iRacing NASCAR league in Gen 4 Grand National cars.",
+  "NASCAR Gen 4 · Grand National": "NASCAR Gen 4 · Grand National",
+  "Les résultats arriveront après la première manche.": "Results will arrive after the first round.",
+  "Les statistiques arriveront après la première manche.": "Statistics will arrive after the first round.",
+  "Le calendrier sera publié ici dès que les manches seront fixées.": "The calendar will be posted here as soon as the rounds are set.",
+  "Le barème sera publié ici dès qu'il sera fixé.": "The scoring will be posted here as soon as it is set.",
+  "Par marque": "By make",
+  "Rubriques de la WCNL": "WCNL sections"
  }
 }
