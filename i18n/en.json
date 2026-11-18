@@ -546,7 +546,6 @@
   "Format": "Format",
   "Horaires": "Schedule",
   "30 min de practice, course d'une traite sans stages": "30 min of practice, one race with no stages",
-  "Serveur à 20h50, départ à 21h20 (Paris)": "Server at 8:50 pm, green flag at 9:20 pm (Paris)",
   "Classement pilotes": "Driver standings",
   "Classement équipes": "Team standings",
   "À chaque manche, seul le pilote le mieux classé de chaque équipe marque pour elle.": "In each round, only the best-placed driver of each team scores for it.",
@@ -568,6 +567,7 @@
   "Égalité : le moins d'incidents de responsabilité, puis le plus de victoires, podiums, top 5, top 10…": "Ties: fewest at-fault incidents, then most wins, podiums, top 5s, top 10s…",
   "Réclamation :": "Protest:",
   "formulaire FR": "FR form",
-  "Ligue iRacing NASCAR francophone, ouverte aux anglophones, en voitures Gen 6. Courses en sessions hébergées, commission de course appuyée par Optima Control, sanctions expliquées et classements mis à jour après chaque manche.": "A French-speaking iRacing NASCAR league, open to English speakers, in Gen 6 cars. Hosted sessions, a race committee backed by Optima Control, explained penalties and standings updated after every round."
+  "Ligue iRacing NASCAR francophone, ouverte aux anglophones, en voitures Gen 6. Courses en sessions hébergées, commission de course appuyée par Optima Control, sanctions expliquées et classements mis à jour après chaque manche.": "A French-speaking iRacing NASCAR league, open to English speakers, in Gen 6 cars. Hosted sessions, a race committee backed by Optima Control, explained penalties and standings updated after every round.",
+  "Serveur à 19:50 UTC, départ à 20:20 UTC": "Server at 19:50 UTC, green flag at 20:20 UTC"
  }
 }
