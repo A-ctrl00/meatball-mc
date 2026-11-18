@@ -1970,8 +1970,9 @@
   .gta-voit img { position: relative; width: 100%; height: auto; display: block; }
   .gta-drapeau { display: inline-block; width: 1.35em; height: auto; margin-right: .4em; vertical-align: -.12em; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.18); }
   .gta-marque { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.22); font: 800 .78em 'Outfit', sans-serif; letter-spacing: .08em; text-transform: uppercase; vertical-align: .05em; }
-  .gta-marque-logo { display: inline-block; height: 1.3em; width: auto; vertical-align: -.3em; }
-  .gta-voit .marque .gta-marque-logo { height: 46px; }
+  .gta-marque-logo { display: inline-block; height: 1.25em; width: auto; vertical-align: -.3em; margin-left: .25em; }
+  .gta-voit .marque .gta-marque-logo { height: 42px; margin: 0; }
+  .gta-voit.grand .marque .gta-marque-logo { height: 58px; }
   .gta-voit .marque { position: relative; margin-bottom: 10%; font: 800 13px 'Outfit', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #F0B000; }
   .gta-voit.grand { width: min(300px, 100%); flex: 0 0 auto; }
   .gta-kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; margin: 12px 0; }
@@ -4343,10 +4344,10 @@ function gtaDrapeau(pays) {
   return c ? `<img class="gta-drapeau" src="https://flagcdn.com/w40/${c}.png" alt="${mcEsc(pays)}" title="${mcEsc(pays)}" width="40" height="30">` : '';
 }
 // Marque de la voiture : logo si le fichier est fourni (GTA_MARQUES), sinon le nom en badge
-const GTA_MARQUES = {}; // ex. { Chevrolet: 'assets/marque-chevrolet.png', Ford: 'assets/marque-ford.png' }
+const GTA_MARQUES = { Chevrolet: 'assets/marque-chevrolet.png', Ford: 'assets/marque-ford.png' };
 function gtaMarque(m) {
   if (!m) return '';
-  return GTA_MARQUES[m] ? `<img class="gta-marque-logo" src="${GTA_MARQUES[m]}" alt="${mcEsc(m)}" title="${mcEsc(m)}" loading="lazy">` : `<span class="gta-marque">${mcEsc(m)}</span>`;
+  return GTA_MARQUES[m] ? `<img class="gta-marque-logo" src="${GTA_MARQUES[m]}" alt="${mcEsc(m)}" title="${mcEsc(m)}">` : `<span class="gta-marque">${mcEsc(m)}</span>`;
 }
 function gtaLienPilote(nom) { return `${gtaDrapeau(gtaPilote(nom).Pays)}<a class="gta-lien" href="#gta-pilote-${gtaSlug(nom)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(nom))});return false">${mcEsc(nom)}</a>`; }
 function gtaLienManche(n, txt) { return `<a class="gta-lien" href="#gta-manche-${n}" onclick="gtaOuvrirManche('${n}');return false">${txt}</a>`; }
