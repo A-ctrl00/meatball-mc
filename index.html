@@ -1802,7 +1802,7 @@
   .mc-res-gh .o { color: var(--orange); }
   .mc-res-sc img { position: relative; max-width: 100%; max-height: 100%; object-fit: contain;
     -webkit-mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); }
-  .mc-res-sc img.detoure { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 10px 14px rgba(0,0,0,.55)); }
+  .mc-res-sc img.detoure { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 3px 2px rgba(0,0,0,.45)); }
   .mc-res-p.sans-img .mc-res-gh { position: static; justify-content: center; gap: .2em; align-self: center; margin: auto; }
   .mc-res-l { display: flex; align-items: flex-end; justify-content: space-between; gap: 8px; }
   .mc-res-nm { font: 800 var(--nm, 15px)/1.1 'Outfit', sans-serif; }
@@ -4744,7 +4744,7 @@ function mcVoitureDe(nom, code) {
 
 // Version détourée (fond transparent) des rendus de voitures : assets/detoure/voiture-….webp.
 // Les lettres derrière la voiture restent visibles tout autour, sans rectangle sombre.
-function mcDetoure(src) { const m = String(src || '').match(/^(?:https?:\/\/(?:www\.)?meatball-mc\.fr\/)?assets\/(voiture-[^/]+)\.jpe?g$/i); return m ? 'assets/detoure/' + m[1] + '.webp' : src; }
+function mcDetoure(src) { const m = String(src || '').match(/^(?:https?:\/\/(?:www\.)?meatball-mc\.fr\/)?assets\/(voiture-[^/]+)\.jpe?g$/i); return m ? 'assets/detoure/' + m[1] + '.webp?v=3' : src; }
 
 function mcInitiales(nom) { return String(nom).split(/\s+/).filter(Boolean).map(m => m[0].toUpperCase()).join('').slice(0, 3); }
 
