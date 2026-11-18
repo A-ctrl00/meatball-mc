@@ -1422,6 +1422,10 @@
     -webkit-mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
             mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
   }
+  .mc-car-img.detoure { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 4px 3px rgba(0,0,0,.45)); }
+  /* Ombre fondue derrière la voiture : passe sur le bas des lettres, sans aucun bord */
+  .mc-car-om { position: absolute; left: -10%; right: -10%; top: 4%; bottom: -12%; pointer-events: none;
+    background: radial-gradient(ellipse 56% 64% at 50% 62%, rgba(5,11,22,.85) 0%, rgba(5,11,22,.72) 30%, rgba(5,11,22,.46) 55%, rgba(5,11,22,.18) 78%, rgba(5,11,22,0) 100%); }
   .mc-car-info { display: flex; flex-direction: column; gap: 6px; }
   .mc-car-info .l { color: var(--text-dim); font-size: 15px; }
   .mc-car-info .nm { font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 28px; line-height: 1.1; }
@@ -4772,7 +4776,7 @@ function mcVitrineHTML(nom, extra, sansBouton, voiture) {
     <div class="mc-car${v.img ? '' : ' sans-img'}">
       <div class="mc-car-scene">
         <div class="mc-car-grand${((v.grand || mcInitiales(nom)) + num).length > 4 ? ' long' : ''}" aria-hidden="true"><span>${mcEsc(v.grand || mcInitiales(nom))}</span>${num ? `<span class="o">${mcEsc(num)}</span>` : ''}</div>
-        ${v.img ? `<img class="mc-car-img" src="${v.img}" alt="${mcEsc((v.modele || 'Voiture') + (num ? ' n°' + num : '') + ' de ' + nom)}" loading="lazy">` : ''}
+        ${v.img ? `${mcDetoure(v.img) !== v.img ? '<div class="mc-car-om" aria-hidden="true"></div>' : ''}<img class="mc-car-img${mcDetoure(v.img) !== v.img ? ' detoure' : ''}" src="${mcDetoure(v.img)}" alt="${mcEsc((v.modele || 'Voiture') + (num ? ' n°' + num : '') + ' de ' + nom)}" loading="lazy" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${v.img}'}">` : ''}
       </div>
       <div class="mc-car-info">
         <b class="nm">${mcEsc(nom)}</b>
@@ -5085,8 +5089,8 @@ function mcCadreResultats(date, code) {
     return `<div class="mc-res-p${v.img ? '' : ' sans-img'}">
       <div class="mc-res-sc">
         <div class="mc-res-gh" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
-        ${v.img ? '<div class="mc-res-om" aria-hidden="true"></div>' : ''}
-        ${v.img ? `<img class="detoure" src="${mcDetoure(v.img)}" alt="" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${v.img}'}">` : ''}
+        ${v.img && mcDetoure(v.img) !== v.img ? '<div class="mc-res-om" aria-hidden="true"></div>' : ''}
+        ${v.img ? `<img class="${mcDetoure(v.img) !== v.img ? 'detoure' : ''}" src="${mcDetoure(v.img)}" alt="" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${v.img}'}">` : ''}
       </div>
       <div class="mc-res-l">
         <div><div class="mc-res-id"><span>${mcEsc(ini)}</span> ${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div><div class="mc-res-nm">${mcEsc(nom)}</div>${tag}</div>
