@@ -4022,7 +4022,13 @@ function mcVoitureDe(nom, code) {
   };
   if (!code) {
     const div = typeof mcDivisionPrincipale === 'function' ? mcDivisionPrincipale(nom) : null;
-    return (div && deCat(div)) || avecImg[0] || liste[0];
+    const v = div && deCat(div);
+    if (v) return v;
+    // pas en IFRN (ou pas de voiture de sa catégorie) : une de ses voitures au hasard, la même pendant la visite
+    const pool = avecImg.length ? avecImg : liste;
+    window._mcVoitHasard = window._mcVoitHasard || {};
+    if (!pool.includes(window._mcVoitHasard[nom])) window._mcVoitHasard[nom] = pool[Math.floor(Math.random() * pool.length)];
+    return window._mcVoitHasard[nom];
   }
   const meme = deCat(code);
   if (meme) return meme;
@@ -4389,15 +4395,18 @@ function mcCadreResultats(date, code) {
   </div>`;
 }
 
+// « Nos voitures » : un pilote par page, avec sa voiture de division IFRN (sinon une des siennes au hasard)
 function mcGarage(dir) {
-  if (dir) _mcVoitI = (_mcVoitI + dir + MC_VOITURES.length) % MC_VOITURES.length;
+  const pilotes = [...new Set(MC_VOITURES.map(v => v.pilote))];
+  if (_mcVoitI >= pilotes.length) _mcVoitI = 0;
+  if (dir) _mcVoitI = (_mcVoitI + dir + pilotes.length) % pilotes.length;
   const box = document.getElementById('mcGarage');
-  if (!box || !MC_VOITURES.length) return;
+  if (!box || !pilotes.length) return;
   const fl = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
-  const fleches = MC_VOITURES.length > 1 ? `<div class="mc-arrows" style="margin-top:18px">
+  const fleches = pilotes.length > 1 ? `<div class="mc-arrows" style="margin-top:18px">
     <button type="button" class="mc-arrow" aria-label="Voiture précédente" onclick="mcGarage(-1)">${fl('M10 3 5 8l5 5')}</button>
     <button type="button" class="mc-arrow" aria-label="Voiture suivante" onclick="mcGarage(1)">${fl('m6 3 5 5-5 5')}</button></div>` : '';
-  box.innerHTML = mcVitrineHTML(MC_VOITURES[_mcVoitI].pilote, fleches, false, MC_VOITURES[_mcVoitI]);
+  box.innerHTML = mcVitrineHTML(pilotes[_mcVoitI], fleches);
 }
 
 /** Onglet Le Convoi : tous les membres, du grade le plus haut au plus bas, en vitrine. */
