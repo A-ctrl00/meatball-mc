@@ -4462,7 +4462,7 @@ function gtaRendreEquipes() {
   pil.forEach(p => { const e = p['Équipe'] || 'Pilotes indépendants'; (parE[e] = parE[e] || []).push(p); });
   const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || parE[b].length - parE[a].length || a.localeCompare(b));
   el.innerHTML = ordre.map(e => `<div class="gta-equipe"><h3 class="gta-h3">${mcEsc(e)} <span>${parE[e].length} pilote${parE[e].length > 1 ? 's' : ''}</span></h3>
-    <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#gta-pilote-${gtaSlug(p.Pilote)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${gtaVoiture(p)}<div class="nom">${gtaDrapeau(p.Pays)}${mcEsc(p.Pilote)}</div><div class="det">#${mcEsc(p['Numéro'])} ${gtaMarque(p.Voiture)}</div></a>`).join('')}</div></div>`).join('');
+    <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#gta-pilote-${gtaSlug(p.Pilote)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${gtaVoiture(p)}<div class="nom">${gtaDrapeau(p.Pays)}${mcEsc(p.Pilote)}</div><div class="det">${gtaMarque(p.Voiture)}</div></a>`).join('')}</div></div>`).join('');
 }
 
 function gtaStatsPilotes() {
@@ -4549,7 +4549,7 @@ function gtaOuvrirPilote(nom) {
   const dec = GTA.decisions.filter(d => d.Pilote === nom);
   history.replaceState(null, '', '#gta-pilote-' + gtaSlug(nom));
   gtaFenetre(`<div class="gta-fiche-tete">${gtaVoiture(p, true)}<div><span class="gta-kicker">${mcEsc(p['Équipe'] || 'Pilote indépendant')}</span><h2 class="gta-titre-deg">${mcEsc(nom)}</h2>
-      <p class="gta-sous-titre">${gtaDrapeau(gtaPilote(p.Pilote).Pays || p.Pays)}#${mcEsc(p['Numéro'] || '')} ${gtaMarque(p.Voiture)}</p></div></div>
+      <p class="gta-sous-titre">${gtaDrapeau(gtaPilote(p.Pilote).Pays || p.Pays)}${gtaMarque(p.Voiture)}</p></div></div>
     <div class="gta-kpis">
       <div><span>Classement</span><b>${cl.Rang ? cl.Rang + (cl.Rang === '1' ? 'er' : 'e') : '–'}</b><em>${cl.Total ? mcEsc(cl.Total) + ' pts' : ''}</em></div>
       <div><span>Victoires</span><b>${st ? st.v : 0}</b></div><div><span>Top 5</span><b>${st ? st.p5 : 0}</b></div>
