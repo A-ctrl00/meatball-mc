@@ -2747,7 +2747,7 @@
           <button data-sous="commission" onclick="wcnlSous('commission')">Commission de course</button>
           <button data-sous="equipes" onclick="wcnlSous('equipes')">Équipes</button>
           <button data-sous="stats" onclick="wcnlSous('stats')">Statistiques</button>
-          <button data-sous="reglement" onclick="wcnlSous('reglement')">Règlement</button>
+          <button data-sous="reglement" onclick="wcnlSous('reglement')" style="display:none">Règlement</button>
         </nav>
 
         <div class="gta-sp active" data-sp="news">
@@ -2808,43 +2808,7 @@
 
         <div class="gta-sp" data-sp="reglement">
           <h2 class="gta-h2">Règlement</h2>
-          <div class="gta-bareme" id="wcnlBareme"><div class="state-msg">Chargement…</div></div>
-          <div class="gta-bareme gta-regles">
-            <div class="gta-carte">
-              <h3>Sanctions</h3>
-              <ul>
-                <li>Les pénalités de la commission ne se retirent que du bonus course propre, jamais des points de place.</li>
-                <li>Pour un même incident, les deux aggravations ne se cumulent pas, et un yellow suivi d'un contact ne compte qu'une fois.</li>
-                <li>La commission peut alourdir une sanction en cas d'intention manifeste ou de danger excessif.</li>
-                <li>Sanctions possibles pour la course suivante : drive-through, stop &amp; go, interdiction de qualification, ban.</li>
-                <li>Un pilote disqualifié garde ses points de place s'il n'a commis aucune erreur ; sinon, la commission les retire.</li>
-              </ul>
-            </div>
-            <div class="gta-carte">
-              <h3>Départage des égalités</h3>
-              <ol>
-                <li>Le moins de responsabilités d'incident sur la saison</li>
-                <li>Le plus de victoires</li>
-                <li>Le plus de podiums (top 3)</li>
-                <li>Le plus de top 5</li>
-                <li>Le plus de top 10</li>
-                <li>Le plus de tours en tête</li>
-                <li>Le plus de tours couverts</li>
-                <li>Le moins de points d'incident iRacing (x)</li>
-                <li>La meilleure place lors de la dernière manche courue</li>
-                <li>L'ordre alphabétique</li>
-              </ol>
-            </div>
-            <div class="gta-carte">
-              <h3>Classement équipes</h3>
-              <ul>
-                <li>À chaque manche, seul le pilote le mieux classé de chaque équipe marque pour elle.</li>
-                <li>L'équipe reçoit son total de la manche, bonus et pénalités compris.</li>
-                <li>Les autres pilotes de l'équipe ne rapportent rien à l'équipe sur cette manche.</li>
-                <li>Égalités : même départage que le classement pilotes.</li>
-              </ul>
-            </div>
-          </div>
+          <div class="gta-bareme" id="wcnlBareme"></div>
         </div>
       </section>
     </div>
@@ -5102,7 +5066,9 @@ function wcnlRendreReglement() {
   const b = WCNL.bareme.filter(r => wcnlNum(r.Points) != null).map(r => ({ p: wcnlNum(r.Position), v: wcnlNum(r.Points) })).sort((a, c) => a.p - c.p);
   const prm = n => WCNL.params.find(r => r['Paramètre'] === n) || {};
   const bonus = wcnlNum(prm('Bonus course propre').Points);
-  if (!b.length) { el.innerHTML = wcnlVide('Le barème sera publié ici dès qu\'il sera fixé.'); return; }
+  // pas encore de règlement : la rubrique n'est pas proposée
+  const btn = document.querySelector('#wcnlSous [data-sous="reglement"]'); if (btn) btn.style.display = b.length ? '' : 'none';
+  if (!b.length) { el.innerHTML = ''; return; }
   const e = n => n === 1 ? '1er' : n + 'e';
   // regroupe les places qui suivent une même règle (un point de moins par place, ou même valeur)
   const lignes = []; let i = 0;
