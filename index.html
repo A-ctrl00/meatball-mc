@@ -2815,16 +2815,32 @@ async function fetchSheetTabCSVByGid(gid) {
   return allRows.slice(1).filter(r => r.some(cell => cell.trim() !== ''));
 }
 
-// Pilotes qui ne roulent plus avec l'équipe : retirés du Convoi, du Power Ranking, des grades,
-// des cartes, des listes de pilotes des ligues et des engagés (leurs anciens résultats restent dans le Sheet)
-const MC_PILOTES_PARTIS = ['Arnaud Dehu'];
-const mcParti = n => MC_PILOTES_PARTIS.includes(String(n || '').trim());
+// Pilotes inactifs : case « Actif (site) » décochée dans TABLEAU_DE_BORD_MC (colonne H).
+// Ils sont retirés du Convoi, du Power Ranking, des grades, des cartes, des listes de pilotes
+// des ligues et des engagés (leurs anciens résultats restent dans le Sheet).
+const MC_PILOTES_PARTIS = []; // secours si le Sheet ne répond pas
+let _mcInactifs = new Set();
+let _mcTableauP = null;
+function mcTableau() {
+  if (!_mcTableauP) _mcTableauP = fetchSheetTab('TABLEAU_DE_BORD_MC').catch(e => { _mcTableauP = null; throw e; });
+  return _mcTableauP;
+}
+async function mcChargerActifs() {
+  try {
+    const rows = (await mcTableau()).filter(r => r[0] && r[0] !== 'Membre');
+    const coche = v => v === true || /^(true|vrai)$/i.test(String(v).trim());
+    // la colonne n'est prise en compte que si elle est remplie (au moins une case cochée)
+    if (rows.some(r => coche(r[7]))) _mcInactifs = new Set(rows.filter(r => !coche(r[7])).map(r => String(r[0]).trim()));
+  } catch (e) { /* le site garde tout le monde */ }
+}
+const mcParti = n => MC_PILOTES_PARTIS.includes(String(n || '').trim()) || _mcInactifs.has(String(n || '').trim());
 
 let _rankingByName = {};
 
 async function loadRanking() {
   const board = document.getElementById('board');
   try {
+    await mcChargerActifs();
     const rows = await fetchSheetTab('RANKING');
     board.innerHTML = '';
     _rankingByName = {};
@@ -2863,7 +2879,8 @@ let _gradesByName = {};
 async function loadGrades() {
   const gradesEl = document.getElementById('grades');
   try {
-    const rows = await fetchSheetTab('TABLEAU_DE_BORD_MC');
+    await mcChargerActifs();
+    const rows = await mcTableau();
     gradesEl.innerHTML = '';
     _gradesByName = {};
     const sortedRows = rows
@@ -3000,6 +3017,7 @@ let _pilotsByName = {};
 async function loadCartes() {
   const list = document.getElementById('cartes-list');
   try {
+    await mcChargerActifs();
     // Colonnes attendues dans l'onglet CARTES_PILOTES du Sheet, dans cet ordre :
     // Numero | Nom | OVR | VIT | LRG | RAC | CON | FGT | SAF | CarImageURL | Spec1Nom | Spec1Texte | Spec2Nom | Spec2Texte
     // Onglet "CARTES PILOTES" ciblé par son GID (2027340657) plutôt que par son nom,
