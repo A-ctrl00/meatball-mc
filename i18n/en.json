@@ -634,7 +634,6 @@
   "L'équipe reçoit son total de la manche, bonus et pénalités compris.": "The team gets that driver's round total, bonus and penalties included.",
   "Les autres pilotes de l'équipe ne rapportent rien à l'équipe sur cette manche.": "The team's other drivers score nothing for the team in that round.",
   "Égalités : même départage que le classement pilotes.": "Ties: same tie-breakers as the driver standings.",
-  "Toutes les manches comptent, sans bonus de performance.": "Every round counts, with no performance bonus.",
   "Une manche devient officielle une fois les réclamations closes.": "A round becomes official once protests are closed.",
   "Le règlement complet est sur le Discord de la ligue ; la version française fait foi.": "The full rules are on the league Discord; the French version prevails.",
   "Sanction pour la course suivante :": "Penalty for the next race:",
@@ -660,6 +659,7 @@
   "Le barème sera publié ici dès qu'il sera fixé.": "The scoring will be posted here as soon as it is set.",
   "Par marque": "By make",
   "Rubriques de la WCNL": "WCNL sections",
-  "Les inscrits": "Entry list"
+  "Les inscrits": "Entry list",
+  "Pas de course joker : tous les résultats comptent.": "No drop rounds: every result counts."
  }
 }
