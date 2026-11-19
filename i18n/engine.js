@@ -108,7 +108,7 @@
   function traduire(el) {
     if (!el || el.nodeType !== 1 || SKIP.test(el.tagName) || el.closest('[data-i18n-skip]')) return;
     if (el.children.length && inlineOnly(el)) {
-      const k = norm(el.innerHTML);
+      const k = norm(el.innerHTML.replace(/&nbsp;/g, ' '));
       if (SEG[k] != null) { el.innerHTML = SEG[k]; attrs(el); return; }
     }
     attrs(el);
@@ -133,7 +133,7 @@
     obs.observe(document.body, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
   }
   function demarrer() {
-    if (!SEG) { const j = JSON.parse(document.getElementById('i18n-en').textContent); SEG = j.seg; TXT = j.txt; }
+    if (!SEG) { const j = JSON.parse(document.getElementById('i18n-en').textContent); SEG = {}; for (const k in j.seg) SEG[norm(k.replace(/&nbsp;/g, ' '))] = j.seg[k]; TXT = j.txt; }
     document.documentElement.lang = 'en';
     document.title = 'Meatball MC — Team Dashboard';
     traduire(document.body);
