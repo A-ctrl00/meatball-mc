@@ -1968,6 +1968,7 @@
   .gta-voit .gh span { background: linear-gradient(180deg, #fff 45%, rgba(255,255,255,.72)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 2px 6px rgba(0,0,0,.6)); }
   .gta-voit .gh .o { background: linear-gradient(180deg, #F01070 35%, #FB6204); -webkit-background-clip: text; background-clip: text; }
   .gta-voit img { position: relative; width: 100%; height: auto; display: block; }
+  .gta-voit img.detoure { filter: drop-shadow(0 4px 3px rgba(0,0,0,.45)); }
   .gta-drapeau { display: inline-block; width: 1.35em; height: auto; margin-right: .4em; vertical-align: -.12em; border-radius: 2px; box-shadow: 0 0 0 1px rgba(255,255,255,.18); }
   .gta-marque { display: inline-block; padding: 1px 8px; border-radius: 999px; border: 1px solid rgba(255,255,255,.22); font: 800 .78em 'Outfit', sans-serif; letter-spacing: .08em; text-transform: uppercase; vertical-align: .05em; }
   .gta-marque-logo { display: inline-block; height: 1.25em; width: auto; vertical-align: -.3em; margin-left: .25em; }
@@ -4478,10 +4479,19 @@ const GTA_ATTENTE = 'Les résultats arriveront après la première manche, le 21
 function gtaTable(cols, rows, cls = '') {
   return `<div class="gta-scroll"><table class="gta-table ${cls}"><thead><tr>${cols.map(c => `<th${c.num ? ' class="n"' : ''}>${c.t}</th>`).join('')}</tr></thead><tbody>${rows.map(r => `<tr>${cols.map(c => `<td${c.num ? ' class="n"' : ''}>${c.f(r)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
 }
+// Voiture d'un pilote de l'équipe dans une catégorie (onglet VOITURES du Sheet de l'équipe), version détourée
+function mcVoitureCategorie(nom, re) {
+  const v = (typeof MC_VOITURES !== 'undefined' ? MC_VOITURES : []).find(x => x.pilote === nom && x.img && re.test(x.cat || ''));
+  return v ? v.img : '';
+}
+function mcImgVoitureLigue(img) {
+  const d = mcDetoure(img);
+  return d !== img ? `<img class="detoure" src="${d}" alt="" loading="lazy" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${img}'}">` : `<img src="${img}" alt="" loading="lazy">`;
+}
 function gtaVoiture(p, grand) {
   const ini = mcInitiales(p.Pilote || ''), num = p['Numéro'] || '';
-  const img = GTA_VOITURES[p.Pilote];
-  return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? `<img src="${img}" alt="" loading="lazy">` : `<div class="marque">${GTA_MARQUES[p.Voiture] ? gtaMarque(p.Voiture) : mcEsc(p.Voiture || '')}</div>`}</div>`;
+  const img = GTA_VOITURES[p.Pilote] || mcVoitureCategorie(p.Pilote, /gen\s*6|legacy/i);
+  return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? mcImgVoitureLigue(img) : `<div class="marque">${GTA_MARQUES[p.Voiture] ? gtaMarque(p.Voiture) : mcEsc(p.Voiture || '')}</div>`}</div>`;
 }
 
 // ---------- Sous-onglets ----------
@@ -4832,8 +4842,8 @@ function wcnlTable(cols, rows, cls = '') {
 }
 function wcnlVoiture(p, grand) {
   const ini = mcInitiales(p.Pilote || ''), num = p['Numéro'] || '';
-  const img = WCNL_VOITURES[p.Pilote];
-  return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? `<img src="${img}" alt="" loading="lazy">` : `<div class="marque">${WCNL_MARQUES[p.Voiture] ? wcnlMarque(p.Voiture) : mcEsc(p.Voiture || '')}</div>`}</div>`;
+  const img = WCNL_VOITURES[p.Pilote] || mcVoitureCategorie(p.Pilote, /gen\s*4|grand national/i);
+  return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? mcImgVoitureLigue(img) : `<div class="marque">${WCNL_MARQUES[p.Voiture] ? wcnlMarque(p.Voiture) : mcEsc(p.Voiture || '')}</div>`}</div>`;
 }
 
 // ---------- Sous-onglets ----------
@@ -5236,6 +5246,7 @@ async function mcChargerConfig() {
   }));
   mcRemplacer(MC_CALENDRIER, cal.map(r => [mcDateIso(r[0]), (r[1] || '').trim(), (r[2] || '').trim(), (r[3] || '').trim(),
     (r[4] || '').trim(), (r[5] || '').trim(), mcHeure(r[6])]).filter(c => c[0] && c[1]).sort((a, b) => a[0].localeCompare(b[0])));
+  setTimeout(() => { try { if (GTA.ok) gtaRendreTout(); if (WCNL.ok) wcnlRendreTout(); } catch (e) {} }, 0);
   mcRemplacer(MC_VOITURES, voit.filter(r => (r[0] || '').trim()).map(r => {
     const nom = r[0].trim();
     const img = (r[4] || '').trim();
