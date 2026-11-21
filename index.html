@@ -6095,12 +6095,24 @@ function mcEngagesCourse(c) {
     .filter(n => !String(c[1]).startsWith('Ifrn') || mcDivisionPrincipale(n) === c[1]);
 }
 
+// Course du jour déjà courue : ses résultats sont dans le Sheet, ou son heure de départ est passée de plus de 3 h
+function mcCoursePassee(c) {
+  const [a, m, j] = String(c[0]).split('-');
+  const dt = j + '/' + m + '/' + String(a).slice(2);
+  if (typeof mcLigneRows === 'function' && mcLigneRows().some(r => String(r[0]).trim() === dt && String(r[2]).trim() === c[1])) return true;
+  const h = String(c[6] || '').match(/(\d{1,2})[:h](\d{2})/);
+  if (h) { const t = new Date(c[0] + 'T00:00:00'); t.setHours(+h[1] + 3, +h[2]); return Date.now() > t; }
+  return false;
+}
+// À venir : à partir d'aujourd'hui, sans les courses du jour déjà courues
+function mcCourseAVenir(c, auj) { const d = new Date(c[0] + 'T00:00:00'); return d > auj || (+d === +auj && !mcCoursePassee(c)); }
+
 // cible (facultatif) : une course précise du calendrier, utilisé par l'annonce Discord automatique
 function mcRenderRace(cible) {
   const el = document.getElementById('mcRace');
   if (!el) return;
   const auj = new Date(); auj.setHours(0, 0, 0, 0);
-  const course = cible || MC_CALENDRIER.find(c => new Date(c[0] + 'T00:00:00') >= auj);
+  const course = cible || MC_CALENDRIER.find(c => mcCourseAVenir(c, auj));
   if (!course) { el.innerHTML = '<div class="mc-race-next"><h3>Saison terminée</h3><span class="mc-note">Rendez-vous la saison prochaine.</span></div>'; return; }
   const d = new Date(course[0] + 'T00:00:00');
   const j = Math.round((d - auj) / 86400000);
@@ -6235,7 +6247,7 @@ function mcRenderCal() {
   const el = document.getElementById('mcCal');
   if (!el) return;
   const auj = new Date(); auj.setHours(0, 0, 0, 0);
-  const avenir = MC_CALENDRIER.filter(c => new Date(c[0] + 'T00:00:00') >= auj).slice(0, 10);
+  const avenir = MC_CALENDRIER.filter(c => mcCourseAVenir(c, auj)).slice(0, 10);
   if (!avenir.length) { el.innerHTML = '<p class="mc-note">Aucune course programmée pour le moment.</p>'; return; }
   el.innerHTML = `<div class="mc-cal-liste">${avenir.map(c => {
     const d = new Date(c[0] + 'T00:00:00');
