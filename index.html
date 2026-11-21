@@ -1847,7 +1847,10 @@
   .mc-res.q3 .mc-res-p:not(.sans-img) .mc-res-sc, .mc-res.q4 .mc-res-p:not(.sans-img) .mc-res-sc,
   .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-sc, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-sc { align-items: flex-end; }
   .mc-res.q3 .mc-res-p:not(.sans-img) .mc-res-sc img, .mc-res.q4 .mc-res-p:not(.sans-img) .mc-res-sc img,
-  .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-sc img, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-sc img { max-height: 74%; }
+  .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-sc img, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-sc img { max-height: none; max-width: none; width: 112%; margin-bottom: -6%; }
+  /* Initiales + numéro : toujours entiers dans la moitié gauche (taille réduite si besoin) */
+  .mc-res.q3 .mc-res-sc, .mc-res.q4 .mc-res-sc, .mc-res.q5 .mc-res-sc, .mc-res.q6 .mc-res-sc { container-type: inline-size; }
+  .mc-res.q3 .mc-res-gh, .mc-res.q4 .mc-res-gh, .mc-res.q5 .mc-res-gh, .mc-res.q6 .mc-res-gh { font-size: min(var(--gh), calc(100cqw / (var(--nc, 5) * .64 + .2))); }
   .mc-res.q3 .mc-res-p, .mc-res.q4 .mc-res-p, .mc-res.q5 .mc-res-p, .mc-res.q6 .mc-res-p { flex-direction: row; align-items: center; gap: 10px; padding: 4px 8px; }
   .mc-res.q3 .mc-res-sc, .mc-res.q4 .mc-res-sc, .mc-res.q5 .mc-res-sc, .mc-res.q6 .mc-res-sc { flex: 0 0 50%; height: 100%; align-items: center; }
   .mc-res.q3 .mc-res-l { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
@@ -5674,7 +5677,7 @@ function mcCadreResultats(date, code) {
     const tag = pos === 1 ? '<span class="mc-res-tag or">Victoire</span>' : pos <= 3 ? '<span class="mc-res-tag pod">Podium</span>' : pos <= 5 ? '<span class="mc-res-tag">Top 5</span>' : pos <= 10 ? '<span class="mc-res-tag">Top 10</span>' : '';
     return `<div class="mc-res-p${v.img ? '' : ' sans-img'}">
       <div class="mc-res-sc">
-        <div class="mc-res-gh" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
+        <div class="mc-res-gh" aria-hidden="true" style="--nc:${(String(ini) + n).length}"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
         ${v.img && mcDetoure(v.img) !== v.img ? '<div class="mc-res-om" aria-hidden="true"></div>' : ''}
         ${v.img ? `<img class="${mcDetoure(v.img) !== v.img ? 'detoure' : ''}" src="${mcDetoure(v.img)}" alt="" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${v.img}'}">` : ''}
       </div>
