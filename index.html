@@ -5430,6 +5430,8 @@ async function mcChargerConfig() {
 // Avec une ligue : la voiture de la catégorie de cette ligue, sinon une autre voiture du pilote au hasard.
 // Sans ligue (Convoi, page pilote) : la voiture de sa division IFRN principale (truck en Ignite,
 // O'Reilly en Access…), sinon sa première ligne.
+// Voiture imposée hors course (Convoi, page pilote), par catégorie de l'onglet VOITURES
+const MC_VOITURE_CHOISIE = { 'Alexis Joube': 'NASCAR Next Gen Cup' };
 function mcVoitureDe(nom, code) {
   const liste = MC_VOITURES.filter(v => v.pilote === nom);
   if (!liste.length) return {};
@@ -5441,6 +5443,12 @@ function mcVoitureDe(nom, code) {
     return meme.find(v => v.img) || meme[0];
   };
   if (!code) {
+    // voiture choisie par le pilote pour le Convoi et sa page (catégorie)
+    const choix = MC_VOITURE_CHOISIE[nom];
+    if (choix) {
+      const c = liste.filter(v => String(v.cat || '').split(/[\/,;]/).map(x => x.trim().toLowerCase()).includes(choix.toLowerCase()));
+      if (c.length) return c.find(v => v.img) || c[0];
+    }
     const div = typeof mcDivisionPrincipale === 'function' ? mcDivisionPrincipale(nom) : null;
     const v = div && deCat(div);
     if (v) return v;
