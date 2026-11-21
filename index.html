@@ -1621,6 +1621,8 @@
   .mc-soiree-cartes .mc-res { border-radius: 16px; }
   .mc-res-bloc { display: flex; flex-direction: column; align-items: center; gap: 10px; width: min(360px, 100%); }
   .mc-res-bloc .mc-res { width: 100%; }
+  .mc-res-extra { display: none; }
+  @media (min-width: 1200px) { .mc-res-extra { display: flex; } }
   .mc-res-part { display: inline-flex; align-items: center; gap: 8px; padding: 9px 18px; border-radius: 999px; border: 1px solid rgba(255,106,26,.55);
     background: rgba(255,106,26,.1); color: #fff; font: 800 12px 'Outfit', sans-serif; letter-spacing: .1em; text-transform: uppercase; cursor: pointer; }
   .mc-res-part:hover { background: var(--orange); }
@@ -1809,10 +1811,11 @@
   .mc-res-g { flex: 1; min-height: 0; display: grid; gap: 8px; margin-top: 10px; grid-auto-rows: minmax(0, 1fr); }
   .mc-res-p { position: relative; min-height: 0; display: flex; flex-direction: column; border-radius: 12px; overflow: hidden;
     background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.08); padding: 6px 10px 8px; }
-  .mc-res-sc { position: relative; flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; }
-  .mc-res-gh { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; font: 900 var(--gh, 64px)/.85 'Outfit', sans-serif; letter-spacing: -0.04em; color: #fff; opacity: .95; }
+  /* La scène porte la taille des initiales (1em) : la voiture est dimensionnée en em, donc toujours dans la même proportion */
+  .mc-res-sc { position: relative; flex: 1; min-height: 0; display: flex; align-items: flex-end; justify-content: center; font-size: var(--gh, 64px); }
+  .mc-res-gh { position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; font: 900 1em/.85 'Outfit', sans-serif; letter-spacing: -0.04em; color: #fff; opacity: .95; }
   .mc-res-gh .o { color: var(--orange); }
-  .mc-res-sc img { position: relative; max-width: 100%; max-height: 100%; object-fit: contain;
+  .mc-res-sc img { position: relative; width: 2.7em; height: auto; max-width: 100%; max-height: none; object-fit: contain;
     -webkit-mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); mask-image: radial-gradient(ellipse 66% 52% at 50% 55%, #000 66%, transparent 100%); }
   .mc-res-sc img.detoure { -webkit-mask-image: none; mask-image: none; filter: drop-shadow(0 3px 2px rgba(0,0,0,.45)); }
   /* Ombre fondue derrière la voiture : au-dessus des lettres, sans aucun bord visible */
@@ -1847,10 +1850,10 @@
   .mc-res.q3 .mc-res-p:not(.sans-img) .mc-res-sc, .mc-res.q4 .mc-res-p:not(.sans-img) .mc-res-sc,
   .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-sc, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-sc { align-items: flex-end; }
   .mc-res.q3 .mc-res-p:not(.sans-img) .mc-res-sc img, .mc-res.q4 .mc-res-p:not(.sans-img) .mc-res-sc img,
-  .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-sc img, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-sc img { max-height: none; max-width: none; width: 112%; margin-bottom: -6%; }
+  .mc-res.q5 .mc-res-p:not(.sans-img) .mc-res-sc img, .mc-res.q6 .mc-res-p:not(.sans-img) .mc-res-sc img { max-width: 112%; margin-bottom: -6%; }
   /* Initiales + numéro : toujours entiers dans la moitié gauche (taille réduite si besoin) */
-  .mc-res.q3 .mc-res-sc, .mc-res.q4 .mc-res-sc, .mc-res.q5 .mc-res-sc, .mc-res.q6 .mc-res-sc { container-type: inline-size; }
-  .mc-res.q3 .mc-res-gh, .mc-res.q4 .mc-res-gh, .mc-res.q5 .mc-res-gh, .mc-res.q6 .mc-res-gh { font-size: min(var(--gh), calc(100cqw / (var(--nc, 5) * .64 + .2))); }
+  .mc-res.q3 .mc-res-p, .mc-res.q4 .mc-res-p, .mc-res.q5 .mc-res-p, .mc-res.q6 .mc-res-p { container-type: inline-size; }
+  .mc-res.q3 .mc-res-sc, .mc-res.q4 .mc-res-sc, .mc-res.q5 .mc-res-sc, .mc-res.q6 .mc-res-sc { font-size: min(var(--gh), calc((50cqw - 5px) / (var(--nc, 5) * .64 + .2))); }
   .mc-res.q3 .mc-res-p, .mc-res.q4 .mc-res-p, .mc-res.q5 .mc-res-p, .mc-res.q6 .mc-res-p { flex-direction: row; align-items: center; gap: 10px; padding: 4px 8px; }
   .mc-res.q3 .mc-res-sc, .mc-res.q4 .mc-res-sc, .mc-res.q5 .mc-res-sc, .mc-res.q6 .mc-res-sc { flex: 0 0 50%; height: 100%; align-items: center; }
   .mc-res.q3 .mc-res-l { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
@@ -5804,8 +5807,8 @@ function mcCadreResultats(date, code) {
     const gain = !nq && !isNaN(pos) ? qn - pos : null;
     const tag = pos === 1 ? '<span class="mc-res-tag or">Victoire</span>' : pos <= 3 ? '<span class="mc-res-tag pod">Podium</span>' : pos <= 5 ? '<span class="mc-res-tag">Top 5</span>' : pos <= 10 ? '<span class="mc-res-tag">Top 10</span>' : '';
     return `<div class="mc-res-p${v.img ? '' : ' sans-img'}">
-      <div class="mc-res-sc">
-        <div class="mc-res-gh" aria-hidden="true" style="--nc:${(String(ini) + n).length}"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
+      <div class="mc-res-sc" style="--nc:${(String(ini) + n).length}">
+        <div class="mc-res-gh" aria-hidden="true"><span>${mcEsc(ini)}</span>${n ? `<span class="o">${mcEsc(n)}</span>` : ''}</div>
         ${v.img && mcDetoure(v.img) !== v.img ? '<div class="mc-res-om" aria-hidden="true"></div>' : ''}
         ${v.img ? `<img class="${mcDetoure(v.img) !== v.img ? 'detoure' : ''}" src="${mcDetoure(v.img)}" alt="" onerror="if(!this.dataset.e){this.dataset.e=1;this.classList.remove('detoure');this.src='${v.img}'}">` : ''}
       </div>
@@ -6151,8 +6154,15 @@ function mcRenderSoiree() {
   soir.forEach(r => { const c = (r[2] || '').trim(); (parLigue[c] = parLigue[c] || []).push(r); });
   const num = v => { const n = parseFloat(v); return isNaN(n) ? 999 : n; };
   const nomLigue = c => (MC_DIVISIONS.find(x => x.code === c) || { nom: c }).nom;
+  // Sur grand écran, on complète jusqu'à 3 cadres avec les soirées précédentes (cachés sinon)
+  const cartes = Object.keys(parLigue).map(c => ({ date: String(parLigue[c][0][0]).trim(), c, extra: false }));
+  const vus = new Set();
+  rows.filter(x => x.d.getTime() < derniere).sort((a, b) => b.d - a.d).forEach(x => {
+    const k = String(x.r[0]).trim() + '|' + String(x.r[2]).trim();
+    if (cartes.length < 3 && !vus.has(k)) { vus.add(k); cartes.push({ date: String(x.r[0]).trim(), c: String(x.r[2]).trim(), extra: true }); }
+  });
   el.innerHTML = `
-    <div class="mc-soiree-cartes">${Object.keys(parLigue).map(c => `<div class="mc-res-bloc">${mcCadreResultats(String(parLigue[c][0][0]).trim(), c)}
+    <div class="mc-soiree-cartes">${cartes.map(({ date, c, extra }) => `<div class="mc-res-bloc${extra ? ' mc-res-extra' : ''}">${mcCadreResultats(date, c)}
       <button type="button" class="mc-res-part" onclick="mcPartagerResultats(this)">
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg>
         <span>Partager</span></button></div>`).join('')}</div>`;
