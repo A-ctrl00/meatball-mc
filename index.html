@@ -2120,8 +2120,10 @@
   body.mc-theme-gta .cart-fab, body.mc-theme-gta .mc-cart-fab { background: #EC07C4; }
 
   /* ===== Bandeau pub maison : Meatball MC, GTA et WCNL en boucle ===== */
-  .mc-pub { position: relative; margin: 18px 0 6px; height: 132px; border-radius: 14px; overflow: hidden;
+  .mc-pub { position: relative; margin: 12px 0 26px; height: 132px; width: calc(100vw - 2 * clamp(16px, 2vw, 32px)); left: 50%; transform: translateX(-50%); border-radius: 14px; overflow: hidden;
     background: #0a1628; box-shadow: 0 0 0 1px var(--line), 0 10px 30px rgba(0,0,0,.35); }
+  /* Écran large : logo et menu sur une ligne, le bandeau colle au bas de l en-tête et garde le même écart avant la couverture */
+  @media (min-width: 1501px) { .mc-pub { margin: 0 0 36px; } }
   .mc-pub-tag { position: absolute; top: 8px; right: 10px; z-index: 5; font: 700 10px/1 'Inter', sans-serif; letter-spacing: .12em;
     color: rgba(255,255,255,.75); background: rgba(0,0,0,.45); padding: 4px 6px; border-radius: 4px; }
   .mc-pub-slide { position: absolute; inset: 0; display: flex; align-items: center; gap: 18px; padding: 0 22px; cursor: pointer;
