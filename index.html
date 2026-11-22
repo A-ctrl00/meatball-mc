@@ -1861,6 +1861,8 @@
   .mc-res.q3 .mc-res-l { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
   .mc-res.q4 .mc-res-l, .mc-res.q5 .mc-res-l, .mc-res.q6 .mc-res-l { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 1px; text-align: center; }
   .mc-res.q5 .mc-res-tag, .mc-res.q6 .mc-res-tag { display: none; }
+  .mc-res.q4 .mc-res-tag { margin-top: 1px; padding: 1px 6px; font-size: 7px; }
+  .mc-res.q4 .mc-res-sf span { font-size: 6px; } .mc-res.q4 .mc-res-d { margin-top: 0; font-size: 7px; }
   .mc-res.q5 .mc-res-d, .mc-res.q6 .mc-res-d { margin-top: 0; font-size: 7px; }
   .mc-res.q5 .mc-res-l > div:first-child, .mc-res.q6 .mc-res-l > div:first-child { display: flex; align-items: baseline; justify-content: center; gap: 6px; }
   .mc-res.q5 .mc-res-sf span, .mc-res.q6 .mc-res-sf span { font-size: 6px; }
@@ -5783,12 +5785,27 @@ function mcPiloteDepuisAdresse() {
  * voiture, initiales et numéro de chaque pilote, place de départ et d'arrivée.
  * date : 'jj/mm/aa' comme dans RESULTATS LIGUE ; code : code de la ligue. Utilisé par l'annonce Discord.
  */
-function mcCadreResultats(date, code) {
+/* Plus de 4 pilotes : plusieurs fiches équilibrées, dans l'ordre d'arrivée (5 → 3 + 2, 7 → 4 + 3, 9 → 3 + 3 + 3) */
+function mcResultatsParties(n) {
+  if (n <= 4) return [n];
+  const k = Math.ceil(n / 4), base = Math.floor(n / k), plus = n % k;
+  return Array.from({ length: k }, (_, i) => base + (i < plus ? 1 : 0));
+}
+function mcResultatsLignes(date, code) {
   const rows = mcLigneRows().filter(r => String(r[0]).trim() === date && String(r[2]).trim() === code);
-  if (!rows.length) return '';
   const num = v => { const n = parseFloat(v); return isNaN(n) ? 999 : n; };
-  rows.sort((a, b) => num(a[3]) - num(b[3]));
-  rows.splice(6); // 6 pilots au plus pour tenir dans le format Instagram
+  return rows.sort((a, b) => num(a[3]) - num(b[3]));
+}
+// partie (facultatif) : numéro de la fiche (0, 1…). Sans partie : toutes les fiches à la suite.
+function mcCadreResultats(date, code, partie) {
+  const toutes = mcResultatsLignes(date, code);
+  if (!toutes.length) return '';
+  const tailles = mcResultatsParties(toutes.length);
+  if (partie == null) return tailles.map((_, i) => mcCadreResultats(date, code, i)).join('');
+  const debut = tailles.slice(0, partie).reduce((s, x) => s + x, 0);
+  const rows = toutes.slice(debut, debut + tailles[partie]);
+  if (!rows.length) return '';
+  const nbFiches = tailles.length;
   const div = MC_DIVISIONS.find(x => x.code === code) || { nom: code };
   const d = mcDate(date);
   const iso = d ? d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0') : '';
@@ -5827,7 +5844,7 @@ function mcCadreResultats(date, code) {
     </div>`;
   }).join('');
   return `<div class="mc-res q${Math.min(rows.length, 6)}">
-    <div class="mc-res-k">Résultats${d ? ' · ' + MC_JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MC_MOIS[d.getMonth()] + ' ' + d.getFullYear() : ''}</div>
+    <div class="mc-res-k">Résultats${d ? ' · ' + MC_JOURS[d.getDay()] + ' ' + d.getDate() + ' ' + MC_MOIS[d.getMonth()] + ' ' + d.getFullYear() : ''}${nbFiches > 1 ? ' · ' + (partie + 1) + '/' + nbFiches : ''}</div>
     <h2>${mcEsc(titre)}</h2>
     ${circuit ? `<div class="mc-res-c">${mcEsc(circuit)}</div>` : ''}
     <div class="mc-res-g">${blocs}</div>
@@ -6157,14 +6174,15 @@ function mcRenderSoiree() {
   const num = v => { const n = parseFloat(v); return isNaN(n) ? 999 : n; };
   const nomLigue = c => (MC_DIVISIONS.find(x => x.code === c) || { nom: c }).nom;
   // Sur grand écran, on complète jusqu'à 3 cadres avec les soirées précédentes (cachés sinon)
-  const cartes = Object.keys(parLigue).map(c => ({ date: String(parLigue[c][0][0]).trim(), c, extra: false }));
+  const cartes = [];
+  Object.keys(parLigue).forEach(c => { const date = String(parLigue[c][0][0]).trim(); mcResultatsParties(parLigue[c].length).forEach((_, p) => cartes.push({ date, c, p, extra: false })); });
   const vus = new Set();
   rows.filter(x => x.d.getTime() < derniere).sort((a, b) => b.d - a.d).forEach(x => {
     const k = String(x.r[0]).trim() + '|' + String(x.r[2]).trim();
-    if (cartes.length < 3 && !vus.has(k)) { vus.add(k); cartes.push({ date: String(x.r[0]).trim(), c: String(x.r[2]).trim(), extra: true }); }
+    if (cartes.length < 3 && !vus.has(k)) { vus.add(k); cartes.push({ date: String(x.r[0]).trim(), c: String(x.r[2]).trim(), p: 0, extra: true }); }
   });
   el.innerHTML = `
-    <div class="mc-soiree-cartes">${cartes.map(({ date, c, extra }) => `<div class="mc-res-bloc${extra ? ' mc-res-extra' : ''}">${mcCadreResultats(date, c)}
+    <div class="mc-soiree-cartes">${cartes.map(({ date, c, p, extra }) => `<div class="mc-res-bloc${extra ? ' mc-res-extra' : ''}">${mcCadreResultats(date, c, p)}
       <button type="button" class="mc-res-part" onclick="mcPartagerResultats(this)">
         <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M18 16a3 3 0 0 0-2.4 1.2l-6.7-3.4a3 3 0 0 0 0-1.6l6.7-3.4A3 3 0 1 0 15 7l-6.7 3.4a3 3 0 1 0 0 3.2L15 17a3 3 0 1 0 3-1z"/></svg>
         <span>Partager</span></button></div>`).join('')}</div>`;

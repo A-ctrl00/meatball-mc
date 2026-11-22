@@ -221,7 +221,7 @@ async function main() {
         const html = mcCadreResultats(date, ligue);
         if (!html) return null;
         let boite = document.getElementById('mcCadreAnnonce');
-        if (!boite) { boite = document.createElement('div'); boite.id = 'mcCadreAnnonce'; boite.style.cssText = 'position:absolute;left:0;top:0;z-index:99999'; document.body.prepend(boite); }
+        if (!boite) { boite = document.createElement('div'); boite.id = 'mcCadreAnnonce'; boite.style.cssText = 'position:absolute;left:0;top:0;z-index:99999;display:flex;gap:20px;align-items:flex-start'; document.body.prepend(boite); }
         boite.innerHTML = html;
         const div = MC_DIVISIONS.find(v => v.code === ligue);
         return { nomLigue: div ? div.nom : ligue, circuit: (boite.querySelector('.mc-res-c') || {}).textContent || '' };
@@ -230,8 +230,14 @@ async function main() {
       if (!info) { console.log('Résultats absents de la page, ignorés :', x); fs.writeFileSync(ETAT_RESULTATS, JSON.stringify(vus, null, 1) + '\n'); continue; }
       await page.waitForFunction(() => [...document.querySelectorAll('#mcCadreAnnonce img')].every(i => i.complete), null, { timeout: 20000 }).catch(() => {});
       await page.waitForTimeout(600);
-      const image = await page.locator('#mcCadreAnnonce .mc-res').screenshot();
-      await poster(`🏁 **Résultats : ${info.nomLigue}**` + (info.circuit ? `, ${info.circuit}` : '') + `\n<${SITE.replace(/\/?$/, '/')}>`, image, 'resultats.png');
+      // plus de 4 pilotes : plusieurs fiches, une image chacune (la première porte le message)
+      const fiches = page.locator('#mcCadreAnnonce .mc-res');
+      const nb = await fiches.count();
+      for (let i = 0; i < nb; i++) {
+        const image = await fiches.nth(i).screenshot();
+        const texte = i === 0 ? `🏁 **Résultats : ${info.nomLigue}**` + (info.circuit ? `, ${info.circuit}` : '') + `\n<${SITE.replace(/\/?$/, '/')}>` : '';
+        await poster(texte, image, nb > 1 ? `resultats-${i + 1}.png` : 'resultats.png');
+      }
       if (!ESSAI) fs.writeFileSync(ETAT_RESULTATS, JSON.stringify(vus, null, 1) + '\n');
     }
   }
