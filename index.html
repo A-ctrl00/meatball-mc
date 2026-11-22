@@ -5471,13 +5471,18 @@ async function mcChargerConfig() {
 const MC_VOITURE_CHOISIE = { 'Alexis Joube': 'NASCAR Next Gen Cup', 'Terry Despois': 'NASCAR Xfinity' };
 // Initiales longues (DP 103…) : même taille de police que JB 10, compressées en largeur si besoin
 function mcAjusterInitiales(racine) {
-  (racine || document).querySelectorAll('.mc-car-grand.long').forEach(g => {
+  // Toutes les initiales : si elles dépassent leur cadre (ex. AJ00 sur une fiche pilote),
+  // elles sont resserrées en largeur comme les 5 caractères et plus, à la même hauteur.
+  (racine || document).querySelectorAll('.mc-car-grand').forEach(g => {
+    if (g.dataset.long == null) g.dataset.long = g.classList.contains('long') ? '1' : '0';
     g.style.transform = '';
+    g.classList.add('long');
     const dispo = g.getBoundingClientRect().width;
-    if (!dispo) return;
+    if (!dispo) { if (g.dataset.long === '0') g.classList.remove('long'); return; }
     const spans = g.children;
     const besoin = spans.length ? spans[spans.length - 1].getBoundingClientRect().right - spans[0].getBoundingClientRect().left : 0;
-    if (dispo && besoin > dispo) g.style.transform = `scaleX(${(dispo / besoin).toFixed(3)})`;
+    if (besoin > dispo) g.style.transform = `scaleX(${(dispo / besoin).toFixed(3)})`;
+    else if (g.dataset.long === '0') g.classList.remove('long');
   });
 }
 window.addEventListener('resize', () => mcAjusterInitiales());
@@ -5486,7 +5491,7 @@ if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mcAj
 const _mcRoInitiales = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(e => e.forEach(x => mcAjusterInitiales(x.target.parentElement))) : null;
 new MutationObserver(m => {
   if (!m.some(x => x.addedNodes.length)) return;
-  requestAnimationFrame(() => document.querySelectorAll('.mc-car-grand.long:not([data-ro])').forEach(g => { g.dataset.ro = 1; if (_mcRoInitiales) _mcRoInitiales.observe(g); }));
+  requestAnimationFrame(() => document.querySelectorAll('.mc-car-grand:not([data-ro])').forEach(g => { g.dataset.ro = 1; if (_mcRoInitiales) _mcRoInitiales.observe(g); }));
 }).observe(document.documentElement, { childList: true, subtree: true });
 function mcVoitureDe(nom, code) {
   const liste = MC_VOITURES.filter(v => v.pilote === nom);
