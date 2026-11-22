@@ -1792,6 +1792,13 @@
   .mc-pp-wins { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: 14px; }
   .mc-pp-wins figure { margin: 0; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
   .mc-pp-wins img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; display: block; }
+  .mc-pp-wins img.mc-pp-zoom { cursor: zoom-in; transition: filter .15s; }
+  .mc-pp-wins img.mc-pp-zoom:hover { filter: brightness(1.12); }
+  /* Image agrandie sur toute la fenêtre */
+  .img-lightbox-overlay.plein { padding: 0; background: rgba(0,0,0,0.94); }
+  .img-lightbox-overlay.plein .img-lightbox-img { max-width: 100vw; max-height: 100vh; width: 100vw; height: 100vh; border-radius: 0; box-shadow: none; }
+  .img-lightbox-overlay.plein .pilot-sheet-close { position: fixed; top: 14px; right: 14px; z-index: 2; width: 46px; height: 46px; border-radius: 50%; background: rgba(0,0,0,0.6); color: #fff; font-size: 32px; display: flex; align-items: center; justify-content: center; }
+  .img-lightbox-overlay.plein .pilot-sheet-close:hover { background: var(--orange); color: #fff; }
   .mc-pp-wins figcaption { padding: 10px 14px; font-size: 14px; color: #dfe7f1; }
   .mc-pp .mc-car { margin: 0; }
   .mc-pp-prog .mc-pp-kpi b { font-size: 21px; line-height: 1.2; }
@@ -4255,8 +4262,17 @@ function openLightbox(src, alt) {
 }
 
 function closeLightbox() {
-  document.getElementById('imgLightboxOverlay').style.display = 'none';
+  const o = document.getElementById('imgLightboxOverlay');
+  o.style.display = 'none';
+  o.classList.remove('plein');
 }
+// Photo de victoire : agrandie sur toute la fenêtre, croix en haut à droite (ou Échap) pour revenir
+function mcAgrandirImage(img) {
+  openLightbox(img.currentSrc || img.src, img.alt);
+  document.getElementById('imgLightboxOverlay').classList.add('plein');
+}
+function mcLightboxOuverte() { const o = document.getElementById('imgLightboxOverlay'); return !!o && o.style.display !== 'none'; }
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && mcLightboxOuverte()) { e.stopImmediatePropagation(); closeLightbox(); } }, true);
 
 function renderShop() {
   const grid = document.getElementById('shopGrid');
@@ -5747,7 +5763,7 @@ function mcOuvrirPilote(nom, sansHistorique) {
       </section>
 
       ${wins.length ? `<section class="mc-pp-sec"><h2>Ses victoires en images</h2>
-        <div class="mc-pp-wins">${wins.map(w => `<figure><img src="${w.img}" alt="Victoire de ${mcEsc(nom)}, ${mcEsc(w.ligue)}" loading="lazy"><figcaption>${[w.ligue, w.circuit, w.date].filter(Boolean).map(mcEsc).join(' · ')}${w.mot ? `<em class="mc-pp-mot">« ${mcEsc(w.mot)} »</em>` : ''}</figcaption></figure>`).join('')}</div>
+        <div class="mc-pp-wins">${wins.map(w => `<figure><img src="${w.img}" alt="Victoire de ${mcEsc(nom)}, ${mcEsc(w.ligue)}" loading="lazy" class="mc-pp-zoom" onclick="mcAgrandirImage(this)"><figcaption>${[w.ligue, w.circuit, w.date].filter(Boolean).map(mcEsc).join(' · ')}${w.mot ? `<em class="mc-pp-mot">« ${mcEsc(w.mot)} »</em>` : ''}</figcaption></figure>`).join('')}</div>
       </section>` : ''}
 
       <section class="mc-pp-sec">
@@ -5799,7 +5815,7 @@ window.addEventListener('popstate', () => {
   else { const page = document.getElementById('mcPilotPage'); if (page && page.classList.contains('open')) { page.classList.remove('open'); document.body.style.overflow = ''; document.body.classList.remove('mc-pp-ouvert'); } }
 });
 // Échap ferme d'abord l'article ouvert par-dessus, puis la page pilote
-document.addEventListener('keydown', e => { const r = document.getElementById('mcReader'); if (e.key === 'Escape' && !(r && r.classList.contains('open'))) mcFermerPilote(); }, true);
+document.addEventListener('keydown', e => { const r = document.getElementById('mcReader'); if (e.key === 'Escape' && !(r && r.classList.contains('open')) && !mcLightboxOuverte()) mcFermerPilote(); }, true);
 function mcNomDepuisSlug(slug) {
   const noms = new Set([...mcLigneRows().map(r => r[1]), ...Object.keys(typeof _gradesByName !== 'undefined' ? _gradesByName : {})]);
   return [...noms].find(n => mcSlug(n) === slug) || null;
