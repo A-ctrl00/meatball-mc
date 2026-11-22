@@ -1410,13 +1410,14 @@
   .mc-garage { position: relative; margin: 56px 0; }
   .mc-garage > .mc-h { margin-bottom: 28px; }
   .mc-car { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: clamp(20px, 4vw, 56px); align-items: center; }
-  .mc-car-scene { position: relative; padding-top: clamp(20px, 5vw, 80px); }
+  .mc-car-scene { position: relative; padding-top: clamp(20px, 5vw, 80px); container-type: inline-size; }
   .mc-car-grand {
     position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; pointer-events: none;
-    font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(110px, 21vw, 330px); line-height: .8; letter-spacing: -0.04em; color: #fff;
+    font-family: 'Outfit', sans-serif; font-weight: 900; font-size: min(clamp(110px, 21vw, 330px), 30cqw); line-height: .8; letter-spacing: -0.04em; color: #fff;
   }
   .mc-car-grand .o { color: var(--orange); }
-  .mc-car-grand.long { font-size: clamp(84px, 16vw, 250px); gap: .12em; }
+  /* même taille pour tous (4 ou 5 caractères), calée pour qu'un « DP 103 » tienne dans la largeur */
+  .mc-car-grand.long { gap: .06em; }
   .mc-car-img {
     position: relative; display: block; width: 100%; height: auto; margin-top: clamp(-30px, -2vw, -10px);
     -webkit-mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
