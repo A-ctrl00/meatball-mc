@@ -221,7 +221,7 @@ async function main() {
         const html = mcCadreResultats(date, ligue);
         if (!html) return null;
         let boite = document.getElementById('mcCadreAnnonce');
-        if (!boite) { boite = document.createElement('div'); boite.id = 'mcCadreAnnonce'; boite.style.cssText = 'position:absolute;left:0;top:0;z-index:99999;display:flex;gap:20px;align-items:flex-start'; document.body.prepend(boite); }
+        if (!boite) { boite = document.createElement('div'); boite.id = 'mcCadreAnnonce'; boite.style.cssText = 'position:absolute;left:0;top:0;z-index:99999;width:360px'; document.body.prepend(boite); }
         boite.innerHTML = html;
         const div = MC_DIVISIONS.find(v => v.code === ligue);
         return { nomLigue: div ? div.nom : ligue, circuit: (boite.querySelector('.mc-res-c') || {}).textContent || '' };
