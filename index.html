@@ -1410,14 +1410,14 @@
   .mc-garage { position: relative; margin: 56px 0; }
   .mc-garage > .mc-h { margin-bottom: 28px; }
   .mc-car { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: clamp(20px, 4vw, 56px); align-items: center; }
-  .mc-car-scene { position: relative; padding-top: clamp(20px, 5vw, 80px); container-type: inline-size; }
+  .mc-car-scene { position: relative; padding-top: clamp(20px, 5vw, 80px); }
   .mc-car-grand {
     position: absolute; left: 0; right: 0; top: 0; display: flex; justify-content: space-between; pointer-events: none;
-    font-family: 'Outfit', sans-serif; font-weight: 900; font-size: min(clamp(110px, 21vw, 330px), 30cqw); line-height: .8; letter-spacing: -0.04em; color: #fff;
+    font-family: 'Outfit', sans-serif; font-weight: 900; font-size: clamp(110px, 21vw, 330px); line-height: .8; letter-spacing: -0.04em; color: #fff;
   }
   .mc-car-grand .o { color: var(--orange); }
-  /* même taille pour tous (4 ou 5 caractères), calée pour qu'un « DP 103 » tienne dans la largeur */
-  .mc-car-grand.long { gap: .06em; }
+  /* 5 caractères et plus : même hauteur que les autres, resserrés en largeur seulement (mcAjusterInitiales) */
+  .mc-car-grand.long { justify-content: flex-start; gap: .06em; transform-origin: 0 0; }
   .mc-car-img {
     position: relative; display: block; width: 100%; height: auto; margin-top: clamp(-30px, -2vw, -10px);
     -webkit-mask-image: radial-gradient(ellipse 66% 46% at 50% 58%, #000 68%, transparent 100%);
@@ -5441,7 +5441,26 @@ async function mcChargerConfig() {
 // Sans ligue (Convoi, page pilote) : la voiture de sa division IFRN principale (truck en Ignite,
 // O'Reilly en Access…), sinon sa première ligne.
 // Voiture imposée hors course (Convoi, page pilote), par catégorie de l'onglet VOITURES
-const MC_VOITURE_CHOISIE = { 'Alexis Joube': 'NASCAR Next Gen Cup' };
+const MC_VOITURE_CHOISIE = { 'Alexis Joube': 'NASCAR Next Gen Cup', 'Terry Despois': 'NASCAR Xfinity' };
+// Initiales longues (DP 103…) : même taille de police que JB 10, compressées en largeur si besoin
+function mcAjusterInitiales(racine) {
+  (racine || document).querySelectorAll('.mc-car-grand.long').forEach(g => {
+    g.style.transform = '';
+    const dispo = g.getBoundingClientRect().width;
+    if (!dispo) return;
+    const spans = g.children;
+    const besoin = spans.length ? spans[spans.length - 1].getBoundingClientRect().right - spans[0].getBoundingClientRect().left : 0;
+    if (dispo && besoin > dispo) g.style.transform = `scaleX(${(dispo / besoin).toFixed(3)})`;
+  });
+}
+window.addEventListener('resize', () => mcAjusterInitiales());
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => mcAjusterInitiales());
+// recalcul quand un cadre apparaît ou change de taille (onglet affiché, fenêtre redimensionnée)
+const _mcRoInitiales = typeof ResizeObserver !== 'undefined' ? new ResizeObserver(e => e.forEach(x => mcAjusterInitiales(x.target.parentElement))) : null;
+new MutationObserver(m => {
+  if (!m.some(x => x.addedNodes.length)) return;
+  requestAnimationFrame(() => document.querySelectorAll('.mc-car-grand.long:not([data-ro])').forEach(g => { g.dataset.ro = 1; if (_mcRoInitiales) _mcRoInitiales.observe(g); }));
+}).observe(document.documentElement, { childList: true, subtree: true });
 function mcVoitureDe(nom, code) {
   const liste = MC_VOITURES.filter(v => v.pilote === nom);
   if (!liste.length) return {};
