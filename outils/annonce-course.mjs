@@ -160,7 +160,10 @@ async function main() {
 
   const navigateur = await chromium.launch();
   const page = await navigateur.newPage({ viewport: { width: 420, height: 1000 }, deviceScaleFactor: 3 });
-  await page.goto(SITE, { waitUntil: 'networkidle', timeout: 60000 });
+  // La page charge le Sheet et des images : on attend le calme réseau, mais sans échouer
+  // si une ressource traîne (une seule requête lente faisait planter tout le passage).
+  await page.goto(SITE, { waitUntil: 'load', timeout: 90000 });
+  await page.waitForLoadState('networkidle', { timeout: 30000 }).catch(() => console.log('Réseau encore actif après 30 s, on continue.'));
   // attendre que le site ait lu le Sheet (calendrier et résultats)
   await page.waitForFunction(() => window._ligueRows && window._ligueRows.length && typeof MC_CALENDRIER !== 'undefined' && MC_CALENDRIER.length, null, { timeout: 60000 });
   await page.waitForTimeout(1500);
