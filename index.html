@@ -1526,6 +1526,12 @@
   .row .driver-name { font-weight: 600; font-size: 16px; }
   .pr-row { cursor: pointer; grid-template-columns: 54px 1fr 120px; }
   .pr-row:hover { background: rgba(255,255,255,0.03); }
+  .pr-row .pos { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; line-height: 1; }
+  .pr-evo { font-family: 'Inter', sans-serif; font-size: 12px; font-weight: 800; letter-spacing: .02em; padding: 2px 6px; border-radius: 6px; white-space: nowrap; }
+  .pr-evo.monte { color: #4ade80; background: rgba(74,222,128,0.14); }
+  .pr-evo.descend { color: #f87171; background: rgba(248,113,113,0.14); }
+  .pr-evo.stable { color: var(--text-dim); background: rgba(255,255,255,0.06); }
+  .pr-evo.nouveau { color: #60a5fa; background: rgba(96,165,250,0.14); font-size: 10px; }
   .pr-qui { min-width: 0; }
   .pr-stats { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
   .pr-chip { font-size: 12px; color: var(--text-dim); background: rgba(255,255,255,0.06); border-radius: 999px; padding: 3px 10px; white-space: nowrap; }
@@ -3781,8 +3787,41 @@ function mcDetailRanking(rows, parseDate) {
 function mcNomLigue(code) { const d = MC_DIVISIONS.find(x => x.code === code); return d ? d.nom : code; }
 function mcSigne(n) { return n > 0 ? '+' + n : String(n); }
 
+// Places gagnées ou perdues depuis 7 jours : le classement est recalculé avec les seules courses
+// courues jusqu'à il y a 7 jours (mêmes règles : 5 dernières courses), parmi les pilotes du tableau.
+function mcRangsIlYa7Jours(noms) {
+  const limite = new Date(); limite.setHours(0, 0, 0, 0); limite.setDate(limite.getDate() - 6); // avant ce jour-là
+  const rows = (window._ligueRows || []).filter(r => { const d = mcDate(r[0]); return d && d < limite; });
+  const det = mcDetailRanking(rows, mcDate);
+  const classes = noms.filter(n => det[n] && det[n].courses.length)
+    .map((n, i) => ({ n, t: det[n].total, i }))
+    .sort((a, b) => b.t - a.t || a.i - b.i);
+  const rangs = {};
+  classes.forEach((c, k) => { rangs[c.n] = k + 1; });
+  return rangs;
+}
+
 function mcEnrichirRanking() {
   const det = mcDetailRanking(window._ligueRows || [], mcDate);
+  const lignes7 = [...document.querySelectorAll('#board .pr-row')];
+  const avant = mcRangsIlYa7Jours(lignes7.map(el => el.dataset.nom));
+  const en = window.MC_LANG === 'en';
+  lignes7.forEach((el, idx) => {
+    const posEl = el.querySelector('.pos');
+    if (!posEl) return;
+    posEl.querySelector('.pr-evo')?.remove();
+    const rang = idx + 1, ancien = avant[el.dataset.nom];
+    let evo;
+    if (!ancien) evo = `<span class="pr-evo nouveau" title="${en ? 'New in the ranking this week' : 'Nouveau dans le classement cette semaine'}">${en ? 'NEW' : 'NEW'}</span>`;
+    else {
+      const dif = ancien - rang;
+      const titre = dif ? (en ? `${Math.abs(dif)} place${Math.abs(dif) > 1 ? 's' : ''} ${dif > 0 ? 'gained' : 'lost'} in 7 days (was ${ancien})`
+                                : `${Math.abs(dif)} place${Math.abs(dif) > 1 ? 's' : ''} ${dif > 0 ? 'gagnée' : 'perdue'}${Math.abs(dif) > 1 ? 's' : ''} en 7 jours (${ancien}e avant)`)
+                        : (en ? 'Same place as 7 days ago' : 'Même place qu\'il y a 7 jours');
+      evo = `<span class="pr-evo ${dif > 0 ? 'monte' : dif < 0 ? 'descend' : 'stable'}" title="${titre}">${dif > 0 ? '▲' + dif : dif < 0 ? '▼' + -dif : '='}</span>`;
+    }
+    posEl.insertAdjacentHTML('beforeend', evo);
+  });
   document.querySelectorAll('#board .pr-row').forEach(el => {
     const d = det[el.dataset.nom];
     const stats = el.querySelector('.pr-stats');
