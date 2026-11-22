@@ -52,13 +52,15 @@ def recuperer():
         os.makedirs(DOSSIER, exist_ok=True)
         im.save(os.path.join(DOSSIER, nom), quality=85, optimize=True)
         entree = {'id': v['id'], 'img': 'assets/victoires/' + nom, 'pilote': v['pilote'], 'num': v.get('num') or '',
-                  'ligue': v['course'], 'circuit': v['circuit'], 'date': v['date'],
+                  'ligue': v['course'], 'date': v['date'],
+                  # SOF ajouté au nom du circuit, comme pour les victoires saisies à la main : « Kentucky (SOF 2527) »
+                  'circuit': v['circuit'] + (' (SOF ' + str(v['sof']).strip() + ')' if str(v.get('sof') or '').strip() else ''),
                   # Les ligues de l'équipe sont déjà comptées par RESULTATS LIGUE
                   'horsSheet': v.get('type') != "Ligue de l'équipe"}
         if v.get('mot'):
             entree['mot'] = v['mot']
         existantes.append(entree)
-        print('Nouvelle victoire :', v['pilote'], v['course'], v['circuit'], v['date'])
+        print('Nouvelle victoire :', v['pilote'], v['course'], entree['circuit'], v['date'])
     with open(DONNEES, 'w', encoding='utf-8') as f:
         f.write(json.dumps(existantes, ensure_ascii=False, indent=1) + '\n')
     json.dump(faites, open(IDS, 'w'))

@@ -1,7 +1,7 @@
 // Relais Cloudflare Worker pour le bot Meatball MC.
 //
 // 1. Rôles : reçoit les demandes de changement de rôle du script Google et les transmet à Discord.
-// 2. Victoires : commande Discord /victoire (photo + course + circuit + date), postée dans le salon
+// 2. Victoires : commande Discord /victoire (photo + course + circuit + date + SOF), postée dans le salon
 //    #victoires avec deux boutons. Seuls Alexis et le rôle Président peuvent valider.
 //    Le robot GitHub du site récupère ensuite les victoires validées et les met en ligne.
 //
@@ -35,6 +35,7 @@ const COMMANDE = {
       choices: COURSES.map(c => ({ name: c, value: c })) },
     { type: 3, name: 'circuit', description: 'Le circuit (ex. Kansas)', required: true, max_length: 60 },
     { type: 3, name: 'date', description: 'Date de la course, jj/mm/aaaa (par défaut : aujourd\'hui)', required: false, max_length: 10 },
+    { type: 4, name: 'sof', description: 'Strength of Field de la course (ex. 2527)', required: false, min_value: 1, max_value: 15000 },
     { type: 3, name: 'nom_ligue', description: 'Seulement pour « Autre ligue » : le nom de la ligue', required: false, max_length: 60 },
     { type: 3, name: 'mot', description: 'Un petit mot sur ta victoire (facultatif)', required: false, max_length: 300 },
   ],
@@ -77,6 +78,19 @@ async function verifierSignature(env, request, corps) {
 async function installerCommande(env) {
   const a = await appli(env);
   return discord(env, `/applications/${a.id}/guilds/${SERVEUR}/commands`, { method: 'PUT', json: [COMMANDE] });
+}
+
+// Réinstalle la commande si celle de Discord n'a pas les mêmes options (ex. nouvelle case « sof »).
+// Appelé par le robot du site toutes les 15 minutes : rien à faire à la main après une mise à jour du relais.
+let _commandeOk = false;
+async function verifierCommande(env) {
+  if (_commandeOk) return;
+  const a = await appli(env);
+  const cmds = await discord(env, `/applications/${a.id}/guilds/${SERVEUR}/commands`);
+  const c = (cmds || []).find(x => x.name === COMMANDE.name);
+  const noms = o => (o || []).map(x => x.name).join(',');
+  if (!c || noms(c.options) !== noms(COMMANDE.options)) await installerCommande(env);
+  _commandeOk = true;
 }
 
 async function salonVictoires(env) {
@@ -162,6 +176,7 @@ async function declarerVictoire(env, it) {
         { name: 'Course', value: course, inline: true },
         { name: 'Circuit', value: String(o.circuit).trim(), inline: true },
         { name: 'Date', value: date, inline: true },
+        ...(o.sof ? [{ name: 'SOF', value: String(o.sof), inline: true }] : []),
         { name: 'Type', value: o.course === 'Officiel iRacing' ? 'Officiel' : (o.course === 'Autre ligue' ? 'Autre ligue' : 'Ligue de l\'équipe'), inline: true },
         ...(o.mot ? [{ name: 'Le mot du pilote', value: String(o.mot).trim() }] : []),
         { name: 'Statut', value: '⏳ En attente de validation (Alexis ou Président)' },
@@ -203,6 +218,7 @@ async function bouton(env, it) {
 
 // Routes pour le robot GitHub du site (protégées par RELAIS_CLE)
 async function victoiresValidees(env) {
+  await verifierCommande(env).catch(e => console.log('commande : ' + e.message));
   const a = await appli(env);
   const salon = await salonVictoires(env);
   const msgs = await discord(env, `/channels/${salon}/messages?limit=100`);
@@ -212,7 +228,7 @@ async function victoiresValidees(env) {
       const e = m.embeds[0];
       return { id: m.id, image: m.attachments[0].url, fichier: m.attachments[0].filename,
         pilote: champ(e, 'Pilote'), num: champ(e, 'Numéro').replace('–', ''), course: champ(e, 'Course'),
-        circuit: champ(e, 'Circuit'), date: champ(e, 'Date'), type: champ(e, 'Type'), mot: champ(e, 'Le mot du pilote') };
+        circuit: champ(e, 'Circuit'), date: champ(e, 'Date'), sof: champ(e, 'SOF'), type: champ(e, 'Type'), mot: champ(e, 'Le mot du pilote') };
     });
 }
 async function marquerPubliee(env, id) {
