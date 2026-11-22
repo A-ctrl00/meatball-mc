@@ -3718,6 +3718,17 @@ function mcBaremePosition(div, pos) {
   if (!t || isNaN(pos)) return 0;
   return pos === 1 ? t[0] : pos <= 2 ? t[1] : pos <= 3 ? t[2] : pos <= 5 ? t[3] : pos <= 10 ? t[4] : t[5];
 }
+// Heure de départ d'une course (en minutes), pour ordonner deux courses du même jour.
+// Lue dans le calendrier, sinon l'heure habituelle de la ligue, sinon 0.
+function mcMinutesCourse(c) {
+  const cal = typeof MC_CALENDRIER !== 'undefined' ? MC_CALENDRIER : [];
+  const iso = c.date.getFullYear() + '-' + String(c.date.getMonth() + 1).padStart(2, '0') + '-' + String(c.date.getDate()).padStart(2, '0');
+  const lire = x => { const h = String(x && x[6] || '').match(/(\d{1,2})[:h](\d{2})/); return h ? +h[1] * 60 + +h[2] : null; };
+  const exacte = lire(cal.find(x => x[0] === iso && x[1] === c.division));
+  if (exacte != null) return exacte;
+  const habituelles = cal.filter(x => x[1] === c.division).map(lire).filter(v => v != null);
+  return habituelles.length ? habituelles[0] : 0;
+}
 function mcDetailRanking(rows, parseDate) {
   // rows : [date, pilote, division, résultat, qualif, dans le tour, briefing, X, ..., (index 26) points position]
   const moyX = {};
@@ -3742,7 +3753,7 @@ function mcDetailRanking(rows, parseDate) {
   const res = {};
   Object.keys(parPilote).forEach(n => {
     const cinq = parPilote[n].sort((a, b) => b.date - a.date || a.i - b.i).slice(0, 5);
-    const toutes = parPilote[n].slice().reverse();
+    const toutes = parPilote[n].slice().sort((a, b) => a.date - b.date || mcMinutesCourse(a) - mcMinutesCourse(b) || b.i - a.i);
     const pos = cinq.map(c => c.pos).filter(p => !isNaN(p));
     res[n] = {
       courses: cinq, toutes,
