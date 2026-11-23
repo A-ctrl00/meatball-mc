@@ -4712,7 +4712,9 @@ const GTA_CALENDRIER = [
   ['2027-01-11', 'Pocono Raceway'], ['2027-01-14', 'Homestead-Miami Speedway'],
 ];
 // Rendus des voitures de la ligue (même format que « Nos voitures ») : nom du pilote → image
-const GTA_VOITURES = {};
+const GTA_VOITURES = {
+  'Bertrand Fourniret': 'assets/voiture-186-fourniret-gen6.jpg',
+};
 const GTA_HEURE_UTC = '20:20';
 
 let GTA = { pilotes: [], calendrier: [], classement: [], equipes: [], resultats: [], decisions: [], ok: false };
@@ -5074,9 +5076,7 @@ const WCNL_PUB = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTE32l-uN703CE
 const WCNL_GID_SITE = 900100;
 const WCNL_CALENDRIER = [];
 // Rendus des voitures de la ligue (même format que « Nos voitures ») : nom du pilote → image
-const WCNL_VOITURES = {
-  'Bertrand Fourniret': 'assets/voiture-186-fourniret-gen6.jpg',
-};
+const WCNL_VOITURES = {};
 
 let WCNL = { pilotes: [], calendrier: [], classement: [], equipes: [], resultats: [], decisions: [], bareme: [], params: [], ok: false };
 const wcnlNum = v => { const n = parseFloat(String(v || '').replace(',', '.')); return isNaN(n) ? null : n; };
