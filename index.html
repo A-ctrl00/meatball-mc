@@ -5070,7 +5070,7 @@ if (document.readyState === 'loading') document.addEventListener('DOMContentLoad
 // ===== Onglet WCNL =====
 // Même principe que la GTA : onglet « Site » du Sheet de la ligue (gid 900100), publié sur le web en CSV.
 // WCNL_PUB : adresse « …/pub » donnée par Fichier → Partager → Publier sur le Web (vide tant que ce n'est pas publié).
-const WCNL_PUB = '';
+const WCNL_PUB = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vTE32l-uN703CE_goz-p-3EDiVTf7qqoL9dLbtCFYagBPPvuDSP2aAhP8T8xL6nEYCxoYn3_U1Pwdoe/pub';
 const WCNL_GID_SITE = 900100;
 const WCNL_CALENDRIER = [];
 // Rendus des voitures de la ligue (même format que « Nos voitures ») : nom du pilote → image
@@ -5272,7 +5272,7 @@ function wcnlRendreEquipes() {
   // Pas d'équipes en WCNL pour l'instant : tous les inscrits sous un seul titre
   const sansEquipe = pil.every(p => !p['Équipe']);
   pil.forEach(p => { const e = p['Équipe'] || (sansEquipe ? 'Pilotes inscrits' : 'Pilotes indépendants'); (parE[e] = parE[e] || []).push(p); });
-  Object.values(parE).forEach(l => l.sort((a, b) => (parseInt(a['Numéro'], 10) || 999) - (parseInt(b['Numéro'], 10) || 999)));
+  Object.values(parE).forEach(l => l.sort((a, b) => { const n = x => { const v = parseInt(x['Numéro'], 10); return isNaN(v) ? 999 : v; }; return n(a) - n(b); }));
   const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || parE[b].length - parE[a].length || a.localeCompare(b));
   el.innerHTML = ordre.map(e => `<div class="gta-equipe"><h3 class="gta-h3">${mcEsc(e)} <span>${parE[e].length} pilote${parE[e].length > 1 ? 's' : ''}</span></h3>
     <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#wcnl-pilote-${wcnlSlug(p.Pilote)}" onclick="wcnlOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${wcnlVoiture(p)}<div class="nom">${wcnlDrapeau(p.Pays)}${mcEsc(p.Pilote)}</div><div class="det">${wcnlMarque(p.Voiture)}</div></a>`).join('')}</div></div>`).join('');
