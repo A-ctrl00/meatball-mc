@@ -808,6 +808,10 @@
   "le plus de X au total": "most incidents (x)",
   "le plus de X par course (2 courses minimum)": "most x per race (2 races minimum)",
   "le plus d'abandons": "most DNFs",
-  "le plus souvent dernier": "most last places"
+  "le plus souvent dernier": "most last places",
+  "La remontada": "The comeback king",
+  "Le crabe": "The crab",
+  "le plus de places gagnées depuis la grille de départ": "most places gained from the starting grid",
+  "le plus de places perdues depuis la grille de départ": "most places lost from the starting grid"
  }
 }
