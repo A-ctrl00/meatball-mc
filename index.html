@@ -1987,6 +1987,8 @@
   .mc-duel { border-collapse: separate; border-spacing: 3px; font: 600 13px 'Inter', sans-serif; margin: 0 auto 0 0; }
   .mc-duel th { font: 800 11px 'Outfit', sans-serif; letter-spacing: .06em; color: var(--text-dim); padding: 4px 2px; text-align: center; white-space: nowrap; }
   .mc-duel th.nom { text-align: left; position: sticky; left: 0; z-index: 1; background: #0b0f1c; padding: 6px 10px 6px 4px; font: 600 13px 'Inter', sans-serif; color: #fff; letter-spacing: 0; min-width: 130px; }
+  .mc-duel thead th span { display: block; line-height: 1.25; }
+  .mc-duel thead th .num { color: var(--orange); font-size: 10px; }
   .mc-duel td { min-width: 44px; height: 34px; text-align: center; border-radius: 6px; background: rgba(255,255,255,.04); color: #fff; font-variant-numeric: tabular-nums; }
   .mc-duel td.plus { background: rgba(74,222,128,.18); color: #86efac; }
   .mc-duel td.moins { background: rgba(248,113,113,.16); color: #fca5a5; }
@@ -4891,7 +4893,7 @@ function mcDuelTable(pilotes, courses, lien, numero) {
   });
   const bilan = pilotes.map((_, i) => { let v = 0, d = 0; pilotes.forEach((__, j) => { v += g[i][j]; d += g[j][i]; }); return [v, d]; });
   const en = window.MC_LANG === 'en';
-  const tete = pilotes.map(n => { const k = numero ? String(numero(n) || '').trim() : ''; return `<th title="${mcEsc(n)}">${k ? '#' + mcEsc(k) : mcEsc(mcInitiales(n))}</th>`; }).join('');
+  const tete = pilotes.map(n => { const k = numero ? String(numero(n) || '').trim() : ''; return `<th title="${mcEsc(n)}"><span class="ini">${mcEsc(mcInitiales(n))}</span>${k ? `<span class="num">#${mcEsc(k)}</span>` : ''}</th>`; }).join('');
   const lignes = pilotes.map((n, i) => `<tr><th class="nom">${lien(n)}</th>${pilotes.map((_, j) => {
     if (i === j) return '<td class="moi"></td>';
     const v = g[i][j], d = g[j][i];
