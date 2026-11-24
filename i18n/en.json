@@ -515,7 +515,7 @@
   "Victoires en ligue": "League wins",
   "Chargement des pilotes…": "Loading drivers…",
   "✕ Fermer": "✕ Close",
-  "Les chiffres": "Key figures",
+  "Les chiffres": "The numbers",
   "Top 10": "Top 10",
   "Meilleure arrivée": "Best finish",
   "Qualif moyenne": "Average qualifying",
@@ -760,6 +760,7 @@
   "La place de chaque pilote au championnat après chaque manche.": "Each driver's championship position after each round.",
   "Pas encore de course disputée à plusieurs.": "No race run together yet.",
   "Chaque case se lit sur la ligne du pilote : « 5-3 » veut dire qu'il a fini 5 fois devant le pilote de la colonne et 3 fois derrière, sur les manches courues par les deux.": "Read each cell along the driver's row: \"5-3\" means he finished ahead of the column driver 5 times and behind 3 times, over the rounds both ran.",
-  "Quand deux membres ont couru la même course (même ligue, même jour), celui qui finit devant gagne le duel. Chaque case se lit sur la ligne du pilote : « 5-3 » veut dire qu'il a fini 5 fois devant le pilote de la colonne et 3 fois derrière.": "When two members ran the same race (same league, same day), whoever finishes ahead wins the duel. Read each cell along the driver's row: \"5-3\" means he finished ahead of the column driver 5 times and behind 3 times."
+  "Quand deux membres ont couru la même course (même ligue, même jour), celui qui finit devant gagne le duel. Chaque case se lit sur la ligne du pilote : « 5-3 » veut dire qu'il a fini 5 fois devant le pilote de la colonne et 3 fois derrière.": "When two members ran the same race (same league, same day), whoever finishes ahead wins the duel. Read each cell along the driver's row: \"5-3\" means he finished ahead of the column driver 5 times and behind 3 times.",
+  "Évolution": "Progression"
  }
 }
