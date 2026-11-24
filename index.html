@@ -2031,7 +2031,11 @@
   .gta-modal { position: fixed; inset: 0; z-index: 9000; display: none; align-items: flex-start; justify-content: center; padding: 4vh 12px; overflow-y: auto; background: rgba(0,0,0,.78); backdrop-filter: blur(4px); }
   .gta-modal.ouvert { display: flex; }
   .gta-modal-boite { position: relative; width: min(860px, 100%); background: #0b070d; border: 1px solid rgba(236,7,196,.4); border-radius: 20px; padding: 26px; box-shadow: 0 20px 60px rgba(236,7,196,.25); }
-  .gta-modal-x { position: absolute; top: 10px; right: 12px; width: 38px; height: 38px; border-radius: 50%; border: 0; background: rgba(255,255,255,.08); color: #fff; font-size: 24px; cursor: pointer; }
+  .gta-modal-x { position: absolute; top: 10px; right: 12px; z-index: 5; width: 42px; height: 42px; border-radius: 50%; border: 1px solid rgba(255,255,255,.25); background: rgba(0,0,0,.72); color: #fff; font-size: 28px; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,.5); }
+  .gta-modal-x:hover { background: #EC07C4; border-color: #EC07C4; }
+  body.mc-theme-wcnl .gta-modal-x:hover { background: #0A5CFF; border-color: #0A5CFF; }
+  /* Sur téléphone, la croix reste visible en haut de l'écran même en faisant défiler la fiche */
+  @media (max-width: 640px) { .gta-modal-x { position: fixed; top: 12px; right: 12px; } }
   .gta-fiche-tete { display: flex; gap: 20px; align-items: center; flex-wrap: wrap; margin-bottom: 8px; }
   .gta-titre-deg { font-size: clamp(26px, 5vw, 40px); line-height: 1.05; margin: 4px 0; }
   .gta-vainqueur { background: linear-gradient(90deg, rgba(240,176,0,.2), transparent); border-left: 3px solid #F0B000; padding: 10px 14px; border-radius: 10px; font: 700 16px 'Outfit', sans-serif; margin: 10px 0; }
