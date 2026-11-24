@@ -2963,6 +2963,7 @@
           <nav class="gta-sous gta-sous2" id="gtaStatsNav" aria-label="Statistiques">
             <button class="active" data-s2="res" onclick="mcStats2('gta', 'res')">Résultats</button>
             <button data-s2="cl" onclick="mcStats2('gta', 'cl')">Classement</button>
+            <button data-s2="eq" onclick="mcStats2('gta', 'eq')">Classement équipes</button>
             <button data-s2="duel" onclick="mcStats2('gta', 'duel')">Duel</button>
             <button data-s2="histo" onclick="mcStats2('gta', 'histo')">Panthéon</button>
           </nav>
@@ -2974,12 +2975,13 @@
           <div class="gta-s2" data-s2p="cl">
             <h3 class="gta-h3">Classement pilotes</h3>
           <div id="gtaClassement"><div class="state-msg">Chargement…</div></div>
-          <h3 class="gta-h3">Classement équipes</h3>
-          <p class="gta-note">À chaque manche, seul le pilote le mieux classé de chaque équipe marque pour elle.</p>
-          <div id="gtaEquipes"><div class="state-msg">Chargement…</div></div>
             <h3 class="gta-h3">Évolution</h3>
             <p class="gta-note">La place de chaque pilote au championnat après chaque manche.</p>
             <div id="gtaStatsCl"><div class="state-msg">Chargement…</div></div>
+          </div>
+          <div class="gta-s2" data-s2p="eq">
+            <p class="gta-note">À chaque manche, seul le pilote le mieux classé de chaque équipe marque pour elle.</p>
+          <div id="gtaEquipes"><div class="state-msg">Chargement…</div></div>
           </div>
           <div class="gta-s2" data-s2p="duel">
             <p class="gta-note">Chaque case se lit sur la ligne du pilote : « 5-3 » veut dire qu'il a fini 5 fois devant le pilote de la colonne et 3 fois derrière, sur les manches courues par les deux.</p>
