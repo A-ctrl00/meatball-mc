@@ -2005,7 +2005,9 @@
   .mc-titre .t { font: 900 18px 'Outfit', sans-serif; color: #fff; padding-right: 46px; line-height: 1.15; }
   .mc-titre .m { font-size: 11px; color: var(--text-dim); margin: 3px 0 12px; padding-right: 40px; }
   .mc-titre .gagnant { font: 700 16px 'Outfit', sans-serif; display: flex; flex-direction: column; gap: 2px; }
-  .mc-titre .nom { display: flex; align-items: center; gap: 6px; }
+  .mc-titre .nom { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; }
+  .mc-titre .et { font-style: normal; color: var(--text-dim); }
+  .mc-titre ol { list-style: none; padding-left: 0 !important; }
   .mc-titre .gagnant em { font-style: normal; font: 800 15px 'Outfit', sans-serif; color: #EC07C4; }
   body.mc-theme-wcnl .mc-titre .gagnant em { color: #1EA8FF; }
   .mc-titre ol { margin: 10px 0 0; padding: 8px 0 0 18px; border-top: 1px solid rgba(255,255,255,.08); font-size: 12px; color: var(--text-dim); }
@@ -4980,11 +4982,17 @@ function mcHistoriqueHTML(st, lien) {
     ['🐢', 'La lanterne rouge', 'le plus souvent dernier', 'pires', false, o => `${o.pires} fois dernier`],
   ];
   const cartes = titres.map(([ico, titre, mesure, k, asc, txt, min]) => {
-    const l = st.filter(o => o[k] != null && o.courses >= (min || 1) && (asc || o[k] > 0)).sort((a, b) => asc ? a[k] - b[k] : b[k] - a[k]).slice(0, 3);
+    const l = st.filter(o => o[k] != null && o.courses >= (min || 1) && (asc || o[k] > 0)).sort((a, b) => asc ? a[k] - b[k] : b[k] - a[k]);
     if (!l.length) return '';
-    return `<div class="mc-titre"><div class="ico">${ico}</div><div class="t">${titre}</div><div class="m">${mesure}</div>
-      <div class="gagnant"><span class="nom">${lien(l[0].Pilote)}</span><em>${txt(l[0])}</em></div>
-      ${l.length > 1 ? `<ol start="2">${l.slice(1).map(o => `<li>${lien(o.Pilote)} <span>${txt(o)}</span></li>`).join('')}</ol>` : ''}</div>`;
+    // égalités : tous les pilotes à la même valeur partagent le rang (3 rangs affichés)
+    const g = [];
+    l.forEach(o => { const v = Math.round(o[k] * 10); const d = g[g.length - 1]; if (d && d.v === v) d.l.push(o); else g.push({ v, l: [o] }); });
+    const noms = gr => { const max = 4, l = gr.l.length > max + 1 ? gr.l.slice(0, max) : gr.l;
+      return l.map(o => lien(o.Pilote)).join('<i class="et"> · </i>') + (l.length < gr.l.length ? `<i class="et"> ${en ? 'and' : 'et'} ${gr.l.length - l.length} ${en ? 'more' : 'autres'}</i>` : ''); };
+    const [g1, ...reste] = g.slice(0, 3);
+    return `<div class="mc-titre${g1.l.length > 1 ? ' ex' : ''}"><div class="ico">${ico}</div><div class="t">${titre}</div><div class="m">${mesure}</div>
+      <div class="gagnant"><span class="nom">${noms(g1)}</span><em>${txt(g1.l[0])}${g1.l.length > 1 ? (en ? ' · tied' : ' · ex aequo') : ''}</em></div>
+      ${reste.length ? `<ol>${reste.map((gr, n) => `<li><b>${n + 2}.</b> <span class="nom">${noms(gr)}</span> <span>${txt(gr.l[0])}</span></li>`).join('')}</ol>` : ''}</div>`;
   }).join('');
   const totalKm = st.reduce((a, o) => a + o.km, 0), terre = totalKm / 40075;
   return `<div class="gta-kpis">
