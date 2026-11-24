@@ -3948,7 +3948,12 @@ function mcRendreDuelEquipe() {
     (parCourse[k] = parCourse[k] || []).push({ nom: n, pos });
   });
   const courses = Object.values(parCourse).filter(c => c.length > 1);
-  el.innerHTML = courses.length ? mcDuelTable(noms, courses, n => `<a class="gta-lien" href="#" onclick="mcOuvrirPilote(${mcEsc(JSON.stringify(n))});return false">${mcEsc(n)}</a>`)
+  // Numéro en tête de colonne : celui de sa voiture IFRN en priorité (dernière ligue IFRN courue), sinon sa voiture principale
+  const numero = n => {
+    const ifrn = (window._ligueRows || []).filter(r => String(r[1] || '').trim() === n && /^ifrn/i.test(String(r[2] || ''))).pop();
+    return (ifrn && mcVoitureDe(n, String(ifrn[2]).trim()).num) || mcVoitureDe(n).num || '';
+  };
+  el.innerHTML = courses.length ? mcDuelTable(noms, courses, n => `<a class="gta-lien" href="#" onclick="mcOuvrirPilote(${mcEsc(JSON.stringify(n))});return false">${mcEsc(n)}</a>`, numero)
     : '<div class="state-msg">Pas encore de course disputée à plusieurs.</div>';
 }
 
@@ -4876,7 +4881,7 @@ function mcStats2(pre, nom) {
   document.querySelectorAll('#tab-' + pre + ' .gta-s2').forEach(p => p.classList.toggle('active', p.dataset.s2p === nom));
 }
 // pilotes : noms dans l'ordre d'affichage ; courses : tableaux [{ nom, pos }] ; lien : nom -> HTML de la ligne
-function mcDuelTable(pilotes, courses, lien) {
+function mcDuelTable(pilotes, courses, lien, numero) {
   const idx = new Map(pilotes.map((n, i) => [n, i]));
   const g = pilotes.map(() => pilotes.map(() => 0));
   courses.forEach(c => {
@@ -4886,7 +4891,7 @@ function mcDuelTable(pilotes, courses, lien) {
   });
   const bilan = pilotes.map((_, i) => { let v = 0, d = 0; pilotes.forEach((__, j) => { v += g[i][j]; d += g[j][i]; }); return [v, d]; });
   const en = window.MC_LANG === 'en';
-  const tete = pilotes.map(n => `<th title="${mcEsc(n)}">${mcEsc(mcInitiales(n))}</th>`).join('');
+  const tete = pilotes.map(n => { const k = numero ? String(numero(n) || '').trim() : ''; return `<th title="${mcEsc(n)}">${k ? '#' + mcEsc(k) : mcEsc(mcInitiales(n))}</th>`; }).join('');
   const lignes = pilotes.map((n, i) => `<tr><th class="nom">${lien(n)}</th>${pilotes.map((_, j) => {
     if (i === j) return '<td class="moi"></td>';
     const v = g[i][j], d = g[j][i];
@@ -5063,7 +5068,7 @@ function gtaRendreDuel() {
   const ordre = GTA.classement.filter(r => gtaNum(r.Courses) > 0).map(r => r.Pilote);
   GTA.resultats.forEach(r => { if (r.Pilote && !ordre.includes(r.Pilote)) ordre.push(r.Pilote); });
   const courses = mc.map(m => GTA.resultats.filter(r => r.Manche === m).map(r => ({ nom: r.Pilote, pos: gtaNum(r.Position) })));
-  el.innerHTML = mcDuelTable(ordre, courses, gtaLienPilote);
+  el.innerHTML = mcDuelTable(ordre, courses, gtaLienPilote, n => (gtaPilote(n) || {})['Numéro'] || (GTA.resultats.find(r => r.Pilote === n) || {})['Numéro']);
 }
 function gtaRendreStatsCl() {
   const el = document.getElementById('gtaStatsCl'); if (!el) return;
@@ -5465,7 +5470,7 @@ function wcnlRendreDuel() {
   const ordre = WCNL.classement.filter(r => wcnlNum(r.Courses) > 0).map(r => r.Pilote);
   WCNL.resultats.forEach(r => { if (r.Pilote && !ordre.includes(r.Pilote)) ordre.push(r.Pilote); });
   const courses = mc.map(m => WCNL.resultats.filter(r => r.Manche === m).map(r => ({ nom: r.Pilote, pos: wcnlNum(r.Position) })));
-  el.innerHTML = mcDuelTable(ordre, courses, wcnlLienPilote);
+  el.innerHTML = mcDuelTable(ordre, courses, wcnlLienPilote, n => (wcnlPilote(n) || {})['Numéro'] || (WCNL.resultats.find(r => r.Pilote === n) || {})['Numéro']);
 }
 function wcnlRendreStatsCl() {
   const el = document.getElementById('wcnlStatsCl'); if (!el) return;
