@@ -2177,12 +2177,12 @@
   body.mc-theme-wcnl .gta-voit .gh span:first-child { background: linear-gradient(180deg, #5CC8FF 30%, #1E6BFF); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 1; filter: drop-shadow(0 0 10px rgba(30,120,255,.45)) drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
   /* Titres du Panthéon et initiales aux couleurs de chaque ligue */
   .mc-titre .t { padding-right: .15em; width: fit-content; max-width: calc(100% - 46px); -webkit-background-clip: text; background-clip: text; color: transparent; }
-  body.mc-theme-gta .mc-titre .t { background-image: linear-gradient(90deg, #F01070, #FB6204); }
-  body.mc-theme-wcnl .mc-titre .t { background-image: linear-gradient(90deg, #FF6A10, #FF9A3C); }
+  body.mc-theme-gta .mc-titre .t { background-image: linear-gradient(90deg, #FF1F8E, #FF7A1A); filter: drop-shadow(0 0 8px rgba(240,16,112,.5)); }
+  body.mc-theme-wcnl .mc-titre .t { background-image: linear-gradient(90deg, #FF7A00, #FFB020); filter: drop-shadow(0 0 8px rgba(255,122,0,.55)); }
   body:not(.mc-theme-gta):not(.mc-theme-wcnl) .mc-titre .t { color: #fff; }
   body.mc-theme-gta .gta-voit .gh span:first-child { background: linear-gradient(180deg, #FF4FD8 30%, #B0179E); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(236,7,196,.45)) drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
   body.mc-theme-gta .gta-h2, body.mc-theme-gta .gta-hero-txt h1 { display: block; width: fit-content; }
-  body.mc-theme-wcnl .gta-voit .gh .o { background: linear-gradient(180deg, #FF6A10 35%, #FF9A3C); -webkit-background-clip: text; background-clip: text; }
+  body.mc-theme-wcnl .gta-voit .gh .o { background: linear-gradient(180deg, #FFB020 20%, #FF7A00); -webkit-background-clip: text; background-clip: text; }
   #gtaFond { display: none; }
   body { transition: background-color .4s ease; }
   body.mc-theme-gta {
@@ -5270,11 +5270,14 @@ function gtaStatsPilotes() {
 function gtaRendreDuel() {
   const el = document.getElementById('gtaDuel'); if (!el) return;
   const mc = gtaManchesCourues();
-  if (!mc.length) { el.innerHTML = gtaVide(GTA_ATTENTE); return; }
+  // les courses test (pré-saison) comptent aussi dans les duels
+  const tests = (GTA.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
+  if (!mc.length && !mTests.length) { el.innerHTML = gtaVide(GTA_ATTENTE); return; }
   const ordre = GTA.classement.filter(r => gtaNum(r.Courses) > 0).map(r => r.Pilote);
-  GTA.resultats.forEach(r => { if (r.Pilote && !ordre.includes(r.Pilote)) ordre.push(r.Pilote); });
-  const courses = mc.map(m => GTA.resultats.filter(r => r.Manche === m).map(r => ({ nom: r.Pilote, pos: gtaNum(r.Position) })));
-  el.innerHTML = mcDuelTable(ordre, courses, gtaLienPilote, n => (gtaPilote(n) || {})['Numéro'] || (GTA.resultats.find(r => r.Pilote === n) || {})['Numéro']);
+  [...GTA.resultats, ...tests].forEach(r => { if (r.Pilote && !ordre.includes(r.Pilote)) ordre.push(r.Pilote); });
+  const courses = [...mTests.map(m => tests.filter(r => r.Manche === m)), ...mc.map(m => GTA.resultats.filter(r => r.Manche === m))]
+    .map(l => l.map(r => ({ nom: r.Pilote, pos: gtaNum(r.Position) })));
+  el.innerHTML = mcDuelTable(ordre, courses, gtaLienPilote, n => (gtaPilote(n) || {})['Numéro'] || ([...GTA.resultats, ...tests].find(r => r.Pilote === n) || {})['Numéro']);
 }
 function gtaRendreStatsCl() {
   const el = document.getElementById('gtaStatsCl'); if (!el) return;
@@ -5707,11 +5710,14 @@ function wcnlStatsPilotes() {
 function wcnlRendreDuel() {
   const el = document.getElementById('wcnlDuel'); if (!el) return;
   const mc = wcnlManchesCourues();
-  if (!mc.length) { el.innerHTML = wcnlVide(WCNL_ATTENTE); return; }
+  // les courses test (pré-saison) comptent aussi dans les duels
+  const tests = (WCNL.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
+  if (!mc.length && !mTests.length) { el.innerHTML = wcnlVide(WCNL_ATTENTE); return; }
   const ordre = WCNL.classement.filter(r => wcnlNum(r.Courses) > 0).map(r => r.Pilote);
-  WCNL.resultats.forEach(r => { if (r.Pilote && !ordre.includes(r.Pilote)) ordre.push(r.Pilote); });
-  const courses = mc.map(m => WCNL.resultats.filter(r => r.Manche === m).map(r => ({ nom: r.Pilote, pos: wcnlNum(r.Position) })));
-  el.innerHTML = mcDuelTable(ordre, courses, wcnlLienPilote, n => (wcnlPilote(n) || {})['Numéro'] || (WCNL.resultats.find(r => r.Pilote === n) || {})['Numéro']);
+  [...WCNL.resultats, ...tests].forEach(r => { if (r.Pilote && !ordre.includes(r.Pilote)) ordre.push(r.Pilote); });
+  const courses = [...mTests.map(m => tests.filter(r => r.Manche === m)), ...mc.map(m => WCNL.resultats.filter(r => r.Manche === m))]
+    .map(l => l.map(r => ({ nom: r.Pilote, pos: wcnlNum(r.Position) })));
+  el.innerHTML = mcDuelTable(ordre, courses, wcnlLienPilote, n => (wcnlPilote(n) || {})['Numéro'] || ([...WCNL.resultats, ...tests].find(r => r.Pilote === n) || {})['Numéro']);
 }
 function wcnlRendreStatsCl() {
   const el = document.getElementById('wcnlStatsCl'); if (!el) return;
