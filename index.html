@@ -2034,6 +2034,13 @@
   .mc-titre ol li .val { display: block; font: 600 12px 'Outfit', sans-serif; color: var(--text-dim); margin-top: 1px; }
   .gta-kpis.mc-histo-kpis { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 760px) { .gta-kpis.mc-histo-kpis { grid-template-columns: repeat(2, 1fr); } }
+  .gta-kpis.mc-histo-kpis b { display: inline-block; -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .1em; }
+  body.mc-theme-wcnl .gta-kpis.mc-histo-kpis > div { background: radial-gradient(120% 140% at 0% 0%, rgba(10,92,255,.2), transparent 60%), linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015)) !important; border-color: rgba(30,168,255,.28) !important; box-shadow: inset 3px 0 0 #FF7A00; }
+  body.mc-theme-wcnl .gta-kpis.mc-histo-kpis span { color: #5CC8FF; }
+  body.mc-theme-wcnl .gta-kpis.mc-histo-kpis b { background-image: linear-gradient(90deg, #FF7A00, #FFB020); filter: drop-shadow(0 0 8px rgba(255,122,0,.45)); }
+  body.mc-theme-gta .gta-kpis.mc-histo-kpis > div { background: radial-gradient(120% 140% at 0% 0%, rgba(236,7,196,.18), transparent 60%), linear-gradient(160deg, rgba(255,255,255,.06), rgba(255,255,255,.015)) !important; border-color: rgba(236,7,196,.28) !important; box-shadow: inset 3px 0 0 #FB6204; }
+  body.mc-theme-gta .gta-kpis.mc-histo-kpis span { color: #FF4FD8; }
+  body.mc-theme-gta .gta-kpis.mc-histo-kpis b { background-image: linear-gradient(90deg, #FF1F8E, #FF7A1A); filter: drop-shadow(0 0 8px rgba(240,16,112,.45)); }
   .gta-kpis.mc-histo-kpis > div { background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.1); }
   .gta-table th.tri { cursor: pointer; user-select: none; }
   .gta-table th.tri:hover { color: #fff; }
