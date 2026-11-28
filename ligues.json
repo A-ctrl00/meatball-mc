@@ -1,6 +1,8 @@
 {
  "wcnl": {
-  "vus": [],
+  "vus": [
+   "news|wcnl-tout-est-pret-place-a-la-saison"
+  ],
   "tests": [
    "Pré-saison 1|06/11/2026",
    "Pré-saison 2|13/11/2026",
