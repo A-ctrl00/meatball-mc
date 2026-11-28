@@ -2089,6 +2089,36 @@
   body.mc-theme-gta .mc-ft.r1 { border-color: rgba(255,122,26,.5); } body.mc-theme-gta .mc-ft.r1 b { color: #FF7A1A; }
   .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 640px) { .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(2, 1fr); } }
+  /* Power Ranking aux couleurs Meatball : orange, bleu, bleu nuit */
+  #tab-ranking { --mb-or: #FF6A1A; --mb-or2: #FFB38A; --mb-bl: #4DA3FF; --mb-nuit: #0b1a30; }
+  #tab-ranking .stats-legend { position: relative; gap: 10px; padding: 16px; border-radius: 18px; border: 1px solid rgba(77,163,255,.3);
+    background: radial-gradient(90% 120% at 0% 0%, rgba(255,106,26,.16), transparent 55%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.012)), rgba(10,20,40,.6);
+    box-shadow: inset 3px 0 0 var(--mb-or), 0 18px 40px rgba(0,0,0,.3); }
+  #tab-ranking .stats-legend-item { padding: 10px 12px; border-radius: 12px; background: rgba(255,255,255,.04); border: 1px solid rgba(77,163,255,.14); box-shadow: inset 2px 0 0 var(--mb-bl); }
+  #tab-ranking .stats-legend-item strong { color: var(--mb-or); font: 800 14px 'Outfit', sans-serif; }
+  #tab-ranking .board { border-radius: 18px; padding: 10px 14px; border: 1px solid rgba(77,163,255,.3);
+    background: radial-gradient(70% 60% at 0% 0%, rgba(255,106,26,.14), transparent 60%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.012)), rgba(10,20,40,.6);
+    box-shadow: inset 3px 0 0 var(--mb-or), 0 18px 40px rgba(0,0,0,.3); }
+  #tab-ranking .row.pr-row { border-top: 0; border-radius: 14px; margin: 6px 0; padding: 14px 16px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06); transition: background .15s, border-color .15s, transform .15s; }
+  #tab-ranking .row.pr-row:hover { background: rgba(77,163,255,.08); border-color: rgba(77,163,255,.35); transform: translateX(2px); }
+  #tab-ranking .row.pr-row.pr-ouvert { border-color: rgba(255,106,26,.5); background: rgba(255,106,26,.06); }
+  #tab-ranking .row.pr-row .pos { font: italic 900 30px 'Outfit', sans-serif; color: var(--mb-bl); text-shadow: 0 0 12px rgba(77,163,255,.35); }
+  #tab-ranking .row.pr-row:nth-of-type(1) .pos { color: #FFC83A; text-shadow: 0 0 14px rgba(255,200,58,.55); }
+  #tab-ranking .row.pr-row.leader { background: radial-gradient(80% 140% at 0% 50%, rgba(255,106,26,.28), transparent 70%), rgba(255,255,255,.03); border-color: rgba(255,106,26,.55); box-shadow: inset 3px 0 0 var(--mb-or), 0 0 24px rgba(255,106,26,.18); }
+  #tab-ranking .row.pr-row.leader .pos { color: #FFC83A; }
+  #tab-ranking .driver-name { font: 800 19px 'Outfit', sans-serif; letter-spacing: -.01em; }
+  #tab-ranking .row.pr-row .score { font: 900 28px 'Outfit', sans-serif; background: linear-gradient(90deg, var(--mb-or), var(--mb-or2)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 8px rgba(255,106,26,.35)); }
+  #tab-ranking .row.pr-row .pr-fleche { color: var(--mb-bl); -webkit-text-fill-color: var(--mb-bl); }
+  #tab-ranking .pr-chip { background: rgba(77,163,255,.1); border: 1px solid rgba(77,163,255,.18); color: #b9cbe2; }
+  #tab-ranking .pr-chip.fort { background: rgba(255,106,26,.18); border-color: rgba(255,106,26,.4); }
+  #tab-ranking .pr-chip.fort b { color: #FFB38A; }
+  #tab-ranking .pr-evo.nouveau { color: var(--mb-bl); background: rgba(77,163,255,.14); }
+  #tab-ranking .pr-detail { margin: -2px 0 8px; padding: 14px 16px 18px 70px; border-radius: 0 0 14px 14px; background: rgba(10,20,40,.55); border: 1px solid rgba(255,106,26,.25); border-top: 0; }
+  #tab-ranking .pr-table th { color: var(--mb-bl); }
+  #tab-ranking .pr-somme .pr-egal b { color: var(--mb-or); }
+  #tab-ranking .pr-astuce { color: #b9cbe2; }
+  #tab-ranking .pr-astuce::before { content: '👉 '; }
+  @media (max-width: 640px) { #tab-ranking .pr-detail { padding-left: 12px; } #tab-ranking .row.pr-row { padding: 12px 10px; } }
   /* Duel : mise en page aux couleurs de chaque section (Meatball orange par défaut, GTA rose, WCNL bleu et orange) */
   .mc-duel-boite { --acc: #FF6A1A; --acc2: #4DA3FF; --rgb: 255,106,26; --lueur: rgba(255,106,26,.18); --bord: rgba(77,163,255,.3); --fond: #0b1a30;
     position: relative; width: fit-content; max-width: 100%; box-sizing: border-box; border-radius: 18px; padding: 14px 12px 10px; margin-top: 10px;
