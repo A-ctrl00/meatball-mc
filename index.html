@@ -5540,7 +5540,7 @@ function gtaRendreEquipes() {
   pil.forEach(p => { const e = p['Équipe'] || 'Pilotes indépendants'; (parE[e] = parE[e] || []).push(p); });
   // pilotes de chaque équipe par ordre alphabétique
   Object.values(parE).forEach(l => l.sort((a, b) => String(a.Pilote || '').localeCompare(String(b.Pilote || ''), 'fr', { sensitivity: 'base' })));
-  const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || parE[b].length - parE[a].length || a.localeCompare(b));
+  const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || a.localeCompare(b, 'fr', { sensitivity: 'base' })); // équipes par ordre alphabétique, sans équipe à la fin
   el.innerHTML = ordre.map(e => `<div class="gta-equipe"><h3 class="gta-h3">${mcEsc(e)} <span>${parE[e].length} pilote${parE[e].length > 1 ? 's' : ''}</span></h3>
     <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#gta-pilote-${gtaSlug(p.Pilote)}" onclick="gtaOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${gtaVoiture(p)}<div class="nom">${gtaDrapeau(p.Pays)}${mcEsc(p.Pilote)}</div><div class="det">${gtaMarque(p.Voiture)}</div></a>`).join('')}</div></div>`).join('');
 }
@@ -6035,7 +6035,7 @@ function wcnlRendreEquipes() {
   pil.forEach(p => { const e = p['Équipe'] || (sansEquipe ? 'Pilotes inscrits' : 'Pilotes indépendants'); (parE[e] = parE[e] || []).push(p); });
   // pilotes par ordre alphabétique (comme en GTA)
   Object.values(parE).forEach(l => l.sort((a, b) => String(a.Pilote || '').localeCompare(String(b.Pilote || ''), 'fr', { sensitivity: 'base' })));
-  const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || parE[b].length - parE[a].length || a.localeCompare(b));
+  const ordre = Object.keys(parE).sort((a, b) => (a === 'Pilotes indépendants') - (b === 'Pilotes indépendants') || a.localeCompare(b, 'fr', { sensitivity: 'base' })); // équipes par ordre alphabétique, sans équipe à la fin
   el.innerHTML = ordre.map(e => `<div class="gta-equipe"><h3 class="gta-h3">${mcEsc(e)} <span>${parE[e].length} pilote${parE[e].length > 1 ? 's' : ''}</span></h3>
     <div class="gta-lineup">${parE[e].map(p => `<a class="gta-pil" href="#wcnl-pilote-${wcnlSlug(p.Pilote)}" onclick="wcnlOuvrirPilote(${mcEsc(JSON.stringify(p.Pilote))});return false">${wcnlVoiture(p)}<div class="nom">${wcnlDrapeau(p.Pays)}${mcEsc(p.Pilote)}</div><div class="det">${wcnlMarque(p.Voiture)}</div></a>`).join('')}</div></div>`).join('');
 }
