@@ -5211,7 +5211,7 @@ function mcHistorique(lignes, num) {
     const o = s[n] = s[n] || { Pilote: n, saisons: new Set(), courses: 0, v: 0, p2: 0, p3: 0, p5: 0, p10: 0, pos: [], tours: 0, tet: 0, km: 0, kmTete: 0, inc: 0, dnf: 0,
       propres: 0, mt: 0, pts: 0, serieTop10: 0, maxTop10: 0, sansVic: 0, maxSansVic: 0, pires: 0, gagnees: 0, perdues: 0,
       parPos: {}, milieu: 0, diesel: 0, holdup: 0, douche: 0, voleur: null, chronoInutile: 0, serieTour: 0, comptable: 0,
-      serie0: 0, saint: 0, carnage: 0, miracule: null, miraculeX: 0, circ: {}, pits: 0, num: '', temps: 0 };
+      serie0: 0, saint: 0, carnage: 0, miracule: null, miraculeX: 0, circ: {}, pits: 0, num: '', temps: 0, poles: 0, fondGrille: 0 };
     const pos = num(r.Position), km = mcKmCircuit(x.circuit), tours = num(r.Tours) || 0, tet = num(r['Tours en tête']) || 0;
     if (!x.horsSaison) o.saisons.add(x.saison); o.courses++;
     if (pos) {
@@ -5243,6 +5243,8 @@ function mcHistorique(lignes, num) {
       const c = String(x.circuit || '').replace(/\s*\(.*\)\s*$/, '').trim();
       if (c) { const v = o.circ[c] = o.circ[c] || { n: 0, s: 0 }; v.n++; v.s += pos; }
     }
+    // grille de départ : pole position et dernière place sur la grille
+    if (dep) { const maxD = Math.max(...course.map(y => num(y.r['Départ'] || y.r['Grille'] || y.r['Position de départ']) || 0)); if (dep === 1) o.poles++; if (nb >= 3 && dep === maxD) o.fondGrille++; }
     const maxT = Math.max(...course.map(y => num(y.r.Tours) || 0));
     o.serieTour = maxT && tours >= maxT ? o.serieTour + 1 : 0; o.comptable = Math.max(o.comptable, o.serieTour);
     if (aX) { o.serie0 = inc === 0 ? o.serie0 + 1 : 0; o.saint = Math.max(o.saint, o.serie0); o.carnage = Math.max(o.carnage, inc); }
@@ -5326,6 +5328,8 @@ function mcHistoriqueHTML(st, lien, fenetre, lg) {
     ['💥', 'Le kamikaze', 'le plus de X par course (2 courses minimum)', 'xParCourse', false, o => `${f1(o.xParCourse)} x par course`, 2],
     ['🔧', 'Le client préféré du garage', 'le plus d\'abandons', 'dnf', false, o => pl(o.dnf, 'abandon')],
     ['🐢', 'La lanterne rouge', 'le plus souvent dernier', 'pires', false, o => `${o.pires} fois dernier`],
+    ['🅿️', 'Le roi de la pole', 'le plus de pole positions', 'poles', false, o => pl(o.poles, 'pole', 'poles')],
+    ['🧱', 'Le fond de grille', 'le plus de départs en dernière position', 'fondGrille', false, o => pl(o.fondGrille, 'fois', 'fois') + ' dernier sur la grille'],
     ['🏃', 'Le lièvre', 'le plus de tours en tête sans jamais gagner', 'lievre', false, o => pl(o.lievre, 'tour', 'tours') + ' en tête'],
     ['🥷', 'Le voleur de victoire', 'la victoire en menant le moins de tours', 'voleur', true, o => `victoire avec ${pl(o.voleur, 'tour', 'tours')} en tête`],
     ['🎢', 'Le yo-yo', 'le plus grand écart entre sa meilleure et sa pire arrivée', 'yoyo', false, o => `${o.yoyo} places d'écart`, 2],
