@@ -78,14 +78,12 @@ async function main() {
       texte: `🏆 **${l.nom} : le top 3 du championnat après la manche ${derniere.Manche}**\n<${SITE}#${l.lg}-stats>` });
     newsDuSite(html, l.lg).forEach(n => items.push({ type: 'news', cle: `news|${n.id}`,
       texte: `📰 **Nouvelle news ${l.nom} : ${n.titre}**\n<${SITE}#${l.lg}-news>` }));
-    const e = etat[l.lg];
+    let e = etat[l.lg];
     if (!e) {
-      // premier passage : on note l'existant (y compris les courses test) sans rien poster
-      etat[l.lg] = { vus: items.map(x => x.cle), tests: [] }; change = true;
+      // premier passage : on note l'existant sans rien poster (les courses test restent à la demande)
+      e = etat[l.lg] = { vus: items.map(x => x.cle), tests: [] }; change = true;
       console.log(`${l.nom} : premier passage, ${items.length} élément(s) noté(s) sans annonce.`);
-      continue;
-    }
-    items.filter(x => !e.vus.includes(x.cle)).forEach(x => travail.push({ l, ...x }));
+    } else items.filter(x => !e.vus.includes(x.cle)).forEach(x => travail.push({ l, ...x }));
     if (TESTS === l.lg) {
       [...new Set(tests.map(r => r.Manche))].filter(m => m && !(e.tests || []).includes(`${m}|${(tests.find(r => r.Manche === m) || {}).Date}`))
         .forEach(m => travail.push({ l, type: 'test', test: true, manche: m, cle: `${m}|${(tests.find(r => r.Manche === m) || {}).Date}`,
