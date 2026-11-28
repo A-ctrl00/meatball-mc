@@ -804,6 +804,7 @@
   "le plus de courses propres": "most clean races",
   "le plus de courses sans victoire": "most races without a win",
   "la plus longue série sans victoire": "longest winless streak",
+    "la plus longue série sans victoire (pilotes déjà vainqueurs)": "longest winless streak (past winners only)",
   "le plus de X au total": "most incidents (x)",
   "le plus de X par course (2 courses minimum)": "most x per race (2 races minimum)",
   "le plus d'abandons": "most DNFs",
