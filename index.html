@@ -2012,6 +2012,24 @@
   body.mc-theme-wcnl .mc-titre .gagnant em { color: #1EA8FF; }
   .mc-titre ol { margin: 10px 0 0; padding: 8px 0 0 18px; border-top: 1px solid rgba(255,255,255,.08); font-size: 12px; color: var(--text-dim); }
   .mc-titre ol li { margin: 2px 0; }
+  /* Panthéon : carte cliquable, classement complet dans une fenêtre */
+  .mc-titre[role="button"] { cursor: pointer; transition: transform .15s, box-shadow .15s; }
+  .mc-titre[role="button"]:hover { transform: translateY(-2px); }
+  .mc-pan-tete { display: flex; gap: 14px; align-items: center; margin-bottom: 14px; padding-right: 40px; }
+  .mc-pan-tete .ico { font-size: 44px; }
+  .mc-pan-tete p { margin: 2px 0 0; color: var(--text-dim); font-size: 14px; }
+  .mc-pan-liste { list-style: none; margin: 0; padding: 0 !important; display: flex; flex-direction: column; gap: 4px; max-height: 60vh; overflow-y: auto; }
+  .mc-pan-liste li { display: grid; grid-template-columns: 34px 1fr auto; gap: 10px; align-items: center; padding: 8px 10px; border-radius: 10px; background: rgba(255,255,255,.04); }
+  .mc-pan-liste li:nth-child(odd) { background: rgba(255,255,255,.07); }
+  .mc-pan-liste .rg { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: rgba(255,255,255,.1); font: 800 13px 'Outfit', sans-serif; color: #fff; }
+  .mc-pan-liste .rg.r1 { background: linear-gradient(180deg, #FFD54A, #E0A100); color: #1a1200; }
+  .mc-pan-liste .rg.r2 { background: rgba(200,210,225,.35); }
+  .mc-pan-liste .rg.r3 { background: rgba(205,127,50,.5); }
+  .mc-pan-liste .pil { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; font: 600 15px 'Outfit', sans-serif; }
+  .mc-pan-liste .pil .et { font-style: normal; color: var(--text-dim); }
+  .mc-pan-liste .det { font: 600 11px 'Outfit', sans-serif; color: var(--text-dim); background: rgba(255,255,255,.08); border-radius: 6px; padding: 1px 6px; }
+  .mc-pan-liste .val { font: 700 14px 'Outfit', sans-serif; color: #EC07C4; text-align: right; }
+  body.mc-theme-wcnl .mc-pan-liste .val { color: #1EA8FF; }
   /* Panthéon : rangs 2 et 3 lisibles, police du site */
   .mc-titre .t { font: italic 900 20px 'Outfit', sans-serif; letter-spacing: -.01em; }
   .mc-titre .m { font: 500 12px 'Inter', sans-serif; letter-spacing: .02em; }
@@ -5045,7 +5063,18 @@ function mcHistorique(lignes, num) {
   st.paires = Object.entries(paires).map(([c, n]) => ({ a: c.split('|')[0], b: c.split('|')[1], n })).filter(p => p.n >= 2).sort((a, b) => b.n - a.n);
   return st;
 }
-function mcHistoriqueHTML(st, lien) {
+const MC_PANTHEON = {};
+function mcPantheonOuvrir(id, ev) {
+  if (ev && ev.target.closest('a')) return; // un clic sur un pilote ouvre sa fiche
+  const t = MC_PANTHEON[id]; if (t) t.fenetre(t.html);
+}
+function mcHistoriqueHTML(st, lien, fenetre) {
+  const cle = Math.random().toString(36).slice(2, 7);
+  const complet = (id, ico, titre, mesure, rangs) => {
+    MC_PANTHEON[id] = { fenetre, html: `<div class="mc-pan-tete"><span class="ico">${ico}</span><div><h2 class="gta-titre-deg">${titre}</h2><p>${mesure}</p></div></div>
+      <ol class="mc-pan-liste">${rangs.map(r => `<li><b class="rg r${r.rang}">${r.rang}</b><span class="pil">${r.nom}</span><span class="val">${r.val}</span></li>`).join('')}</ol>` };
+    return fenetre ? ` role="button" tabindex="0" onclick="mcPantheonOuvrir('${id}', event)" onkeydown="if(event.key==='Enter')mcPantheonOuvrir('${id}', event)"` : '';
+  };
   const en = window.MC_LANG === 'en', f1 = v => v.toFixed(1).replace('.', en ? '.' : ','), km = v => Math.round(v).toLocaleString(en ? 'en-GB' : 'fr-FR');
   const pl = (n, mot, plur) => `${n} ${n > 1 ? (plur || mot + 's') : mot}`;
   // [icône, titre, ce qui est mesuré, clé, ordre croissant ?, texte de la valeur, minimum de courses]
@@ -5097,7 +5126,13 @@ function mcHistoriqueHTML(st, lien) {
     const noms = gr => { const max = 4, l = gr.l.length > max + 1 ? gr.l.slice(0, max) : gr.l;
       return l.map(o => `<span class="pil">${lien(o.Pilote)}${det && det(o) ? `<small class="det">${mcEsc(det(o))}</small>` : ''}</span>`).join('<i class="et sep"> · </i>') + (l.length < gr.l.length ? `<i class="et"> ${en ? 'and' : 'et'} ${gr.l.length - l.length} ${en ? 'more' : 'autres'}</i>` : ''); };
     const [g1, ...reste] = g.slice(0, 3);
-    return `<div class="mc-titre${g1.l.length > 1 ? ' ex' : ''}"><div class="ico">${ico}</div><div class="t">${titre}</div><div class="m">${mesure}</div>
+    // fenêtre : tous les pilotes, même ceux à 0
+    const tous = st.filter(o => o[k] != null && o.courses >= (min || 1) && (!cond || cond(o))).sort((a, b) => asc ? a[k] - b[k] : b[k] - a[k]);
+    let rang = 1, prec = null; const rangs = [];
+    tous.forEach((o, i) => { const v = Math.round(o[k] * 10); if (v !== prec) { rang = i + 1; prec = v; }
+      rangs.push({ rang, nom: lien(o.Pilote) + (det && det(o) ? `<small class="det">${mcEsc(det(o))}</small>` : ''), val: txt(o) }); });
+    const ouvrir = complet(cle + '-' + k + '-' + titre.length, ico, titre, mesure, rangs);
+    return `<div class="mc-titre${g1.l.length > 1 ? ' ex' : ''}"${ouvrir}><div class="ico">${ico}</div><div class="t">${titre}</div><div class="m">${mesure}</div>
       <div class="gagnant"><span class="nom">${noms(g1)}</span><em>${txt(g1.l[0])}${g1.l.length > 1 ? (en ? ' · tied' : ' · ex aequo') : ''}</em></div>
       ${reste.length ? `<ol>${reste.map((gr, n) => `<li><b class="rg">${n + 2}</b><div><span class="nom">${noms(gr)}</span><span class="val">${txt(gr.l[0])}${gr.l.length > 1 ? (en ? ' · tied' : ' · ex aequo') : ''}</span></div></li>`).join('')}</ol>` : ''}</div>`;
   }).join('') + jumeaux();
@@ -5106,7 +5141,10 @@ function mcHistoriqueHTML(st, lien) {
     const duo = x => `<span class="duo"><span class="pil">${lien(x.a)}</span><span class="pil"><i class="et">&amp;</i>${lien(x.b)}</span></span>`;
     const g = []; p.forEach(x => { const d = g[g.length - 1]; if (d && d.v === x.n) d.l.push(x); else g.push({ v: x.n, l: [x] }); });
     const [g1, ...reste] = g.slice(0, 3), val = gr => `${gr.v} fois l'un derrière l'autre${gr.l.length > 1 ? (en ? ' · tied' : ' · ex aequo') : ''}`;
-    return `<div class="mc-titre"><div class="ico">👯</div><div class="t">Les jumeaux</div><div class="m">les deux pilotes qui finissent le plus souvent l'un juste derrière l'autre</div>
+    let rang = 1; const rangs = [];
+    g.forEach(gr => { gr.l.forEach(x => rangs.push({ rang, nom: `${lien(x.a)}<i class="et">&amp;</i>${lien(x.b)}`, val: `${x.n} fois` })); rang += gr.l.length; });
+    const ouvrir = complet(cle + '-jumeaux', '👯', 'Les jumeaux', 'les deux pilotes qui finissent le plus souvent l\'un juste derrière l\'autre', rangs);
+    return `<div class="mc-titre"${ouvrir}><div class="ico">👯</div><div class="t">Les jumeaux</div><div class="m">les deux pilotes qui finissent le plus souvent l'un juste derrière l'autre</div>
       <div class="gagnant"><span class="nom">${g1.l.slice(0, 2).map(duo).join('')}</span><em>${val(g1)}</em></div>
       ${reste.length ? `<ol>${reste.map((gr, n) => `<li><b class="rg">${n + 2}</b><div><span class="nom">${gr.l.slice(0, 2).map(duo).join('')}</span><span class="val">${val(gr)}</span></div></li>`).join('')}</ol>` : ''}</div>`;
   }
@@ -5341,7 +5379,7 @@ async function gtaRendreHisto() {
   const tests = (GTA.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
   tests.forEach(r => lignes.push({ saison: 'tests', manche: r.Manche, circuit: r.Circuit, ordre: -100000 + mTests.indexOf(r.Manche), horsSaison: true, r }));
   if (!lignes.length) { el.innerHTML = gtaVide(GTA_ATTENTE); return; }
-  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => gtaNum(v) || 0), gtaLienPilote);
+  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => gtaNum(v) || 0), gtaLienPilote, gtaFenetre);
 }
 function gtaRendreStats() {
   const el = document.getElementById('gtaStats'); if (!el) return;
@@ -5781,7 +5819,7 @@ async function wcnlRendreHisto() {
   const tests = (WCNL.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
   tests.forEach(r => lignes.push({ saison: 'tests', manche: r.Manche, circuit: r.Circuit, ordre: -100000 + mTests.indexOf(r.Manche), horsSaison: true, r }));
   if (!lignes.length) { el.innerHTML = wcnlVide(WCNL_ATTENTE); return; }
-  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => wcnlNum(v) || 0), wcnlLienPilote);
+  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => wcnlNum(v) || 0), wcnlLienPilote, wcnlFenetre);
 }
 function wcnlRendreStats() {
   const el = document.getElementById('wcnlStats'); if (!el) return;
