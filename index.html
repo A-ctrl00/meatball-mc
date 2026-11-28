@@ -2107,8 +2107,9 @@
   #tab-ranking .row.pr-row.leader { background: radial-gradient(80% 140% at 0% 50%, rgba(255,106,26,.28), transparent 70%), rgba(255,255,255,.03); border-color: rgba(255,106,26,.55); box-shadow: inset 3px 0 0 var(--mb-or), 0 0 24px rgba(255,106,26,.18); }
   #tab-ranking .row.pr-row.leader .pos { color: #FFC83A; }
   #tab-ranking .driver-name { font: 800 19px 'Outfit', sans-serif; letter-spacing: -.01em; }
-  #tab-ranking .row.pr-row .score { font: 900 28px 'Outfit', sans-serif; background: linear-gradient(90deg, var(--mb-or), var(--mb-or2)); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 8px rgba(255,106,26,.35)); }
-  #tab-ranking .row.pr-row .pr-fleche { color: var(--mb-bl); -webkit-text-fill-color: var(--mb-bl); }
+  #tab-ranking .row.pr-row .score { font: 900 30px 'Outfit', sans-serif; color: #FF7A2E; text-shadow: 0 0 14px rgba(255,106,26,.55), 0 0 2px rgba(255,160,100,.8); opacity: 1; }
+  #tab-ranking .row.pr-row.leader .score { color: #FFB020; text-shadow: 0 0 16px rgba(255,176,32,.6); }
+  #tab-ranking .row.pr-row .pr-fleche { color: var(--mb-bl); text-shadow: none; }
   #tab-ranking .pr-chip { background: rgba(77,163,255,.1); border: 1px solid rgba(77,163,255,.18); color: #b9cbe2; }
   #tab-ranking .pr-chip.fort { background: rgba(255,106,26,.18); border-color: rgba(255,106,26,.4); }
   #tab-ranking .pr-chip.fort b { color: #FFB38A; }
@@ -2118,6 +2119,7 @@
   #tab-ranking .pr-somme .pr-egal b { color: var(--mb-or); }
   #tab-ranking .pr-astuce { color: #b9cbe2; }
   #tab-ranking .pr-astuce::before { content: '👉 '; }
+  #tab-ranking .stats-legend.pr-legende { margin-top: 18px; }
   @media (max-width: 640px) { #tab-ranking .pr-detail { padding-left: 12px; } #tab-ranking .row.pr-row { padding: 12px 10px; } }
   /* Duel : mise en page aux couleurs de chaque section (Meatball orange par défaut, GTA rose, WCNL bleu et orange) */
   .mc-duel-boite { --acc: #FF6A1A; --acc2: #4DA3FF; --rgb: 255,106,26; --lueur: rgba(255,106,26,.18); --bord: rgba(77,163,255,.3); --fond: #0b1a30;
@@ -3029,7 +3031,9 @@
     <div class="tab-panel" id="tab-ranking">
       <section>
         <div class="section-title">Power Ranking</div>
-        <div class="stats-legend">
+        <p class="pr-astuce">Clique sur un pilote pour voir le détail de ses 5 dernières courses et comment ses points sont calculés.</p>
+        <div class="board" id="board"><div class="state-msg">Chargement du classement...</div></div>
+        <div class="stats-legend pr-legende">
           <div class="stats-legend-item"><strong>Fenêtre de calcul</strong> — Ce classement se base uniquement sur les 5 derniers résultats de chaque pilote, pas sur l'historique complet de la saison.</div>
           <div class="stats-legend-item"><strong>Fiabilité (+50)</strong> — Gros bonus si tu termines la course sans dégâts majeurs, dans le tour du leader. Le message est clair&nbsp;: avant de viser la victoire, il faut déjà savoir finir la course.</div>
           <div class="stats-legend-item"><strong>Discipline (+20)</strong> — Bonus pour une conduite propre et le respect des procédures (jaunes, pits, etc.).</div>
@@ -3038,8 +3042,6 @@
           <div class="stats-legend-item"><strong>Boost division</strong> — Léger bonus supplémentaire pour les pilotes évoluant dans une division supérieure, car le niveau y est plus relevé et donc plus dur à performer.</div>
           <div class="stats-legend-item">💡 <strong>Pour les rookies</strong> : le plus gros levier de points, c'est de finir dans le tour du leader sans accrocher personne — ça vaut largement plus qu'une prise de risque pour grappiller 2-3 places. Finir propre en division inférieure rapporte une belle place au classement.</div>
         </div>
-        <p class="pr-astuce">Clique sur un pilote pour voir le détail de ses 5 dernières courses et comment ses points sont calculés.</p>
-        <div class="board" id="board"><div class="state-msg">Chargement du classement...</div></div>
         <div class="section-title pr-duel-titre">Les duels</div>
         <p class="pr-astuce">Quand deux membres ont couru la même course (même ligue, même jour), celui qui finit devant gagne le duel. Chaque case se lit sur la ligne du pilote : « 5-3 » veut dire qu'il a fini 5 fois devant le pilote de la colonne et 3 fois derrière.</p>
         <div id="mcDuel"><div class="state-msg">Chargement...</div></div>
