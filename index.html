@@ -5080,7 +5080,7 @@ function mcHistoriqueHTML(st, lien, fenetre) {
   // [icône, titre, ce qui est mesuré, clé, ordre croissant ?, texte de la valeur, minimum de courses]
   const titres = [
     ['🏆', 'Le roi de la victoire', 'le plus de victoires', 'v', false, o => pl(o.v, 'victoire')],
-    ['🥈', 'Le Poulidor', 'le plus de 2es places', 'p2', false, o => pl(o.p2, '2e place', '2es places')],
+    ['🥈', 'Le Poulidor', 'le plus de 2es places', 'p2', false, o => `${o.p2} fois 2e`],
     ['🍾', 'L\'abonné du podium', 'le plus de top 3', 'p3', false, o => pl(o.p3, 'podium')],
     ['🖐️', 'Le pilier du top 5', 'le plus de top 5', 'p5', false, o => pl(o.p5, 'top 5', 'top 5')],
     ['🔟', 'Monsieur Régularité', 'le plus de top 10', 'p10', false, o => pl(o.p10, 'top 10', 'top 10')],
