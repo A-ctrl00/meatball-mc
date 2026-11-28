@@ -2462,6 +2462,29 @@
       <div class="mc-home" id="mcHome"></div>
       <div class="articles" id="newsArticles">
 
+                <div class="article-card" data-ligue="wcnl">
+          <img class="article-img" src="assets/wcnl-logo.jpg" alt="Logo de la WCNL">
+          <div class="article-body">
+            <div class="article-date">28 novembre 2026, WCNL</div>
+            <div class="article-title">WCNL&nbsp;: TOUT EST PRÊT, PLACE À LA SAISON&nbsp;!</div>
+            <p>Les moteurs chauffent à la WCNL. Après trois courses de pré-saison et une course test dans la ligue officielle, l'organisation est prête à lancer le championnat, et elle a hâte d'y être.</p>
+            <p class="article-subhead">Le tableau duel arrive sur le site</p>
+            <p>Qui est vraiment le plus rapide entre vous et votre rival&nbsp;? Le nouveau tableau duel du site répond à la question. Il compare chaque pilote à tous les autres&nbsp;: sur votre ligne, vous voyez combien de fois vous avez fini devant chacun de vos rivaux, et combien de fois derrière. De quoi nourrir les débats sur Discord tout au long de la saison.</p>
+            <p>Le tableau duel rejoint les autres statistiques du site, mises à jour après chaque manche&nbsp;: résultats, classement, et le Panthéon, avec ses titres sérieux et ses titres plus loufoques.</p>
+            <p class="article-subhead">Des courses test réussies</p>
+            <p>Les courses de préparation ont déjà offert du spectacle. Alexis Joube a gagné la première à Phoenix, et Christophe Baczyk s'est imposé à Atlanta. À Homestead, Thomas Le Noble a mené 99 tours avant de gagner. À Iowa, Christophe Baczyk a remis ça en menant 142 tours sur 200.</p>
+            <p>Ces courses avaient aussi un autre but&nbsp;: tester toute la chaîne, de l'arrivée jusqu'au classement. Le test est réussi. Les résultats sont relevés automatiquement, la commission de course rend ses décisions et le classement est publié sur Discord peu après le drapeau à damier. Dès la première manche, vous aurez vos résultats et votre classement le plus vite possible.</p>
+            <p class="article-subhead">Le calendrier bientôt dévoilé</p>
+            <p>Le calendrier de la saison sera publié prochainement dans le salon #calendrier. Restez attentifs&nbsp;!</p>
+            <p class="article-subhead">Envoyez-nous votre livrée</p>
+            <p>Pour mettre à jour le site, chaque pilote est invité à envoyer une capture d'écran de sa livrée. Une vue de profil bien nette est l'idéal.</p>
+            <p class="article-subhead">Rejoignez la ligue iRacing</p>
+            <p>Toutes les courses du championnat se dérouleront dans la ligue iRacing officielle de la WCNL. Si ce n'est pas déjà fait, demandez à la rejoindre&nbsp;: ligue numéro 13470.</p>
+            <p>On se retrouve très vite en piste. 🏁</p>
+            <div class="like-row" data-like-key="article-wcnl-saison"><button class="like-btn" onclick="toggleLike(this)">🏁 <span class="like-count">0</span></button></div>
+          </div>
+                </div>
+
                 <div class="article-card">
           <img class="article-img" src="assets/news-elite-challenge-kentucky.jpg" alt="Le peloton dans un virage du Kentucky Speedway, devant des tribunes pleines">
           <div class="article-body">
@@ -6037,7 +6060,7 @@ function wcnlOuvrirManche(n) {
     ${dec.length ? `<h3 class="gta-h3">Décisions de la commission</h3>` + wcnlDecisionsHTML(dec) : ''}`);
 }
 
-// News de la WCNL : les articles du site marqués data-ligue="gta" (ils restent aussi dans les News de l'équipe)
+// News de la WCNL : les articles du site marqués data-ligue="wcnl" (seulement dans l'onglet WCNL, pas dans les News de l'équipe)
 function wcnlRendreNews() {
   const el = document.getElementById('wcnlNews'); if (!el) return;
   const arts = (_mcArticles.length ? _mcArticles : mcCollectArticles()).filter(a => a.card && a.card.dataset.ligue === 'wcnl');
@@ -6359,7 +6382,7 @@ function mcDateCourte(d) { return d ? String(d.getDate()).padStart(2, '0') + '/'
 
 /** Articles du site qui citent le pilote (nom complet, ou nom de famille s'il est unique dans l'équipe). */
 function mcArticlesPilote(nom) {
-  const arts = (_mcArticles && _mcArticles.length) ? _mcArticles : mcCollectArticles();
+  const arts = ((_mcArticles && _mcArticles.length) ? _mcArticles : mcCollectArticles()).filter(a => !a.card || a.card.dataset.ligue !== 'wcnl');
   const complet = mcSansAccent(nom);
   const famille = mcSansAccent(nom.split(' ').slice(1).join(' '));
   const equipe = Object.keys(typeof _gradesByName !== 'undefined' ? _gradesByName : {});
@@ -6797,7 +6820,8 @@ function mcBuildHome() {
   if (!home) return;
   _mcArticles = mcCollectArticles();
   setTimeout(mcArticleDepuisAdresse, 0);
-  const A = _mcArticles;
+  // les news de la WCNL restent dans l'onglet WCNL (pas dans les news de l'équipe)
+  const A = _mcArticles.filter(a => !a.card || a.card.dataset.ligue !== 'wcnl');
   const fleche = d => `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="${d}" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
   // Produits de la boutique dans un ordre aléatoire à chaque visite (mélange de Fisher-Yates)
   const produits = (typeof PRODUCTS !== 'undefined' ? PRODUCTS : []).slice();

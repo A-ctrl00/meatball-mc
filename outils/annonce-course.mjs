@@ -70,7 +70,9 @@ async function articlesDuSite() {
   const html = await (await fetch(SITE + '?v=' + Date.now(), { headers: { 'Cache-Control': 'no-cache' } })).text();
   const debut = html.indexOf('id="newsArticles"');
   const zone = debut >= 0 ? html.slice(debut) : html;
-  return [...zone.matchAll(/class="article-title"[^>]*>([\s\S]*?)<\/div>/g)].map(m => decoder(m[1])).filter(Boolean)
+  // une carte par article ; les news de la WCNL (data-ligue="wcnl") sont annoncées par annonce-ligues.mjs, pas ici
+  return [...zone.matchAll(/<div class="article-card"([^>]*)>[\s\S]*?class="article-title"[^>]*>([\s\S]*?)<\/div>/g)]
+    .filter(m => !/data-ligue="wcnl"/.test(m[1])).map(m => decoder(m[2])).filter(Boolean)
     .map(titre => ({ titre, id: slug(titre) }));
 }
 
