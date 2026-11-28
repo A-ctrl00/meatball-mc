@@ -2032,7 +2032,9 @@
   .mc-titre .pil img, .mc-titre .pil svg { flex: none; }
   .mc-titre .nom .et { font-size: 12px; }
   .mc-titre ol li .val { display: block; font: 600 12px 'Outfit', sans-serif; color: var(--text-dim); margin-top: 1px; }
-  .mc-histo-kpis > div { background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.1); }
+  .gta-kpis.mc-histo-kpis { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 760px) { .gta-kpis.mc-histo-kpis { grid-template-columns: repeat(2, 1fr); } }
+  .gta-kpis.mc-histo-kpis > div { background: linear-gradient(160deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); border: 1px solid rgba(255,255,255,.1); }
   .gta-table th.tri { cursor: pointer; user-select: none; }
   .gta-table th.tri:hover { color: #fff; }
   .gta-table th.tri::after { content: '↕'; margin-left: 5px; opacity: .35; font-size: 10px; }
@@ -4979,7 +4981,7 @@ function mcHistorique(lignes, num) {
     const o = s[n] = s[n] || { Pilote: n, saisons: new Set(), courses: 0, v: 0, p2: 0, p3: 0, p5: 0, p10: 0, pos: [], tours: 0, tet: 0, km: 0, kmTete: 0, inc: 0, dnf: 0,
       propres: 0, mt: 0, pts: 0, serieTop10: 0, maxTop10: 0, sansVic: 0, maxSansVic: 0, pires: 0, gagnees: 0, perdues: 0,
       parPos: {}, milieu: 0, diesel: 0, holdup: 0, douche: 0, voleur: null, chronoInutile: 0, serieTour: 0, comptable: 0,
-      serie0: 0, saint: 0, carnage: 0, miracule: null, miraculeX: 0, circ: {}, pits: 0, num: '' };
+      serie0: 0, saint: 0, carnage: 0, miracule: null, miraculeX: 0, circ: {}, pits: 0, num: '', temps: 0 };
     const pos = num(r.Position), km = mcKmCircuit(x.circuit), tours = num(r.Tours) || 0, tet = num(r['Tours en tête']) || 0;
     if (!x.horsSaison) o.saisons.add(x.saison); o.courses++;
     if (pos) {
@@ -5014,6 +5016,8 @@ function mcHistorique(lignes, num) {
     o.serieTour = maxT && tours >= maxT ? o.serieTour + 1 : 0; o.comptable = Math.max(o.comptable, o.serieTour);
     if (aX) { o.serie0 = inc === 0 ? o.serie0 + 1 : 0; o.saint = Math.max(o.saint, o.serie0); o.carnage = Math.max(o.carnage, inc); }
     o.pits += num(r['Arrêts'] || r['Arrêts aux stands'] || r.Pits) || 0;
+    // temps en piste estimé : tours couverts au rythme du tour moyen (sinon du meilleur tour) du pilote
+    const tm = num(r['Tour moyen (s)']) || mt; if (tm > 0) o.temps += tours * tm;
   });
   // les jumeaux : deux pilotes qui finissent l'un juste derrière l'autre
   const paires = {};
@@ -5096,11 +5100,16 @@ function mcHistoriqueHTML(st, lien) {
       ${reste.length ? `<ol>${reste.map((gr, n) => `<li><b class="rg">${n + 2}</b><div><span class="nom">${gr.l.slice(0, 2).map(duo).join('')}</span><span class="val">${val(gr)}</span></div></li>`).join('')}</ol>` : ''}</div>`;
   }
   const totalKm = st.reduce((a, o) => a + o.km, 0), terre = totalKm / 40075;
+  const duree = sec => { const h = Math.floor(sec / 3600), m = Math.round((sec % 3600) / 60); return h ? `${h} h ${String(m).padStart(2, '0')}` : `${m} min`; };
   return `<div class="gta-kpis mc-histo-kpis">
       <div><span>Kilomètres parcourus (tous les pilotes)</span><b>${km(totalKm)} km</b><em>${terre >= 1 ? `${f1(terre)} fois le tour de la Terre` : `${Math.round(terre * 100)} % du tour de la Terre`}</em></div>
       <div><span>Paris-Marseille</span><b>${km(totalKm / 775)} fois</b><em>en distance cumulée</em></div>
       <div><span>Pilotes au départ</span><b>${st.length}</b></div>
       <div><span>Vainqueurs différents</span><b>${st.filter(o => o.v).length}</b></div>
+      <div><span>Incidents (tous les pilotes)</span><b>${km(st.reduce((a, o) => a + o.inc, 0))} x</b><em>${f1(st.reduce((a, o) => a + o.inc, 0) / Math.max(1, st.reduce((a, o) => a + o.courses, 0)))} x par pilote et par course</em></div>
+      <div><span>Temps de course cumulé</span><b>${duree(st.reduce((a, o) => a + o.temps, 0))}</b><em>${en ? 'all drivers, estimated' : 'tous les pilotes, estimé'}</em></div>
+      <div><span>Tours bouclés</span><b>${km(st.reduce((a, o) => a + o.tours, 0))}</b><em>tous les pilotes</em></div>
+      <div><span>Leaders différents</span><b>${st.filter(o => o.tet > 0).length}</b><em>au moins un tour en tête</em></div>
     </div>
     <div class="mc-titres">${cartes}</div>`;
 }
