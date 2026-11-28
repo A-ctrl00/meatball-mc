@@ -2090,7 +2090,7 @@
   .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 640px) { .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(2, 1fr); } }
   /* Duel : mise en page aux couleurs de chaque section (Meatball orange par défaut, GTA rose, WCNL bleu et orange) */
-  .mc-duel-boite { --acc: #FF6B1A; --acc2: #FFB347; --rgb: 255,107,26; --lueur: rgba(255,107,26,.18); --bord: rgba(255,140,60,.3); --fond: #0b0f1c;
+  .mc-duel-boite { --acc: #FF6A1A; --acc2: #4DA3FF; --rgb: 255,106,26; --lueur: rgba(255,106,26,.18); --bord: rgba(77,163,255,.3); --fond: #0b1a30;
     position: relative; width: fit-content; max-width: 100%; box-sizing: border-box; border-radius: 18px; padding: 14px 12px 10px; margin-top: 10px;
     background: radial-gradient(90% 120% at 0% 0%, var(--lueur), transparent 55%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.012)), rgba(10,12,18,.55);
     border: 1px solid var(--bord); box-shadow: inset 3px 0 0 var(--acc), 0 18px 40px rgba(0,0,0,.35); }
@@ -2113,6 +2113,9 @@
   .mc-duel-boite .mc-duel td:not(.bilan):not(.moi):not(.vide):hover { transform: scale(1.12); box-shadow: 0 0 0 2px var(--acc), 0 6px 16px rgba(0,0,0,.4); position: relative; z-index: 1; }
   .mc-duel-boite .mc-duel tbody tr:hover th.nom { color: var(--acc); }
   .mc-duel-boite .mc-duel tbody tr:hover td.vide, .mc-duel-boite .mc-duel tbody tr:hover td.egal { background: rgba(255,255,255,.14); }
+  /* noms des pilotes : blancs, sans soulignement (le rose de la GTA ne s'applique plus ailleurs) */
+  .mc-duel-boite .mc-duel th.nom a { color: #fff; border-bottom: 0; text-decoration: none; }
+  .mc-duel-boite .mc-duel th.nom a:hover { color: var(--acc); }
   .mc-duel-boite .mc-duel td:not(.bilan) { cursor: pointer; }
   .mc-duel-boite .mc-duel.focus td:not(.lc):not(.bilan) { opacity: .28; }
   .mc-duel-boite .mc-duel.focus td.lc:not(.cible):not(.bilan) { box-shadow: inset 0 0 0 1px var(--acc); }
