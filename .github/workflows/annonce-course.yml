@@ -18,6 +18,11 @@ on:
         type: choice
         options: ['non', 'course', 'resultats']
         default: 'non'
+      affiches_tests:
+        description: "Publier une fois les affiches des courses test d'une ligue (après validation des aperçus)"
+        type: choice
+        options: ['non', 'wcnl', 'gta']
+        default: 'non'
 
 permissions:
   contents: write
@@ -42,6 +47,7 @@ jobs:
             git show origin/etat-annonces:annonces.json > etat/annonces.json || echo '{}' > etat/annonces.json
             git show origin/etat-annonces:articles.json > etat/articles.json 2>/dev/null || rm -f etat/articles.json
             git show origin/etat-annonces:resultats.json > etat/resultats.json 2>/dev/null || rm -f etat/resultats.json
+            git show origin/etat-annonces:ligues.json > etat/ligues.json 2>/dev/null || rm -f etat/ligues.json
           else
             echo '{}' > etat/annonces.json
           fi
@@ -60,8 +66,18 @@ jobs:
           cd outils && npm init -y >/dev/null && npm i -s playwright@1.47.2 >/dev/null
           node annonce-course.mjs ../etat/annonces.json
 
+      # Affiches des ligues partenaires (WCNL, GTA) : podium, top 3 du championnat, news
+      - name: Y a-t-il une affiche de ligue à poster ?
+        id: verifl
+        env:
+          VERIF_SEUL: '1'
+          AFFICHES_TESTS: ${{ inputs.affiches_tests || 'non' }}
+          DISCORD_WEBHOOK_WCNL: ${{ secrets.DISCORD_WEBHOOK_WCNL }}
+          DISCORD_WEBHOOK_GTA: ${{ secrets.DISCORD_WEBHOOK_GTA }}
+        run: cd outils && node annonce-ligues.mjs ../etat/ligues.json
+
       - name: Installer le navigateur
-        if: steps.verif.outputs.a_faire == '1'
+        if: steps.verif.outputs.a_faire == '1' || steps.verifl.outputs.a_faire == '1'
         run: cd outils && npx playwright install --with-deps chromium
 
       - name: Photographier et poster
@@ -71,12 +87,21 @@ jobs:
           DISCORD_WEBHOOK_COURSES: ${{ secrets.DISCORD_WEBHOOK_COURSES }}
         run: cd outils && node annonce-course.mjs ../etat/annonces.json
 
+      - name: Photographier et poster les affiches de ligue
+        if: steps.verifl.outputs.a_faire == '1'
+        env:
+          AFFICHES_TESTS: ${{ inputs.affiches_tests || 'non' }}
+          DISCORD_WEBHOOK_WCNL: ${{ secrets.DISCORD_WEBHOOK_WCNL }}
+          DISCORD_WEBHOOK_GTA: ${{ secrets.DISCORD_WEBHOOK_GTA }}
+        run: cd outils && node annonce-ligues.mjs ../etat/ligues.json
+
       - name: Enregistrer l'état
-        if: (steps.verif.outputs.a_faire == '1' || steps.verif.outputs.etat_change == '1') && (inputs.essai || 'non') == 'non'
+        if: always() && (steps.verif.outputs.a_faire == '1' || steps.verif.outputs.etat_change == '1' || steps.verifl.outputs.a_faire == '1' || steps.verifl.outputs.etat_change == '1') && (inputs.essai || 'non') == 'non'
         run: |
           cp etat/annonces.json /tmp/annonces.json
           cp etat/articles.json /tmp/articles.json 2>/dev/null || true
           cp etat/resultats.json /tmp/resultats.json 2>/dev/null || true
+          cp etat/ligues.json /tmp/ligues.json 2>/dev/null || true
           git config user.name "Meatball MC"
           git config user.email "actions@users.noreply.github.com"
           if git ls-remote --exit-code --heads origin etat-annonces >/dev/null; then
@@ -85,8 +110,8 @@ jobs:
             git checkout -q --orphan etat-annonces && git rm -rqf .
           fi
           cp /tmp/annonces.json annonces.json
-          for f in articles.json resultats.json; do if [ -f /tmp/$f ]; then cp /tmp/$f $f; fi; done
-          git add annonces.json $(ls articles.json resultats.json 2>/dev/null)
+          for f in articles.json resultats.json ligues.json; do if [ -f /tmp/$f ]; then cp /tmp/$f $f; fi; done
+          git add annonces.json $(ls articles.json resultats.json ligues.json 2>/dev/null)
           git commit -qm "Annonces postées" || exit 0
           git push -q origin etat-annonces
 

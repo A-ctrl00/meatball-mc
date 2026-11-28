@@ -2012,6 +2012,67 @@
   body.mc-theme-wcnl .mc-titre .gagnant em { color: #1EA8FF; }
   .mc-titre ol { margin: 10px 0 0; padding: 8px 0 0 18px; border-top: 1px solid rgba(255,255,255,.08); font-size: 12px; color: var(--text-dim); }
   .mc-titre ol li { margin: 2px 0; }
+  /* Affiches Discord des ligues (540 px de large, photographiées en x2) */
+  .mc-aff { position: relative; width: 540px; height: 675px; overflow: hidden; background: #000; color: #fff; font-family: 'Outfit', sans-serif; padding: 26px 22px 18px; box-sizing: border-box; display: flex; flex-direction: column; }
+  .mc-aff .fond { position: absolute; left: 50%; top: 52%; width: 620px; transform: translate(-50%, -50%); opacity: .13; pointer-events: none; }
+  .mc-aff-gta .fond { border-radius: 50%; }
+  .mc-aff .tete { position: relative; display: flex; gap: 14px; align-items: center; }
+  .mc-aff .tete .logo { width: 74px; height: 74px; border-radius: 14px; object-fit: cover; flex: none; }
+  .mc-aff-gta .tete .logo { border-radius: 50%; }
+  .mc-aff .k { font: 800 13px 'Outfit', sans-serif; letter-spacing: .14em; text-transform: uppercase; }
+  .mc-aff .t { font: italic 900 34px/1.05 'Outfit', sans-serif; letter-spacing: -.01em; width: fit-content; padding-right: .15em; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .mc-aff .s { font: 600 14px 'Inter', sans-serif; color: #c9d3e2; margin-top: 3px; }
+  .mc-aff .podium { position: relative; flex: 1; display: grid; grid-template-columns: 1fr 1.18fr 1fr; gap: 10px; align-items: end; margin-top: 14px; }
+  .mc-aff .marche { position: relative; border-radius: 16px; padding: 12px 8px 12px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .mc-aff .marche.m1 { padding-bottom: 46px; }
+  .mc-aff .marche.m2 { padding-bottom: 22px; }
+  .mc-aff .marche .rang { font: italic 900 46px/1 'Outfit', sans-serif; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .mc-aff .marche.m1 .rang { font-size: 62px; }
+  .mc-aff .marche .gta-voit { width: 100%; border-radius: 10px; }
+  .mc-aff .marche .gta-voit .gh { font-size: 22px; }
+  .mc-aff .marche.m1 .gta-voit .gh { font-size: 27px; }
+  .mc-aff .marche .nom { display: flex; align-items: center; justify-content: center; gap: 6px; font: 800 15px/1.15 'Outfit', sans-serif; min-height: 36px; }
+  .mc-aff .marche.m1 .nom { font-size: 18px; }
+  .mc-aff .marche .nom img, .mc-aff .marche .nom svg { flex: none; }
+  .mc-aff .det { display: flex; gap: 6px; align-items: center; justify-content: center; flex-wrap: wrap; font: 600 12.5px 'Inter', sans-serif; color: #c9d3e2; }
+  .mc-aff .det b { font: 800 13px 'Outfit', sans-serif; padding: 2px 8px; border-radius: 99px; background: rgba(255,255,255,.1); }
+  .mc-aff .det b.plus { background: rgba(40,200,120,.22); color: #6CF0A8; }
+  .mc-aff .det b.moins { background: rgba(255,80,80,.2); color: #FF9A9A; }
+  .mc-aff .det b.pts { font-size: 15px; background: none; padding: 0; }
+  .mc-aff .det2 { font: 600 11.5px 'Inter', sans-serif; color: #9fb0c8; }
+  .mc-aff .pied { position: relative; text-align: center; font: 800 13px 'Outfit', sans-serif; letter-spacing: .12em; text-transform: uppercase; color: #9fb0c8; margin-top: 12px; }
+  .mc-aff .vainq { position: relative; text-align: center; margin-top: 22px; }
+  .mc-aff .vainq span { display: block; font: 800 12px 'Outfit', sans-serif; letter-spacing: .2em; text-transform: uppercase; color: #c9d3e2; }
+  .mc-aff .vainq b { display: inline-block; font: italic 900 40px/1.1 'Outfit', sans-serif; padding-right: .12em; -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .mc-aff-wcnl .vainq b { background-image: linear-gradient(90deg, #fff 20%, #5CC8FF); filter: drop-shadow(0 0 12px rgba(30,168,255,.5)); }
+  .mc-aff-gta .vainq b { background-image: linear-gradient(90deg, #fff 20%, #FF4FD8); filter: drop-shadow(0 0 12px rgba(236,7,196,.5)); }
+  .mc-aff .faits { position: relative; display: flex; justify-content: center; gap: 8px; margin-top: 12px; }
+  .mc-aff .faits > div { flex: 1; max-width: 160px; border-radius: 12px; padding: 7px 8px; text-align: center; background: rgba(255,255,255,.06); border: 1px solid rgba(255,255,255,.12); }
+  .mc-aff .faits span { display: block; font: 700 10.5px 'Inter', sans-serif; color: #9fb0c8; letter-spacing: .02em; }
+  .mc-aff .faits b { display: block; font: 800 13.5px/1.2 'Outfit', sans-serif; margin-top: 2px; }
+  .mc-aff .faits em { display: block; font: 800 13px 'Outfit', sans-serif; font-style: normal; }
+  .mc-aff-wcnl .faits em { color: #FFB020; } .mc-aff-gta .faits em { color: #FF7A1A; }
+  .mc-aff-wcnl .faits > div { border-color: rgba(30,168,255,.3); } .mc-aff-gta .faits > div { border-color: rgba(236,7,196,.3); }
+  /* WCNL : bleu et orange du logo */
+  .mc-aff-wcnl { background: radial-gradient(90% 60% at 50% 100%, rgba(10,92,255,.35), transparent 70%), radial-gradient(60% 40% at 0% 0%, rgba(255,122,0,.18), transparent 70%), #000; }
+  .mc-aff-wcnl .k { color: #5CC8FF; }
+  .mc-aff-wcnl .t { background-image: linear-gradient(90deg, #FF7A00, #FFB020); filter: drop-shadow(0 0 10px rgba(255,122,0,.5)); }
+  .mc-aff-wcnl .marche { background: radial-gradient(120% 80% at 50% 0%, rgba(10,92,255,.28), transparent 70%), rgba(7,16,30,.85); border: 1px solid rgba(30,168,255,.35); box-shadow: inset 0 3px 0 #FF7A00; }
+  .mc-aff-wcnl .marche.m1 { border-color: rgba(255,176,32,.7); box-shadow: inset 0 3px 0 #FFB020, 0 0 30px rgba(255,122,0,.35); }
+  .mc-aff-wcnl .marche .rang { background-image: linear-gradient(180deg, #FFB020, #FF7A00); }
+  .mc-aff-wcnl .marche .gta-voit { background: radial-gradient(120% 90% at 50% 100%, rgba(10,92,255,.35), transparent 60%), #050a14; }
+  .mc-aff-wcnl .marche .gta-voit .gh span:first-child { background: linear-gradient(180deg, #5CC8FF 30%, #1E6BFF); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .mc-aff-wcnl .marche .gta-voit .gh .o { background: linear-gradient(180deg, #FFB020 20%, #FF7A00); -webkit-background-clip: text; background-clip: text; }
+  .mc-aff-wcnl .det b.pts { color: #FFB020; }
+  /* GTA : rose, magenta et orange */
+  .mc-aff-gta { background: radial-gradient(90% 60% at 50% 100%, rgba(236,7,196,.32), transparent 70%), radial-gradient(60% 40% at 0% 0%, rgba(251,98,4,.2), transparent 70%), #000; }
+  .mc-aff-gta .k { color: #FF4FD8; }
+  .mc-aff-gta .t { background-image: linear-gradient(90deg, #FF1F8E, #FF7A1A); filter: drop-shadow(0 0 10px rgba(240,16,112,.5)); }
+  .mc-aff-gta .marche { background: radial-gradient(120% 80% at 50% 0%, rgba(236,7,196,.25), transparent 70%), rgba(14,6,14,.85); border: 1px solid rgba(236,7,196,.35); box-shadow: inset 0 3px 0 #FB6204; }
+  .mc-aff-gta .marche.m1 { border-color: rgba(255,122,26,.7); box-shadow: inset 0 3px 0 #FF7A1A, 0 0 30px rgba(240,16,112,.35); }
+  .mc-aff-gta .marche .rang { background-image: linear-gradient(180deg, #FF7A1A, #F01070); }
+  .mc-aff-gta .marche .gta-voit .gh span:first-child { background: linear-gradient(180deg, #FF4FD8 30%, #B0179E); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .mc-aff-gta .det b.pts { color: #FF7A1A; }
   /* Panthéon : carte cliquable, classement complet dans une fenêtre */
   .mc-titre[role="button"] { cursor: pointer; transition: transform .15s, box-shadow .15s; }
   .mc-titre[role="button"]:hover { transform: translateY(-2px); }
@@ -5634,6 +5695,61 @@ function wcnlVoiture(p, grand) {
   const ini = mcInitiales(p.Pilote || ''), num = p['Numéro'] || '';
   const img = WCNL_VOITURES[p.Pilote] || mcVoitureCategorie(p.Pilote, /gen\s*4|grand national/i);
   return `<div class="gta-voit${grand ? ' grand' : ''}${img ? '' : ' sans-img'}"><div class="gh"><span>${mcEsc(ini)}</span><span class="o">${mcEsc(num)}</span></div>${img ? mcImgVoitureLigue(img) : `<div class="marque">${WCNL_MARQUES[p.Voiture] ? wcnlMarque(p.Voiture) : mcEsc(p.Voiture || '')}</div>`}</div>`;
+}
+
+// ---------- Affiches Discord (podium d'une course, top 3 du championnat) ----------
+// Rendues hors écran puis photographiées par le robot (outils/annonce-ligues.mjs). Mêmes affiches pour la GTA et la WCNL.
+function mcLigueOutils(lg) {
+  return lg === 'gta'
+    ? { D: GTA, voit: gtaVoiture, num: gtaNum, pil: gtaPilote, drap: gtaDrapeau, logo: 'assets/gta-logo.jpg', nom: 'Gen6 Thunder Association', lien: 'meatball-mc.fr/#gta' }
+    : { D: WCNL, voit: wcnlVoiture, num: wcnlNum, pil: wcnlPilote, drap: wcnlDrapeau, logo: 'assets/wcnl-logo.jpg', nom: 'WCNL', lien: 'meatball-mc.fr/#wcnl' };
+}
+function mcAfficheCadre(lg, kicker, titre, sous, corps) {
+  const o = mcLigueOutils(lg);
+  return `<div class="mc-aff mc-aff-${lg}"><img class="fond" src="${o.logo}" alt="">
+    <div class="tete"><img class="logo" src="${o.logo}" alt=""><div><div class="k">${kicker}</div><div class="t">${titre}</div>${sous ? `<div class="s">${sous}</div>` : ''}</div></div>
+    ${corps}<div class="pied">${o.lien}</div></div>`;
+}
+function mcAffichePilote(lg, r, rang, details) {
+  const o = mcLigueOutils(lg), fiche = o.pil(r.Pilote) || {};
+  const p = { Pilote: r.Pilote, 'Numéro': r['Numéro'] || fiche['Numéro'] || '', Voiture: fiche.Voiture || r.Voiture || '' };
+  return `<div class="marche m${rang}"><div class="rang">${rang}</div>${o.voit(p)}<div class="nom">${o.drap(fiche.Pays)}<span>${mcEsc(r.Pilote)}</span></div>${details}</div>`;
+}
+// Podium d'une manche (test = nom d'une course test)
+function mcAffichePodium(lg, manche, test) {
+  const o = mcLigueOutils(lg), D = o.D;
+  const lignes = (test ? (D.tests || []).filter(r => r.Manche === manche) : D.resultats.filter(r => r.Manche === manche))
+    .filter(r => r.Pilote && o.num(r.Position)).sort((a, b) => o.num(a.Position) - o.num(b.Position));
+  if (lignes.length < 3) return '';
+  const cal = test ? lignes[0] : (D.calendrier.find(c => c.Manche === manche) || {});
+  const circuit = String(cal.Circuit || '').replace(/\s*\(.*\)\s*$/, ''), date = cal.Date || '';
+  const det = r => { const d = o.num(r['Départ']), p = o.num(r.Position), g = d ? d - p : null;
+    return `<div class="det">${d ? `<span>Parti P${d}</span>` : ''}${g ? `<b class="${g > 0 ? 'plus' : 'moins'}">${g > 0 ? '+' : ''}${g} place${Math.abs(g) > 1 ? 's' : ''}</b>` : (d ? '<b>=</b>' : '')}</div>`
+      + (o.num(r['Tours en tête']) ? `<div class="det2">${o.num(r['Tours en tête'])} tour${o.num(r['Tours en tête']) > 1 ? 's' : ''} en tête</div>` : ''); };
+  const [p1, p2, p3] = lignes;
+  // faits marquants : meilleur tour et plus belle remontée de la course
+  const mt = lignes.filter(r => o.num(r['Meilleur tour (s)']) > 0).sort((a, b) => o.num(a['Meilleur tour (s)']) - o.num(b['Meilleur tour (s)']))[0];
+  const rem = lignes.map(r => ({ r, g: (o.num(r['Départ']) || 0) - o.num(r.Position) })).filter(x => o.num(x.r['Départ']) && x.g > 0).sort((a, b) => b.g - a.g)[0];
+  const tete = lignes.filter(r => o.num(r['Tours en tête']) > 0).sort((a, b) => o.num(b['Tours en tête']) - o.num(a['Tours en tête']))[0];
+  const faits = [
+    mt ? `<div><span>⏱️ Meilleur tour</span><b>${mcEsc(mt.Pilote)}</b><em>${String(mt['Meilleur tour (s)']).replace('.', ',')} s</em></div>` : '',
+    rem ? `<div><span>🚀 Remontée du jour</span><b>${mcEsc(rem.r.Pilote)}</b><em>+${rem.g} places</em></div>` : '',
+    tete ? `<div><span>👑 Le plus en tête</span><b>${mcEsc(tete.Pilote)}</b><em>${o.num(tete['Tours en tête'])} tours</em></div>` : '',
+  ].filter(Boolean).join('');
+  const corps = `<div class="vainq"><span>Victoire de</span><b>${mcEsc(p1.Pilote)}</b></div>${faits ? `<div class="faits">${faits}</div>` : ''}
+    <div class="podium">${mcAffichePilote(lg, p2, 2, det(p2))}${mcAffichePilote(lg, p1, 1, det(p1))}${mcAffichePilote(lg, p3, 3, det(p3))}</div>`;
+  return mcAfficheCadre(lg, test ? 'Course test' : `Manche ${mcEsc(manche)} · Résultats officiels`, mcEsc(circuit || o.nom), [mcEsc(date), `${lignes.length} pilotes au départ`].filter(Boolean).join(' · '), corps);
+}
+// Top 3 du championnat
+function mcAfficheClassement(lg) {
+  const o = mcLigueOutils(lg), D = o.D;
+  const l = D.classement.filter(r => r.Pilote && o.num(r.Rang)).sort((a, b) => o.num(a.Rang) - o.num(b.Rang));
+  if (l.length < 3) return '';
+  const faites = D.calendrier.filter(c => c.Statut === 'Officiel').length;
+  const det = (r, i) => `<div class="det"><b class="pts">${o.num(r.Total) || 0} pts</b>${i ? `<span>à ${(o.num(l[0].Total) || 0) - (o.num(r.Total) || 0)} pts</span>` : ''}</div>`
+    + `<div class="det2">${o.num(r.Victoires) || 0} victoire${o.num(r.Victoires) > 1 ? 's' : ''} · ${o.num(r['Top 5']) || 0} top 5</div>`;
+  const corps = `<div class="vainq"><span>En tête du championnat</span><b>${mcEsc(l[0].Pilote)}</b></div><div class="podium">${mcAffichePilote(lg, l[1], o.num(l[1].Rang), det(l[1], 1))}${mcAffichePilote(lg, l[0], o.num(l[0].Rang), det(l[0], 0))}${mcAffichePilote(lg, l[2], o.num(l[2].Rang), det(l[2], 2))}</div>`;
+  return mcAfficheCadre(lg, 'Classement du championnat', 'Le top 3', faites ? `après ${faites} manche${faites > 1 ? 's' : ''}` : '', corps);
 }
 
 // ---------- Sous-onglets ----------
