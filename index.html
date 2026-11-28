@@ -2076,6 +2076,18 @@
   .mc-aff-gta .marche .rang { background-image: linear-gradient(180deg, #FF7A1A, #F01070); }
   .mc-aff-gta .marche .gta-voit .gh span:first-child { background: linear-gradient(180deg, #FF4FD8 30%, #B0179E); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .mc-aff-gta .det b.pts { color: #FF7A1A; }
+  /* Fiche pilote : titres du Panthéon */
+  .mc-fiche-titres { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 8px; margin: 8px 0 12px; }
+  .mc-ft { display: flex; gap: 10px; align-items: center; padding: 9px 12px; border-radius: 12px; background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); }
+  .mc-ft .ico { font-size: 26px; }
+  .mc-ft b { display: block; font: italic 800 15px/1.15 'Outfit', sans-serif; }
+  .mc-ft em { display: block; font: 600 12px 'Inter', sans-serif; font-style: normal; color: var(--text-dim); margin-top: 2px; }
+  .mc-ft.r1 { box-shadow: inset 3px 0 0 #FFC83A; }
+  .mc-ft.r2 { box-shadow: inset 3px 0 0 #C8D2E1; } .mc-ft.r3 { box-shadow: inset 3px 0 0 #CD7F32; }
+  body.mc-theme-wcnl .mc-ft.r1 { border-color: rgba(255,176,32,.5); } body.mc-theme-wcnl .mc-ft.r1 b { color: #FFB020; }
+  body.mc-theme-gta .mc-ft.r1 { border-color: rgba(255,122,26,.5); } body.mc-theme-gta .mc-ft.r1 b { color: #FF7A1A; }
+  .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(4, 1fr); }
+  @media (max-width: 640px) { .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(2, 1fr); } }
   /* Panthéon : carte cliquable, classement complet dans une fenêtre */
   .mc-titre[role="button"] { cursor: pointer; transition: transform .15s, box-shadow .15s; }
   .mc-titre[role="button"]:hover { transform: translateY(-2px); }
@@ -5153,7 +5165,31 @@ function mcPantheonOuvrir(id, ev) {
   if (ev && ev.target.closest('a')) return; // un clic sur un pilote ouvre sa fiche
   const t = MC_PANTHEON[id]; if (t) t.fenetre(t.html);
 }
-function mcHistoriqueHTML(st, lien, fenetre) {
+// Fiche pilote : titres du Panthéon et chiffres de carrière (saisons + courses test)
+function mcPantheonPilote(lg, nom) {
+  const pan = MC_PAN[lg]; if (!pan) return '';
+  const o = pan.st[nom], titres = (pan.titres[nom] || []).sort((a, b) => a.rang - b.rang);
+  if (!o && !titres.length) return '';
+  const en = window.MC_LANG === 'en', f1 = v => v.toFixed(1).replace('.', en ? '.' : ',');
+  const km = v => Math.round(v).toLocaleString(en ? 'en-GB' : 'fr-FR');
+  const tit = titres.length ? `<div class="mc-fiche-titres">${titres.map(t => `<div class="mc-ft r${t.rang}"><span class="ico">${t.ico}</span><div><b>${t.titre}</b><em>${t.rang === 1 ? (t.ex ? 'Titre partagé' : 'Détenteur du titre') : t.rang + 'e du classement'} · ${mcEsc(t.val)}</em></div></div>`).join('')}</div>` : '';
+  const chiffres = o ? `<div class="gta-kpis mc-histo-kpis mc-fiche-kpis">
+      <div><span>Courses</span><b>${o.courses}</b><em>courses test comprises</em></div>
+      <div><span>Victoires</span><b>${o.v}</b><em>${o.p3} podium${o.p3 > 1 ? 's' : ''}</em></div>
+      <div><span>Top 10</span><b>${o.p10}</b><em>${o.p5} top 5</em></div>
+      <div><span>Position moyenne</span><b>${o.moy != null ? 'P' + f1(o.moy) : '–'}</b></div>
+      <div><span>Tours en tête</span><b>${o.tet}</b><em>${km(o.kmTete)} km en tête</em></div>
+      <div><span>Kilomètres</span><b>${km(o.km)} km</b><em>${o.tours} tours</em></div>
+      <div><span>Places gagnées</span><b>${o.gagnees}</b><em>${o.perdues} perdue${o.perdues > 1 ? 's' : ''}</em></div>
+      <div><span>Incidents</span><b>${o.inc} x</b><em>${f1(o.xParCourse)} x par course</em></div>
+    </div>` : '';
+  return `<h3 class="gta-h3">Panthéon</h3>${tit || '<p class="gta-note">Pas encore de titre au Panthéon.</p>'}${chiffres}`;
+}
+// Panthéon de chaque ligue, gardé pour les fiches pilotes : stats de carrière et titres détenus (rangs 1 à 3)
+const MC_PAN = {};
+function mcHistoriqueHTML(st, lien, fenetre, lg) {
+  const pan = lg ? (MC_PAN[lg] = { st: Object.fromEntries(st.map(o => [o.Pilote, o])), titres: {} }) : null;
+  const noter = (nom, t) => { if (pan) (pan.titres[nom] = pan.titres[nom] || []).push(t); };
   const cle = Math.random().toString(36).slice(2, 7);
   const complet = (id, ico, titre, mesure, rangs) => {
     MC_PANTHEON[id] = { fenetre, html: `<div class="mc-pan-tete"><span class="ico">${ico}</span><div><h2 class="gta-titre-deg">${titre}</h2><p>${mesure}</p></div></div>
@@ -5180,7 +5216,7 @@ function mcHistoriqueHTML(st, lien, fenetre) {
     ['🔥', 'La série en feu', 'la plus longue série de top 10', 'maxTop10', false, o => `${o.maxTop10} top 10 d'affilée`],
     ['😇', 'L\'enfant de chœur', 'le plus de courses propres', 'propres', false, o => pl(o.propres, 'course propre', 'courses propres')],
     ['🌈', 'L\'éternel optimiste', 'le plus de courses sans victoire', 'sansVictoire', false, o => pl(o.sansVictoire, 'course', 'courses') + ' sans gagner'],
-    ['🏜️', 'La traversée du désert', 'la plus longue série sans victoire (pilotes déjà vainqueurs)', 'maxSansVic', false, o => `${o.maxSansVic} courses d'affilée`, 1, o => o.v > 0],
+    ['🏜️', 'La traversée du désert', 'la plus longue série sans victoire (pilotes déjà vainqueurs)', 'maxSansVic', false, o => pl(o.maxSansVic, 'course') + ' d\'affilée', 1, o => o.v > 0],
     ['🛡️', 'L\'ami des assureurs', 'le plus de X au total', 'inc', false, o => `${o.inc} x`],
     ['💥', 'Le kamikaze', 'le plus de X par course (2 courses minimum)', 'xParCourse', false, o => `${f1(o.xParCourse)} x par course`, 2],
     ['🔧', 'Le client préféré du garage', 'le plus d\'abandons', 'dnf', false, o => pl(o.dnf, 'abandon')],
@@ -5211,6 +5247,7 @@ function mcHistoriqueHTML(st, lien, fenetre) {
     const noms = gr => { const max = 4, l = gr.l.length > max + 1 ? gr.l.slice(0, max) : gr.l;
       return l.map(o => `<span class="pil">${lien(o.Pilote)}${det && det(o) ? `<small class="det">${mcEsc(det(o))}</small>` : ''}</span>`).join('<i class="et sep"> · </i>') + (l.length < gr.l.length ? `<i class="et"> ${en ? 'and' : 'et'} ${gr.l.length - l.length} ${en ? 'more' : 'autres'}</i>` : ''); };
     const [g1, ...reste] = g.slice(0, 3);
+    g.slice(0, 3).forEach((gr, n) => gr.l.forEach(o => noter(o.Pilote, { ico, titre, rang: n + 1, val: txt(o) + (det && det(o) ? ` (${det(o)})` : ''), ex: gr.l.length > 1 })));
     // fenêtre : tous les pilotes, même ceux à 0
     const tous = st.filter(o => o[k] != null && o.courses >= (min || 1) && (!cond || cond(o))).sort((a, b) => asc ? a[k] - b[k] : b[k] - a[k]);
     let rang = 1, prec = null; const rangs = [];
@@ -5464,7 +5501,7 @@ async function gtaRendreHisto() {
   const tests = (GTA.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
   tests.forEach(r => lignes.push({ saison: 'tests', manche: r.Manche, circuit: r.Circuit, ordre: -100000 + mTests.indexOf(r.Manche), horsSaison: true, r }));
   if (!lignes.length) { el.innerHTML = gtaVide(GTA_ATTENTE); return; }
-  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => gtaNum(v) || 0), gtaLienPilote, gtaFenetre);
+  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => gtaNum(v) || 0), gtaLienPilote, gtaFenetre, 'gta');
 }
 function gtaRendreStats() {
   const el = document.getElementById('gtaStats'); if (!el) return;
@@ -5543,6 +5580,7 @@ function gtaOuvrirPilote(nom) {
       <div><span>Position moyenne</span><b>${st && st.moy != null ? st.moy.toFixed(1).replace('.', ',') : '–'}</b></div>
       <div><span>Tours en tête</span><b>${st ? st.tet : 0}</b></div><div><span>Courses propres</span><b>${st ? st.bonus : 0}</b></div>
     </div>
+    ${mcPantheonPilote('gta', nom)}
     ${res.length ? `<h3 class="gta-h3">Positions à l'arrivée</h3>${gtaCourbe(res.map(r => ({ m: r.Manche, y: gtaNum(r.Position) })).filter(p => p.y))}
     <h3 class="gta-h3">Ses manches</h3>` + gtaTable([
       { t: 'Manche', f: r => gtaLienManche(r.Manche, 'M' + r.Manche) }, { t: 'Circuit', f: r => mcEsc((GTA.calendrier.find(c => c.Manche === r.Manche) || {}).Circuit || '') },
@@ -5957,7 +5995,7 @@ async function wcnlRendreHisto() {
   const tests = (WCNL.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
   tests.forEach(r => lignes.push({ saison: 'tests', manche: r.Manche, circuit: r.Circuit, ordre: -100000 + mTests.indexOf(r.Manche), horsSaison: true, r }));
   if (!lignes.length) { el.innerHTML = wcnlVide(WCNL_ATTENTE); return; }
-  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => wcnlNum(v) || 0), wcnlLienPilote, wcnlFenetre);
+  el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => wcnlNum(v) || 0), wcnlLienPilote, wcnlFenetre, 'wcnl');
 }
 function wcnlRendreStats() {
   const el = document.getElementById('wcnlStats'); if (!el) return;
@@ -6036,6 +6074,7 @@ function wcnlOuvrirPilote(nom) {
       <div><span>Position moyenne</span><b>${st && st.moy != null ? st.moy.toFixed(1).replace('.', ',') : '–'}</b></div>
       <div><span>Tours en tête</span><b>${st ? st.tet : 0}</b></div><div><span>Courses propres</span><b>${st ? st.bonus : 0}</b></div>
     </div>
+    ${mcPantheonPilote('wcnl', nom)}
     ${res.length ? `<h3 class="gta-h3">Positions à l'arrivée</h3>${wcnlCourbe(res.map(r => ({ m: r.Manche, y: wcnlNum(r.Position) })).filter(p => p.y))}
     <h3 class="gta-h3">Ses manches</h3>` + wcnlTable([
       { t: 'Manche', f: r => wcnlLienManche(r.Manche, 'M' + r.Manche) }, { t: 'Circuit', f: r => mcEsc((WCNL.calendrier.find(c => c.Manche === r.Manche) || {}).Circuit || '') },
