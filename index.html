@@ -2128,6 +2128,7 @@
     border: 1px solid var(--bord); box-shadow: inset 3px 0 0 var(--acc), 0 18px 40px rgba(0,0,0,.35); }
   body.mc-theme-gta .mc-duel-boite { --acc: #F01070; --acc2: #FF7A1A; --rgb: 236,7,196; --lueur: rgba(236,7,196,.18); --bord: rgba(236,7,196,.3); --fond: #0e060e; }
   body.mc-theme-wcnl .mc-duel-boite { --acc: #1EA8FF; --acc2: #FF7A00; --rgb: 30,150,255; --lueur: rgba(10,92,255,.22); --bord: rgba(30,168,255,.3); --fond: #050c18; }
+  .mc-duel-boite.large { max-width: none; position: relative; left: 50%; transform: translateX(-50%); }
   .mc-duel-boite .mc-duel { border-spacing: 4px; }
   .mc-duel-boite .mc-duel thead th { position: sticky; top: 0; z-index: 2; background: var(--fond); padding: 6px 2px 8px; }
   .mc-duel-boite .mc-duel thead th .ini { font: italic 900 14px 'Outfit', sans-serif; letter-spacing: .02em; color: var(--acc); text-shadow: 0 0 10px var(--lueur); }
@@ -5137,6 +5138,18 @@ function mcStats2(pre, nom) {
   document.querySelectorAll('#tab-' + pre + ' .gta-s2').forEach(p => p.classList.toggle('active', p.dataset.s2p === nom));
 }
 // pilotes : noms dans l'ordre d'affichage ; courses : tableaux [{ nom, pos }] ; lien : nom -> HTML de la ligne
+// Duel : si le tableau est plus large que la colonne du site, il déborde sur les côtés (centré, jusqu'à la largeur de l'écran)
+function mcDuelAjuster() {
+  document.querySelectorAll('.mc-duel-boite').forEach(b => {
+    b.classList.remove('large'); b.style.width = '';
+    const parent = b.parentElement; if (!parent || !b.offsetParent) return;
+    const t = b.querySelector('table'); if (!t) return;
+    const besoin = t.scrollWidth + 26, dispo = parent.clientWidth;
+    if (besoin > dispo) { b.classList.add('large'); b.style.width = Math.min(besoin, window.innerWidth - 24) + 'px'; }
+  });
+}
+window.addEventListener('resize', () => { clearTimeout(window._mcDuelT); window._mcDuelT = setTimeout(mcDuelAjuster, 150); });
+document.addEventListener('click', e => { if (e.target.closest('button, .tab-btn, [data-tab]')) setTimeout(mcDuelAjuster, 50); });
 // Duel : un clic sur une case met en valeur sa ligne et sa colonne (re-clic : on enlève)
 function mcDuelClic(ev) {
   const td = ev.target.closest('td'); const t = ev.currentTarget;
@@ -5169,6 +5182,7 @@ function mcDuelTable(pilotes, courses, lien, numero) {
     return `<td class="${v > d ? 'plus' : v < d ? 'moins' : 'egal'}" style="--f:${f.toFixed(2)}" title="${mcEsc(n)} ${v}-${d} ${mcEsc(pilotes[j])}"><b>${v}</b><i>-</i>${d}</td>`;
   }).join('')}${(() => { const [v, d] = bilan[i], pc = v + d ? Math.round(100 * v / (v + d)) : 0;
     return `<td class="bilan"><span class="b">${v}-${d}</span><span class="pc"><i style="width:${pc}%"></i></span><em>${pc} %</em></td>`; })()}</tr>`).join('');
+  setTimeout(mcDuelAjuster, 0);
   return `<div class="mc-duel-boite"><div class="gta-scroll"><table class="mc-duel" onclick="mcDuelClic(event)"><thead><tr><th class="nom"></th>${tete}<th class="bilan">${en ? 'Total' : 'Bilan'}</th></tr></thead><tbody>${lignes}</tbody></table></div></div>`;
 }
 
