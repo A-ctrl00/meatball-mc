@@ -2021,6 +2021,8 @@
   .gta-table.classement tr:nth-child(-n+3) td:first-child b { color: #F0B000; }
   .gta-numero { display: inline-block; min-width: 30px; padding: 2px 6px; margin-right: 4px; border-radius: 6px; background: rgba(236,7,196,.18); color: #F01070; font: 800 12px 'Outfit', sans-serif; text-align: center; }
   .gta-pts { color: #F0B000; }
+  .mc-provisoire { margin: 0 0 12px; padding: 10px 14px; border-radius: 8px; background: rgba(245,166,35,.12); border: 1px solid rgba(245,166,35,.55); color: #f5c46a; font-size: 14px; }
+  .mc-provisoire b { color: #F5A623; letter-spacing: .06em; }
   .gta-pen { color: #ff6b6b; font-weight: 700; }
   .gta-lien { color: #fff; text-decoration: none; border-bottom: 1px dotted rgba(240,16,112,.6); }
   .gta-lien:hover { color: #F01070; }
@@ -4859,6 +4861,15 @@ function gtaDateEN(txt) {
   if (window.MC_LANG !== 'en') return gtaDateTxt(txt);
   const d = gtaDate(txt); return d ? new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' }).format(d) : (txt || '');
 }
+// Classement pas encore officiel : dernière manche courue en « Provisoire » (ou pas encore jugée) dans le calendrier
+function mcBandeauProvisoire(cal, mc) {
+  const m = mc[mc.length - 1];
+  if (!m) return '';
+  const c = (cal || []).find(x => String(x.Manche) === String(m)) || {};
+  if (!/provisoire|courue|commission|provisional/i.test(String(c.Statut || ''))) return '';
+  const EN = window.MC_LANG === 'en';
+  return `<div class="mc-provisoire">⏳ <b>${EN ? 'PROVISIONAL' : 'PROVISOIRE'}</b> · ${EN ? 'standings after round' : 'classement après la manche'} ${mcEsc(String(m))} : ${EN ? 'waiting for the stewards\' decisions' : 'en attente des décisions de la commission de course'}</div>`;
+}
 function gtaManchesCourues() { return [...new Set(GTA.resultats.map(r => r.Manche).filter(Boolean))].sort((a, b) => a - b); }
 function gtaPilote(nom) {
   return GTA.pilotes.find(p => p.Pilote === nom) || GTA.classement.find(p => p.Pilote === nom) || GTA.resultats.find(p => p.Pilote === nom) || { Pilote: nom };
@@ -5075,7 +5086,8 @@ function gtaRendreClassement() {
   if (!el) return;
   const mc = gtaManchesCourues();
   const cl = GTA.classement.filter(r => gtaNum(r.Courses) > 0 || gtaNum(r.Total) > 0);
-  el.innerHTML = cl.length ? gtaTable([
+  const prov = mcBandeauProvisoire(GTA.calendrier, mc);
+  el.innerHTML = cl.length ? prov + gtaTable([
     { t: '#', num: 1, f: r => `<b>${mcEsc(r.Rang)}</b>` },
     { t: 'Pilote', v: r => r.Pilote, f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${gtaLienPilote(r.Pilote)} ${gtaMarque(r.Voiture || gtaPilote(r.Pilote).Voiture)}` },
     { t: 'Équipe', f: r => mcEsc(r['Équipe']) },
@@ -5087,7 +5099,7 @@ function gtaRendreClassement() {
     ...mc.map(m => ({ t: gtaLienManche(m, 'M' + m), num: 1, f: r => mcEsc(r['M' + m] || '–') })),
   ], cl, 'classement triable') : gtaVide(GTA_ATTENTE);
   const ce = GTA.equipes.filter(r => gtaNum(r.Courses) > 0 || gtaNum(r.Total) > 0);
-  if (eq) eq.innerHTML = ce.length ? gtaTable([
+  if (eq) eq.innerHTML = ce.length ? prov + gtaTable([
     { t: '#', num: 1, f: r => `<b>${mcEsc(r.Rang)}</b>` },
     { t: 'Équipe', v: r => r['Équipe'], f: r => `<b>${mcEsc(r['Équipe'])}</b>` },
     { t: 'Pts', num: 1, f: r => `<b class="gta-pts">${mcEsc(r.Total)}</b>` },
@@ -5504,7 +5516,8 @@ function wcnlRendreClassement() {
   if (!el) return;
   const mc = wcnlManchesCourues();
   const cl = WCNL.classement.filter(r => wcnlNum(r.Courses) > 0 || wcnlNum(r.Total) > 0);
-  el.innerHTML = cl.length ? wcnlTable([
+  const prov = mcBandeauProvisoire(WCNL.calendrier, mc);
+  el.innerHTML = cl.length ? prov + wcnlTable([
     { t: '#', num: 1, f: r => `<b>${mcEsc(r.Rang)}</b>` },
     { t: 'Pilote', v: r => r.Pilote, f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${wcnlLienPilote(r.Pilote)} ${wcnlMarque(r.Voiture || wcnlPilote(r.Pilote).Voiture)}` },
     { t: 'Équipe', f: r => mcEsc(r['Équipe']) },
@@ -5516,7 +5529,7 @@ function wcnlRendreClassement() {
     ...mc.map(m => ({ t: wcnlLienManche(m, 'M' + m), num: 1, f: r => mcEsc(r['M' + m] || '–') })),
   ], cl, 'classement triable') : wcnlVide(WCNL_ATTENTE);
   const ce = WCNL.equipes.filter(r => wcnlNum(r.Courses) > 0 || wcnlNum(r.Total) > 0);
-  if (eq) eq.innerHTML = ce.length ? wcnlTable([
+  if (eq) eq.innerHTML = ce.length ? prov + wcnlTable([
     { t: '#', num: 1, f: r => `<b>${mcEsc(r.Rang)}</b>` },
     { t: 'Équipe', v: r => r['Équipe'], f: r => `<b>${mcEsc(r['Équipe'])}</b>` },
     { t: 'Pts', num: 1, f: r => `<b class="gta-pts">${mcEsc(r.Total)}</b>` },
