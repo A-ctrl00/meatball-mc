@@ -4951,7 +4951,7 @@ function mcHistorique(lignes, num) {
     const o = s[n] = s[n] || { Pilote: n, saisons: new Set(), courses: 0, v: 0, p2: 0, p3: 0, p5: 0, p10: 0, pos: [], tours: 0, tet: 0, km: 0, kmTete: 0, inc: 0, dnf: 0,
       propres: 0, mt: 0, pts: 0, serieTop10: 0, maxTop10: 0, sansVic: 0, maxSansVic: 0, pires: 0, gagnees: 0, perdues: 0 };
     const pos = num(r.Position), km = mcKmCircuit(x.circuit), tours = num(r.Tours) || 0, tet = num(r['Tours en tête']) || 0;
-    o.saisons.add(x.saison); o.courses++;
+    if (!x.horsSaison) o.saisons.add(x.saison); o.courses++;
     if (pos) {
       o.pos.push(pos); if (pos === 1) o.v++; if (pos === 2) o.p2++; if (pos <= 3) o.p3++; if (pos <= 5) o.p5++; if (pos <= 10) o.p10++;
       if (pos === Math.max(...parCourse[x.saison + '|' + x.manche].map(y => num(y.r.Position) || 0))) o.pires++;
@@ -5437,7 +5437,8 @@ async function wcnlChargerDonnees() {
     if (!r.ok || !/text\/csv/i.test(r.headers.get('content-type') || '') || /^\s*</.test(t)) throw new Error('non publié');
     const b = wcnlBlocs(parseCSV(t));
     WCNL = { pilotes: b.PILOTES || [], calendrier: b.CALENDRIER || [], classement: b.CLASSEMENT || [], equipes: b.EQUIPES || [],
-      resultats: b.RESULTATS || [], decisions: b.DECISIONS || [], bareme: b.BAREME || [], params: b.PARAMETRES || [], ok: true };
+      resultats: b.RESULTATS || [], decisions: b.DECISIONS || [], bareme: b.BAREME || [], params: b.PARAMETRES || [],
+      tests: b['COURSES TEST'] || [], ok: true };
   } catch (e) { WCNL.ok = false; }
 }
 
@@ -5662,6 +5663,9 @@ async function wcnlRendreHisto() {
   const lignes = [];
   saisons.forEach((sa, i) => sa.resultats.forEach(r => { if (!r.Pilote) return; const c = sa.calendrier.find(x => x.Manche === r.Manche) || {};
     lignes.push({ saison: sa.saison, manche: r.Manche, circuit: c.Circuit, ordre: i * 1000 + (wcnlNum(r.Manche) || 0), r }); }));
+  // Courses test (pré-saison) : comptées dans le Panthéon, avant les saisons officielles
+  const tests = (WCNL.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
+  tests.forEach(r => lignes.push({ saison: 'tests', manche: r.Manche, circuit: r.Circuit, ordre: -100000 + mTests.indexOf(r.Manche), horsSaison: true, r }));
   if (!lignes.length) { el.innerHTML = wcnlVide(WCNL_ATTENTE); return; }
   el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => wcnlNum(v) || 0), wcnlLienPilote);
 }
