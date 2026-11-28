@@ -5129,7 +5129,8 @@ function mcHistorique(lignes, num) {
     if (r['Numéro']) o.num = r['Numéro'];
     if (pos) {
       o.parPos[pos] = (o.parPos[pos] || 0) + 1;
-      if (nb >= 3 && pos === Math.ceil(nb / 2)) o.milieu++;
+      // milieu exact : nombre impair de pilotes → une seule place (13 pilotes : P7) ; nombre pair → les deux places centrales (14 pilotes : P7 et P8)
+      if (nb >= 3 && (nb % 2 ? pos === (nb + 1) / 2 : pos === nb / 2 || pos === nb / 2 + 1)) o.milieu++;
       if (dep && dep <= 5 && pos > 10) o.diesel++;
       if (dep) { o.holdup = Math.max(o.holdup, dep - pos); o.douche = Math.max(o.douche, pos - dep); }
       if (pos === 1) o.voleur = o.voleur == null ? tet : Math.min(o.voleur, tet);
