@@ -2083,7 +2083,7 @@
   .mc-ft b { display: block; font: italic 800 15px/1.15 'Outfit', sans-serif; }
   .mc-ft em { display: block; font: 600 12px 'Inter', sans-serif; font-style: normal; color: var(--text-dim); margin-top: 2px; }
   .mc-ft.r1 { box-shadow: inset 3px 0 0 #FFC83A; }
-  .mc-ft.r2 { box-shadow: inset 3px 0 0 #C8D2E1; } .mc-ft.r3 { box-shadow: inset 3px 0 0 #CD7F32; }
+  .mc-ft.r2 { box-shadow: inset 3px 0 0 #C8D2E1; border-color: rgba(200,210,225,.4); } .mc-ft.r3 { box-shadow: inset 3px 0 0 #CD7F32; border-color: rgba(205,127,50,.5); }
   body.mc-theme-wcnl .mc-ft.r1 { border-color: rgba(255,176,32,.5); } body.mc-theme-wcnl .mc-ft.r1 b { color: #FFB020; }
   body.mc-theme-gta .mc-ft.r1 { border-color: rgba(255,122,26,.5); } body.mc-theme-gta .mc-ft.r1 b { color: #FF7A1A; }
   .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(4, 1fr); }
@@ -5173,7 +5173,7 @@ function mcPantheonPilote(lg, nom) {
   if (!o && !titres.length) return '';
   const en = window.MC_LANG === 'en', f1 = v => v.toFixed(1).replace('.', en ? '.' : ',');
   const km = v => Math.round(v).toLocaleString(en ? 'en-GB' : 'fr-FR');
-  const tit = titres.length ? `<div class="mc-fiche-titres">${titres.map(t => `<div class="mc-ft r${t.rang}"><span class="ico">${t.ico}</span><div><b>${t.titre}</b><em>${t.rang === 1 ? (t.ex ? 'Titre partagé' : 'Détenteur du titre') : t.rang + 'e du classement'} · ${mcEsc(t.val)}</em></div></div>`).join('')}</div>` : '';
+  const tit = titres.length ? `<div class="mc-fiche-titres">${titres.map(t => `<div class="mc-ft r${t.rang}"><span class="ico">${t.ico}</span><div><b>${t.titre}</b><em>${['🥇', '🥈', '🥉'][t.rang - 1]} ${t.rang === 1 ? (t.ex ? 'Titre partagé' : 'Détenteur du titre') : t.rang + 'e du classement'} · ${mcEsc(t.val)}</em></div></div>`).join('')}</div>` : '';
   const chiffres = o ? `<div class="gta-kpis mc-histo-kpis mc-fiche-kpis">
       <div><span>Courses</span><b>${o.courses}</b><em>courses test comprises</em></div>
       <div><span>Victoires</span><b>${o.v}</b><em>${o.p3} podium${o.p3 > 1 ? 's' : ''}</em></div>
