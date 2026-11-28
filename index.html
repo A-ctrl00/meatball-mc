@@ -2173,6 +2173,13 @@
   body.mc-theme-wcnl .gta-courbe circle { fill: #1EA8FF; stroke: #050c18; }
   body.mc-theme-wcnl .gta-voit { background: radial-gradient(120% 90% at 50% 100%, rgba(10,92,255,.28), transparent 60%), #050a14; }
   body.mc-theme-wcnl .gta-voit .gh span:first-child { background: linear-gradient(180deg, #5CC8FF 30%, #1E6BFF); -webkit-background-clip: text; background-clip: text; color: transparent; opacity: 1; filter: drop-shadow(0 0 10px rgba(30,120,255,.45)) drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+  /* Titres du Panthéon et initiales aux couleurs de chaque ligue */
+  .mc-titre .t { padding-right: .15em; width: fit-content; max-width: calc(100% - 46px); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  body.mc-theme-gta .mc-titre .t { background-image: linear-gradient(90deg, #F01070, #FB6204); }
+  body.mc-theme-wcnl .mc-titre .t { background-image: linear-gradient(90deg, #FF6A10, #FF9A3C); }
+  body:not(.mc-theme-gta):not(.mc-theme-wcnl) .mc-titre .t { color: #fff; }
+  body.mc-theme-gta .gta-voit .gh span:first-child { background: linear-gradient(180deg, #FF4FD8 30%, #B0179E); -webkit-background-clip: text; background-clip: text; color: transparent; filter: drop-shadow(0 0 10px rgba(236,7,196,.45)) drop-shadow(0 2px 4px rgba(0,0,0,.6)); }
+  body.mc-theme-gta .gta-h2, body.mc-theme-gta .gta-hero-txt h1 { display: block; width: fit-content; }
   body.mc-theme-wcnl .gta-voit .gh .o { background: linear-gradient(180deg, #FF6A10 35%, #FF9A3C); -webkit-background-clip: text; background-clip: text; }
   #gtaFond { display: none; }
   body { transition: background-color .4s ease; }
@@ -4864,7 +4871,7 @@ async function gtaChargerDonnees() {
     if (!r.ok || !/text\/csv/i.test(r.headers.get('content-type') || '') || /^\s*</.test(t)) throw new Error('non publié');
     const b = gtaBlocs(parseCSV(t));
     GTA = { pilotes: b.PILOTES || [], calendrier: b.CALENDRIER || [], classement: b.CLASSEMENT || [], equipes: b.EQUIPES || [],
-      resultats: b.RESULTATS || [], decisions: b.DECISIONS || [], ok: true };
+      resultats: b.RESULTATS || [], decisions: b.DECISIONS || [], tests: b['COURSES TEST'] || [], ok: true };
   } catch (e) { GTA.ok = false; }
   if (!GTA.calendrier.length) GTA.calendrier = GTA_CALENDRIER.map((c, i) => ({ Manche: String(i + 1), Date: c[0].split('-').reverse().join('/'), Heure: '21:20', Circuit: c[1], Statut: 'À venir' }));
 }
@@ -5248,6 +5255,9 @@ async function gtaRendreHisto() {
   const lignes = [];
   saisons.forEach((sa, i) => sa.resultats.forEach(r => { if (!r.Pilote) return; const c = sa.calendrier.find(x => x.Manche === r.Manche) || {};
     lignes.push({ saison: sa.saison, manche: r.Manche, circuit: c.Circuit, ordre: i * 1000 + (gtaNum(r.Manche) || 0), r }); }));
+  // Courses test (pré-saison) : comptées dans le Panthéon, avant les saisons officielles
+  const tests = (GTA.tests || []).filter(r => r.Pilote), mTests = [...new Set(tests.map(r => r.Manche))];
+  tests.forEach(r => lignes.push({ saison: 'tests', manche: r.Manche, circuit: r.Circuit, ordre: -100000 + mTests.indexOf(r.Manche), horsSaison: true, r }));
   if (!lignes.length) { el.innerHTML = gtaVide(GTA_ATTENTE); return; }
   el.innerHTML = mcHistoriqueHTML(mcHistorique(lignes, v => gtaNum(v) || 0), gtaLienPilote);
 }
