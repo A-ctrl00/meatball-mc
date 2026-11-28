@@ -5718,7 +5718,7 @@ function wcnlOuvrirPilote(nom) {
   const res = WCNL.resultats.filter(r => r.Pilote === nom).sort((a, b) => a.Manche - b.Manche);
   const dec = WCNL.decisions.filter(d => d.Pilote === nom);
   history.replaceState(null, '', '#wcnl-pilote-' + wcnlSlug(nom));
-  wcnlFenetre(`<div class="gta-fiche-tete">${wcnlVoiture(p, true)}<div><span class="gta-kicker">${mcEsc(p['Équipe'] || 'Pilote indépendant')}</span><h2 class="gta-titre-deg">${mcEsc(nom)}</h2>
+  wcnlFenetre(`<div class="gta-fiche-tete">${wcnlVoiture(p, true)}<div><h2 class="gta-titre-deg">${mcEsc(nom)}</h2>
       <p class="gta-sous-titre">${wcnlDrapeau(wcnlPilote(p.Pilote).Pays || p.Pays)}${wcnlMarque(p.Voiture)}</p></div></div>
     <div class="gta-kpis">
       <div><span>Classement</span><b>${cl.Rang ? cl.Rang + (cl.Rang === '1' ? 'er' : 'e') : '–'}</b><em>${cl.Total ? mcEsc(cl.Total) + ' pts' : ''}</em></div>
