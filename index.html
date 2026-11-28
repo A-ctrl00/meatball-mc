@@ -1883,7 +1883,8 @@
   .mc-res.q3 .mc-res-l { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-align: center; }
   .mc-res.q4 .mc-res-l, .mc-res.q5 .mc-res-l, .mc-res.q6 .mc-res-l { flex: 1; flex-direction: column; align-items: center; justify-content: center; gap: 1px; text-align: center; }
   .mc-res.q5 .mc-res-tag, .mc-res.q6 .mc-res-tag { display: none; }
-  .mc-res.q4 .mc-res-tag { margin-top: 1px; padding: 1px 6px; font-size: 7px; }
+  /* 4 pilotes : la pastille (podium, top 10…) passe dans le coin du cadre pour ne pas décaler le texte */
+  .mc-res.q4 .mc-res-tag { position: absolute; top: 5px; right: 7px; margin: 0; padding: 1px 6px; font-size: 7px; }
   .mc-res.q4 .mc-res-sf span { font-size: 6px; } .mc-res.q4 .mc-res-d { margin-top: 0; font-size: 7px; }
   .mc-res.q5 .mc-res-d, .mc-res.q6 .mc-res-d { margin-top: 0; font-size: 7px; }
   .mc-res.q5 .mc-res-l > div:first-child, .mc-res.q6 .mc-res-l > div:first-child { display: flex; align-items: baseline; justify-content: center; gap: 6px; }
