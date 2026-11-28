@@ -3274,9 +3274,6 @@
           <div class="gta-s2" data-s2p="cl">
             <h3 class="gta-h3">Classement pilotes</h3>
           <div id="wcnlClassement"><div class="state-msg">Chargement…</div></div>
-          <h3 class="gta-h3">Classement équipes</h3>
-          <p class="gta-note">À chaque manche, seul le pilote le mieux classé de chaque équipe marque pour elle.</p>
-          <div id="wcnlEquipes"><div class="state-msg">Chargement…</div></div>
             <h3 class="gta-h3">Évolution</h3>
             <p class="gta-note">La place de chaque pilote au championnat après chaque manche.</p>
             <div id="wcnlStatsCl"><div class="state-msg">Chargement…</div></div>
@@ -5810,7 +5807,6 @@ function wcnlRendreClassement() {
   el.innerHTML = cl.length ? prov + wcnlTable([
     { t: '#', num: 1, f: r => `<b>${mcEsc(r.Rang)}</b>` },
     { t: 'Pilote', v: r => r.Pilote, f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${wcnlLienPilote(r.Pilote)} ${wcnlMarque(r.Voiture || wcnlPilote(r.Pilote).Voiture)}` },
-    { t: 'Équipe', f: r => mcEsc(r['Équipe']) },
     { t: 'Pts', num: 1, f: r => `<b class="gta-pts">${mcEsc(r.Total)}</b>` },
     { t: window.MC_LANG === 'en' ? 'W' : 'V', num: 1, f: r => mcEsc(r.Victoires) },
     { t: 'Top 5', num: 1, f: r => mcEsc(r['Top 5']) },
@@ -5844,7 +5840,6 @@ function wcnlTableResultats(rows) {
   return wcnlTable([
     { t: 'Pos', num: 1, f: r => `<b>${mcEsc(r.Position)}</b>` },
     { t: 'Pilote', f: r => `<span class="gta-numero">${mcEsc(r['Numéro'])}</span> ${wcnlLienPilote(r.Pilote)} ${wcnlMarque(r.Voiture || wcnlPilote(r.Pilote).Voiture)}` },
-    { t: 'Équipe', f: r => mcEsc(r['Équipe']) },
     { t: 'Tours', num: 1, f: r => mcEsc(r.Tours) },
     { t: 'En tête', num: 1, f: r => mcEsc(r['Tours en tête']) },
     { t: 'Meilleur tour', num: 1, f: r => mcEsc(r['Meilleur tour (s)']) },
