@@ -2090,12 +2090,12 @@
   .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(4, 1fr); }
   @media (max-width: 640px) { .gta-kpis.mc-fiche-kpis { grid-template-columns: repeat(2, 1fr); } }
   /* Duel : mise en page aux couleurs de chaque section (Meatball orange par défaut, GTA rose, WCNL bleu et orange) */
-  .mc-duel-boite { --acc: #FF6B1A; --acc2: #FFB347; --lueur: rgba(255,107,26,.18); --bord: rgba(255,140,60,.3); --fond: #0b0f1c;
+  .mc-duel-boite { --acc: #FF6B1A; --acc2: #FFB347; --rgb: 255,107,26; --lueur: rgba(255,107,26,.18); --bord: rgba(255,140,60,.3); --fond: #0b0f1c;
     position: relative; width: fit-content; max-width: 100%; box-sizing: border-box; border-radius: 18px; padding: 14px 12px 10px; margin-top: 10px;
     background: radial-gradient(90% 120% at 0% 0%, var(--lueur), transparent 55%), linear-gradient(160deg, rgba(255,255,255,.05), rgba(255,255,255,.012)), rgba(10,12,18,.55);
     border: 1px solid var(--bord); box-shadow: inset 3px 0 0 var(--acc), 0 18px 40px rgba(0,0,0,.35); }
-  body.mc-theme-gta .mc-duel-boite { --acc: #F01070; --acc2: #FF7A1A; --lueur: rgba(236,7,196,.18); --bord: rgba(236,7,196,.3); --fond: #0e060e; }
-  body.mc-theme-wcnl .mc-duel-boite { --acc: #1EA8FF; --acc2: #FF7A00; --lueur: rgba(10,92,255,.22); --bord: rgba(30,168,255,.3); --fond: #050c18; }
+  body.mc-theme-gta .mc-duel-boite { --acc: #F01070; --acc2: #FF7A1A; --rgb: 236,7,196; --lueur: rgba(236,7,196,.18); --bord: rgba(236,7,196,.3); --fond: #0e060e; }
+  body.mc-theme-wcnl .mc-duel-boite { --acc: #1EA8FF; --acc2: #FF7A00; --rgb: 30,150,255; --lueur: rgba(10,92,255,.22); --bord: rgba(30,168,255,.3); --fond: #050c18; }
   .mc-duel-boite .mc-duel { border-spacing: 4px; }
   .mc-duel-boite .mc-duel thead th { position: sticky; top: 0; z-index: 2; background: var(--fond); padding: 6px 2px 8px; }
   .mc-duel-boite .mc-duel thead th .ini { font: italic 900 14px 'Outfit', sans-serif; letter-spacing: .02em; color: var(--acc); text-shadow: 0 0 10px var(--lueur); }
@@ -2104,14 +2104,22 @@
   .mc-duel-boite .mc-duel thead th.nom { z-index: 3; }
   .mc-duel-boite .mc-duel td { min-width: 46px; height: 36px; border-radius: 9px; font: 600 13px 'Outfit', sans-serif; transition: transform .12s, box-shadow .12s; }
   .mc-duel-boite .mc-duel td b { font-weight: 900; } .mc-duel-boite .mc-duel td i { font-style: normal; opacity: .5; margin: 0 1px; }
-  .mc-duel-boite .mc-duel td.plus { background: rgba(52,211,120, calc(.12 + .32 * var(--f, .5))); color: #b6f5cf; box-shadow: inset 0 0 0 1px rgba(52,211,120,.25); }
-  .mc-duel-boite .mc-duel td.moins { background: rgba(244,80,80, calc(.10 + .28 * var(--f, .5))); color: #ffc2c2; box-shadow: inset 0 0 0 1px rgba(244,80,80,.22); }
+  /* gagné : couleur de la section, plus vive selon la domination ; perdu : sombre */
+  .mc-duel-boite .mc-duel td.plus { background: rgba(var(--rgb), calc(.2 + .55 * var(--f, .5))); color: #fff; box-shadow: inset 0 0 0 1px rgba(var(--rgb), .5); }
+  .mc-duel-boite .mc-duel td.moins { background: rgba(255,255,255, calc(.03 + .04 * var(--f, .5))); color: rgba(255,255,255,.55); box-shadow: inset 0 0 0 1px rgba(255,255,255,.08); }
   .mc-duel-boite .mc-duel td.egal { background: rgba(255,255,255,.1); color: #e6ebf2; }
   .mc-duel-boite .mc-duel td.vide { background: rgba(255,255,255,.025); color: rgba(255,255,255,.2); }
   .mc-duel-boite .mc-duel td.moi { background: repeating-linear-gradient(45deg, var(--lueur) 0 4px, transparent 4px 8px); }
   .mc-duel-boite .mc-duel td:not(.bilan):not(.moi):not(.vide):hover { transform: scale(1.12); box-shadow: 0 0 0 2px var(--acc), 0 6px 16px rgba(0,0,0,.4); position: relative; z-index: 1; }
   .mc-duel-boite .mc-duel tbody tr:hover th.nom { color: var(--acc); }
   .mc-duel-boite .mc-duel tbody tr:hover td.vide, .mc-duel-boite .mc-duel tbody tr:hover td.egal { background: rgba(255,255,255,.14); }
+  .mc-duel-boite .mc-duel td:not(.bilan) { cursor: pointer; }
+  .mc-duel-boite .mc-duel.focus td:not(.lc):not(.bilan) { opacity: .28; }
+  .mc-duel-boite .mc-duel.focus td.lc:not(.cible):not(.bilan) { box-shadow: inset 0 0 0 1px var(--acc); }
+  .mc-duel-boite .mc-duel.focus th.lc, .mc-duel-boite .mc-duel tr.sel th.nom { background: var(--acc); color: #fff; border-radius: 8px; }
+  .mc-duel-boite .mc-duel tr.sel th.nom a { color: #fff; }
+  .mc-duel-boite .mc-duel.focus thead th.lc .ini, .mc-duel-boite .mc-duel.focus thead th.lc .num { color: #fff; text-shadow: none; }
+  .mc-duel-boite .mc-duel td.cible { transform: scale(1.15); box-shadow: 0 0 0 3px var(--acc), 0 0 18px var(--acc); position: relative; z-index: 1; }
   .mc-duel-boite .mc-duel th.bilan { color: var(--acc2); font: 900 12px 'Outfit', sans-serif; letter-spacing: .1em; text-transform: uppercase; padding-left: 12px; }
   .mc-duel-boite .mc-duel td.bilan { min-width: 92px; padding: 0 4px 0 12px; text-align: left; white-space: nowrap; background: transparent; }
   .mc-duel-boite .mc-duel td.bilan .b { display: block; font: 900 15px/1 'Outfit', sans-serif; color: var(--acc2); }
@@ -5094,6 +5102,18 @@ function mcStats2(pre, nom) {
   document.querySelectorAll('#tab-' + pre + ' .gta-s2').forEach(p => p.classList.toggle('active', p.dataset.s2p === nom));
 }
 // pilotes : noms dans l'ordre d'affichage ; courses : tableaux [{ nom, pos }] ; lien : nom -> HTML de la ligne
+// Duel : un clic sur une case met en valeur sa ligne et sa colonne (re-clic : on enlève)
+function mcDuelClic(ev) {
+  const td = ev.target.closest('td'); const t = ev.currentTarget;
+  if (!td || td.classList.contains('bilan') || ev.target.closest('a')) return;
+  const tr = td.parentNode, c = td.cellIndex, deja = td.classList.contains('cible');
+  t.querySelectorAll('.lc, .cible, .sel').forEach(x => x.classList.remove('lc', 'cible', 'sel'));
+  t.classList.toggle('focus', !deja);
+  if (deja) return;
+  td.classList.add('cible'); tr.classList.add('sel');
+  [...t.rows].forEach(r => { const x = r.cells[c]; if (x) x.classList.add('lc'); });
+  [...tr.cells].forEach(x => x.classList.add('lc'));
+}
 function mcDuelTable(pilotes, courses, lien, numero) {
   const idx = new Map(pilotes.map((n, i) => [n, i]));
   const g = pilotes.map(() => pilotes.map(() => 0));
@@ -5114,7 +5134,7 @@ function mcDuelTable(pilotes, courses, lien, numero) {
     return `<td class="${v > d ? 'plus' : v < d ? 'moins' : 'egal'}" style="--f:${f.toFixed(2)}" title="${mcEsc(n)} ${v}-${d} ${mcEsc(pilotes[j])}"><b>${v}</b><i>-</i>${d}</td>`;
   }).join('')}${(() => { const [v, d] = bilan[i], pc = v + d ? Math.round(100 * v / (v + d)) : 0;
     return `<td class="bilan"><span class="b">${v}-${d}</span><span class="pc"><i style="width:${pc}%"></i></span><em>${pc} %</em></td>`; })()}</tr>`).join('');
-  return `<div class="mc-duel-boite"><div class="gta-scroll"><table class="mc-duel"><thead><tr><th class="nom"></th>${tete}<th class="bilan">${en ? 'Total' : 'Bilan'}</th></tr></thead><tbody>${lignes}</tbody></table></div></div>`;
+  return `<div class="mc-duel-boite"><div class="gta-scroll"><table class="mc-duel" onclick="mcDuelClic(event)"><thead><tr><th class="nom"></th>${tete}<th class="bilan">${en ? 'Total' : 'Bilan'}</th></tr></thead><tbody>${lignes}</tbody></table></div></div>`;
 }
 
 // Longueur des circuits en km (pour les kilomètres parcourus) ; clé = mot reconnaissable du nom du circuit
