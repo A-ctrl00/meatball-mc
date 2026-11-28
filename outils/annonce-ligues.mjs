@@ -1,7 +1,7 @@
 // Affiches Discord des ligues partenaires (WCNL et GTA), lancé avec les autres annonces
 // (.github/workflows/annonce-course.yml). Pour chaque ligue dont le webhook est enregistré dans les secrets GitHub
 // (DISCORD_WEBHOOK_WCNL, DISCORD_WEBHOOK_GTA) :
-//   - podium de chaque manche dès qu'elle passe « Officiel » dans l'onglet Site du Sheet de la ligue ;
+//   - podium de chaque manche dès la fin de la course (résultats envoyés, manche « Courue » ou plus) ;
 //   - top 3 du championnat après chaque manche officielle ;
 //   - annonce de chaque nouvelle news de la ligue (articles du site marqués data-ligue) avec son lien.
 // Les affiches sont rendues par le site (mcAffichePodium, mcAfficheClassement) puis photographiées.
@@ -69,10 +69,12 @@ async function main() {
     try { b = blocs(lireCsv(await (await fetch(l.csv + '&v=' + Date.now())).text())); }
     catch (e) { console.log(`${l.nom} : lecture du Sheet impossible`, e.message); continue; }
     const cal = b.CALENDRIER || [], res = b.RESULTATS || [], tests = b['COURSES TEST'] || [];
+    // podium : dès que la course est finie (résultats envoyés par Optima Control, manche « Courue » ou plus)
+    const courues = cal.filter(c => ['Courue', 'Provisoire', 'En commission', 'Officiel'].includes(c.Statut) && res.some(r => r.Manche === c.Manche && r.Pilote));
     const officielles = cal.filter(c => c.Statut === 'Officiel' && res.some(r => r.Manche === c.Manche && r.Pilote));
     const items = [];
-    officielles.forEach(c => items.push({ type: 'podium', cle: `podium|${c.Manche}|${c.Date}`, manche: c.Manche,
-      texte: `🏁 **${l.nom} : résultats officiels de la manche ${c.Manche}**${c.Circuit ? `, ${c.Circuit.replace(/\s*\(.*\)\s*$/, '')}` : ''}\n<${SITE}#${l.lg}-stats>` }));
+    courues.forEach(c => items.push({ type: 'podium', cle: `podium|${c.Manche}|${c.Date}`, manche: c.Manche,
+      texte: `🏁 **${l.nom} : podium de la manche ${c.Manche}**${c.Circuit ? `, ${c.Circuit.replace(/\s*\(.*\)\s*$/, '')}` : ''}\n<${SITE}#${l.lg}-stats>` }));
     const derniere = officielles[officielles.length - 1];
     if (derniere) items.push({ type: 'classement', cle: `classement|${derniere.Manche}|${derniere.Date}`,
       texte: `🏆 **${l.nom} : le top 3 du championnat après la manche ${derniere.Manche}**\n<${SITE}#${l.lg}-stats>` });

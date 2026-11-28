@@ -5738,7 +5738,7 @@ function mcAffichePodium(lg, manche, test) {
   ].filter(Boolean).join('');
   const corps = `<div class="vainq"><span>Victoire de</span><b>${mcEsc(p1.Pilote)}</b></div>${faits ? `<div class="faits">${faits}</div>` : ''}
     <div class="podium">${mcAffichePilote(lg, p2, 2, det(p2))}${mcAffichePilote(lg, p1, 1, det(p1))}${mcAffichePilote(lg, p3, 3, det(p3))}</div>`;
-  return mcAfficheCadre(lg, test ? 'Course test' : `Manche ${mcEsc(manche)} · Résultats officiels`, mcEsc(circuit || o.nom), [mcEsc(date), `${lignes.length} pilotes au départ`].filter(Boolean).join(' · '), corps);
+  return mcAfficheCadre(lg, test ? 'Course test' : `Manche ${mcEsc(manche)} · Podium`, mcEsc(circuit || o.nom), [mcEsc(date), `${lignes.length} pilotes au départ`].filter(Boolean).join(' · '), corps);
 }
 // Top 3 du championnat
 function mcAfficheClassement(lg) {
