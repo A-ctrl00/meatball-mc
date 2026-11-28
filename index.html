@@ -3712,7 +3712,7 @@ function openPilotSheetModal(nom) {
       ${patchSrc ? `<img class="pilot-sheet-patch" src="${patchSrc}" alt="${g.grade || ''}">` : ''}
       <div>
         <div class="pilot-sheet-title">${nom}</div>
-        <div class="pilot-sheet-grade">${g.grade || ''}</div>
+        <div class="pilot-sheet-grade">${mcGradeTexte(g.grade, true)}</div>
       </div>
     </div>
     <div class="pilot-sheet-info">
@@ -3929,6 +3929,12 @@ async function loadRanking() {
   }
 }
 
+// Grades écrits pareil partout : en majuscules (« 👑 Président » et « 🗺️ NOMAD » → « PRÉSIDENT », « NOMAD »)
+function mcGradeTexte(g, avecEmoji) {
+  const t = String(g || '').trim(); if (!t) return '';
+  const m = t.match(/^([^A-Za-zÀ-ÿ]*)(.*)$/);
+  return (avecEmoji ? m[1] : '') + m[2].trim().toLocaleUpperCase('fr-FR');
+}
 let _gradesByName = {};
 
 async function loadGrades() {
@@ -3960,7 +3966,7 @@ async function loadGrades() {
           <div class="grade-name">${membre}</div>
           <div class="grade-badge-group">
             ${patchSrc ? `<img class="grade-patch" src="${patchSrc}" alt="${grade}">` : ''}
-            <div class="grade-badge tier-${tier}">${grade || ''}</div>
+            <div class="grade-badge tier-${tier}">${mcGradeTexte(grade, true)}</div>
           </div>
         </div>
         <div class="divisions">${divisionDots}</div>
@@ -6636,7 +6642,7 @@ function mcOuvrirPilote(nom, sansHistorique) {
       derniere: dates[dates.length - 1] };
   }).sort((a, b) => b.derniere - a.derniere);
   const patch = typeof patchForGrade === 'function' ? patchForGrade(g.grade || '') : null;
-  const grade = (g.grade || '').replace(/^[^A-Za-zÀ-ÿ]+/, '');
+  const grade = mcGradeTexte(g.grade);
   const arts = mcArticlesPilote(nom);
   const wins = (typeof MC_VICTOIRES !== 'undefined' ? MC_VICTOIRES : []).filter(w => w.pilote === nom);
   const winsOff = wins.filter(w => w.ligue === 'Officiel iRacing').length;
@@ -7335,7 +7341,7 @@ function mcRenderData() {
     if (liste.length) {
       top.innerHTML = liste.map(x => {
         const g = (_gradesByName[x.nom] || {}).grade || '';
-        return `<div class="mc-rank-row"><span class="n">${String(x.rang).padStart(2, '0')}</span><span class="who"><b>${mcEsc(x.nom)}</b><span>${mcEsc(g.replace(/^[^A-Za-zÀ-ÿ]+/, ''))}</span></span><span class="pts">${mcEsc(x.points)}</span></div>`;
+        return `<div class="mc-rank-row"><span class="n">${String(x.rang).padStart(2, '0')}</span><span class="who"><b>${mcEsc(x.nom)}</b><span>${mcEsc(mcGradeTexte(g))}</span></span><span class="pts">${mcEsc(x.points)}</span></div>`;
       }).join('') + '<div class="mc-note" style="padding-top:4px">Points des 5 dernières courses de ligue.</div>';
     }
   }
@@ -7354,7 +7360,7 @@ function mcRenderData() {
           ${carte.carImg ? `<img class="car" src="${carte.carImg}" alt="Voiture de ${mcEsc(nom)}" referrerpolicy="no-referrer"><span class="car-fade"></span>` : `<img class="logo" src="${mcLogo()}" alt="">`}
           ${carte.num ? `<span class="mc-num">${mcEsc(carte.num)}</span>` : ''}
           <span class="mc-dcard-txt">
-            <span class="g">${mcEsc((g.grade || '').replace(/^[^A-Za-zÀ-ÿ]+/, ''))}</span>
+            <span class="g">${mcEsc(mcGradeTexte(g.grade))}</span>
             <span class="nm">${mcEsc(prenom)}<br>${mcEsc(reste.join(' '))}</span>
             <span class="st">${mcPluriel(s.v, 'victoire')}</span>
             <span class="st">${mcPluriel(s.p, 'podium')}</span>
